@@ -4,14 +4,11 @@ import 'package:contextless_ui/contextless_ui.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final navigatorKey = GlobalKey<NavigatorState>();
-  ContextlessUi.init(navigatorKey: navigatorKey);
-  runApp(MyApp(navigatorKey: navigatorKey));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final GlobalKey<NavigatorState> navigatorKey;
-  const MyApp({super.key, required this.navigatorKey});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +31,10 @@ class MyApp extends StatelessWidget {
           margin: EdgeInsets.only(bottom: 12),
         ),
       ),
-      navigatorKey: navigatorKey,
+      navigatorKey: GlobalKey<NavigatorState>(),
+      navigatorObservers: [
+        ContextlessObserver(),
+      ],
       home: const MyHome(),
       debugShowCheckedModeBanner: false,
     );

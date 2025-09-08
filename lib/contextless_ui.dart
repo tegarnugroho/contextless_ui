@@ -2,6 +2,7 @@ library contextless_ui;
 
 // Export the main UI functionality
 export 'src/ui/contextless_ui_core.dart';
+export 'src/ui/contextless_observer.dart' show ContextlessObserver;
 export 'src/ui/ui_handle.dart'
     show UiHandle, UiEvent, UiEventType, UiId, UiType;
 export 'src/ui/snackbar_builder.dart';

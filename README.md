@@ -5,36 +5,39 @@
 
 A comprehensive Flutter package for displaying **UI components without requiring `BuildContext`** - including dialogs, snackbars, toasts, and bottom sheets. Manage components by handle, ID, or tags with full async support.
 
-## 🎥 Demo
+## Demo
 
 [![Contextless UI Demo](./contextless_ui.gif)](https://www.youtube.com/watch?v=2pprA48Dmmc)
 
 > Click the preview above to watch the full demo video showcasing all features of the contextless_ui package
 
-## ✨ Features
+## Features
 
-### 🚀 Core Capabilities
+### Core Capabilities
+
 - **Zero BuildContext Required** - Display any UI component from anywhere in your code
 - **Unified API** - Single package for dialogs, snackbars, toasts, and bottom sheets
 - **Precise Control** - Close specific components by handle, ID, or tag (not just the topmost one)
 - **Async Support** - `showAsync()` methods return results from user interactions
 - **Event Streams** - Listen to component open/close events for analytics or state management
 
-### 🎯 UI Components
-- **📱 Dialogs** - Modal dialogs with custom content and transitions
-- **📋 Snackbars** - Material Design snackbars with actions and custom styling
-- **🍞 Toasts** - Simple toast notifications with flexible positioning
-- **📄 Bottom Sheets** - Material bottom sheets with drag support and custom content
+### UI Components
 
-### 🛠️ Advanced Features
-- **🏷️ Tag-based Management** - Group and bulk close components
-- **🎭 Custom Transitions** - Built-in animations with support for custom transitions
-- **📊 Analytics Ready** - Event streams for tracking user interactions
-- **🔒 Thread-safe** - All operations are UI-thread safe with proper error handling
-- **📱 Cross-platform** - Works on Android, iOS, Web, and desktop
-- **🧪 Zero Dependencies** - Only depends on Flutter SDK
+- **Dialogs** - Modal dialogs with custom content and transitions
+- **Snackbars** - Material Design snackbars with actions and custom styling
+- **Toasts** - Simple toast notifications with flexible positioning
+- **Bottom Sheets** - Material bottom sheets with drag support and custom content
 
-## 🚀 Quick Start
+### Advanced Features
+
+- **Tag-based Management** - Group and bulk close components
+- **Custom Transitions** - Built-in animations with support for custom transitions
+- **Analytics Ready** - Event streams for tracking user interactions
+- **Thread-safe** - All operations are UI-thread safe with proper error handling
+- **Cross-platform** - Works on Android, iOS, Web, and desktop
+- **Zero Dependencies** - Only depends on Flutter SDK
+
+## Quick Start
 
 ### Installation
 
@@ -45,20 +48,47 @@ dependencies:
   contextless_ui: ^0.1.0
 ```
 
-### Basic Setup
+### Initialization Options
+
+You can initialize Contextless UI in two ways:
+
+#### 1. Using NavigatorObserver (Recommended for existing apps)
 
 ```dart
 import 'package:contextless_ui/contextless_ui.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize with your app's navigator key
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  final navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      navigatorKey: navigatorKey,
+      navigatorObservers: [
+        ContextlessObserver(), // Auto-init ContextlessUi on first route push
+      ],
+      home: const MyHomePage(),
+    );
+  }
+}
+```
+
+#### 2. Manual Function Call
+
+```dart
+import 'package:contextless_ui/contextless_ui.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   final navigatorKey = GlobalKey<NavigatorState>();
   ContextlessUi.init(navigatorKey: navigatorKey);
-  
   runApp(MaterialApp(
-    navigatorKey: navigatorKey, // Important: Pass the key to MaterialApp
+    navigatorKey: navigatorKey,
     home: const MyHomePage(),
   ));
 }
@@ -92,7 +122,7 @@ void showLoadingDialog() {
   });
 }
 
-// 📋 Snackbars - Material Design snackbars
+// Snackbars - Material Design snackbars
 void showNotification() {
   ContextlessUi.showSnackbar(
     const Text('File uploaded successfully!'),
@@ -104,7 +134,7 @@ void showNotification() {
   );
 }
 
-// 🍞 Toasts - Simple toast notifications
+// Toasts - Simple toast notifications
 void showToast() {
   ContextlessUi.showToast(
     Container(
@@ -118,7 +148,7 @@ void showToast() {
   );
 }
 
-// 📄 Bottom Sheets - Material bottom sheets
+// Bottom Sheets - Material bottom sheets
 void showSettings() {
   ContextlessUi.showBottomSheet(
     Container(
@@ -134,7 +164,7 @@ void showSettings() {
   );
 }
 
-// ⚡ Async dialogs - Get results from user interactions
+// Async dialogs - Get results from user interactions
 Future<String?> pickColor() async {
   final result = await ContextlessDialogs.showAsync<String>(
     Dialog(
@@ -159,7 +189,7 @@ Future<String?> pickColor() async {
 }
 ```
 
-## 📖 API Reference
+## API Reference
 
 ### Initialization
 
@@ -171,7 +201,7 @@ ContextlessUi.init(navigatorKey: yourNavigatorKey);
 ContextlessUi.init(overlayKey: yourOverlayKey);
 ```
 
-### 📱 Dialogs
+### Dialogs
 
 ```dart
 // Show a dialog
@@ -197,7 +227,7 @@ List<DialogHandle> get openDialogs;
 int get openDialogCount;
 ```
 
-### 📋 Snackbars
+### Snackbars
 
 ```dart
 // Show a snackbar
@@ -223,7 +253,7 @@ UiHandle showSnackbar(Widget content, {
 Future<T?> showSnackbarAsync<T>(Widget content, { /* same parameters */ });
 ```
 
-### 🍞 Toasts
+### Toasts
 
 ```dart
 // Show a toast
@@ -240,7 +270,7 @@ UiHandle showToast(Widget content, {
 Future<T?> showToastAsync<T>(Widget content, { /* same parameters */ });
 ```
 
-### 📄 Bottom Sheets
+### Bottom Sheets
 
 ```dart
 // Show a bottom sheet
@@ -267,7 +297,7 @@ UiHandle showBottomSheet(Widget content, {
 Future<T?> showBottomSheetAsync<T>(Widget content, { /* same parameters */ });
 ```
 
-### 🎛️ Universal Controls
+### Universal Controls
 
 These methods work with all UI component types:
 
@@ -297,7 +327,7 @@ List<UiHandle> get openUiComponents;
 int get openUiComponentCount;
 ```
 
-### 📊 Event Streams
+### Event Streams
 
 ```dart
 // Listen to UI component events
@@ -319,7 +349,7 @@ ContextlessDialogs.events.listen((event) {
 });
 ```
 
-## 🛠️ Builders (Convenience Classes)
+## Builders (Convenience Classes)
 
 ### SnackbarBuilder
 
@@ -379,7 +409,7 @@ final handle = BottomSheetBuilder.list(
 );
 ```
 
-## 🎯 Advanced Usage
+## Advanced Usage
 
 ### Custom Transitions
 
@@ -500,7 +530,7 @@ void showMixedComponents() {
 }
 ```
 
-## 💡 Best Practices
+## Best Practices
 
 ### 1. Initialize Early
 
@@ -598,7 +628,7 @@ class _MyAppState extends State<MyApp> {
 }
 ```
 
-## ⚠️ Common Issues & Solutions
+## Common Issues & Solutions
 
 ### "ContextlessUi not initialized" Error
 
@@ -646,7 +676,7 @@ void dispose() {
 }
 ```
 
-## 🔗 Component Types
+## Component Types
 
 | Component | Use Case | Key Features |
 |-----------|----------|--------------|
@@ -663,7 +693,7 @@ void dispose() {
 - ✅ **Desktop** - Windows, macOS, Linux support
 - ✅ **Embedded** - Flutter embedded platforms
 
-## 📦 Examples
+## Examples
 
 Check out the `/example` folder for a complete working example showcasing:
 
@@ -675,7 +705,7 @@ Check out the `/example` folder for a complete working example showcasing:
 - Builder patterns
 - Event stream usage
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please:
 
@@ -685,11 +715,11 @@ Contributions are welcome! Please:
 4. Ensure all tests pass
 5. Submit a pull request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🌟 Support
+## Support
 
 If you find this package helpful, please:
 
@@ -700,4 +730,4 @@ If you find this package helpful, please:
 
 ---
 
-**Made with ❤️ for the Flutter community**
+### Made with ❤️ for the Flutter community
