@@ -1,3 +1,19 @@
-.dart_tool/package_config.json
-.dart_tool/package_graph.json
-.dart_tool/version
+# Pub-specific ignores (supersedes .gitignore for publishing)
+.dart_tool/
+.pub/
+.pub-cache/
+build/
+**/.dart_tool/
+**/build/
+**/test_cache/
+**/*.dill
+**/*.dill.*
+**/*.track.dill
+
+# Platform caches
+**/.gradle/
+**/.cxx/
+
+# Example app outputs
+example/**/.dart_tool/
+example/**/build/
