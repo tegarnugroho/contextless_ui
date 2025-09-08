@@ -523,6 +523,9 @@ class _MyHomeState extends State<MyHome> {
       'Delete this item?',
       actionLabel: 'DELETE',
       actionResult: true,
+      id: 'delete-snackbar',
+      backgroundColor: Colors.red,
+      actionColor: Colors.white,
       duration: const Duration(seconds: 6),
     );
 
