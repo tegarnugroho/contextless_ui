@@ -7,7 +7,7 @@ class ToastBuilder {
   ToastBuilder._();
 
   /// Creates a simple text toast
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ToastBuilder.text('Hello World!');
@@ -25,7 +25,8 @@ class ToastBuilder {
   }) {
     return ContextlessUi.showToast(
       Container(
-        padding: padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        padding:
+            padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         decoration: BoxDecoration(
           color: backgroundColor ?? Colors.black87,
           borderRadius: borderRadius ?? BorderRadius.circular(8),
@@ -46,7 +47,7 @@ class ToastBuilder {
   }
 
   /// Creates a success toast with green styling
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ToastBuilder.success('Operation completed!');
@@ -95,7 +96,7 @@ class ToastBuilder {
   }
 
   /// Creates an error toast with red styling
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ToastBuilder.error('Something went wrong!');
@@ -144,7 +145,7 @@ class ToastBuilder {
   }
 
   /// Creates a warning toast with orange styling
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ToastBuilder.warning('Please check your input!');
@@ -193,7 +194,7 @@ class ToastBuilder {
   }
 
   /// Creates an info toast with blue styling
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ToastBuilder.info('New feature available!');
@@ -242,7 +243,7 @@ class ToastBuilder {
   }
 
   /// Creates a loading toast with progress indicator
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final handle = ToastBuilder.loading('Processing...');
@@ -296,7 +297,7 @@ class ToastBuilder {
   }
 
   /// Creates a custom toast with icon
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ToastBuilder.withIcon(
@@ -352,7 +353,7 @@ class ToastBuilder {
   }
 
   /// Creates a progress toast that shows a progress bar
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final handle = ToastBuilder.progress('Downloading...', progress: 0.3);
@@ -413,7 +414,8 @@ class ToastBuilder {
       ),
       id: id,
       tag: tag,
-      duration: duration ?? const Duration(days: 1), // Very long duration by default
+      duration:
+          duration ?? const Duration(days: 1), // Very long duration by default
       alignment: alignment,
     );
   }

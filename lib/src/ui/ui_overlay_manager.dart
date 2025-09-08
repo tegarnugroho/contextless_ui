@@ -10,7 +10,7 @@ class UiOverlayManager {
   GlobalKey<NavigatorState>? _navigatorKey;
   GlobalKey<OverlayState>? _overlayKey;
   final Map<String, _UiEntry> _activeComponents = {};
-  
+
   bool get isInitialized {
     if (_navigatorKey != null) {
       return _navigatorKey!.currentState != null;
@@ -47,8 +47,6 @@ class UiOverlayManager {
     _navigatorKey = navigatorKey;
     _overlayKey = overlayKey;
   }
-
-
 
   void showSnackbar({
     required UiHandle handle,
@@ -93,7 +91,7 @@ class UiOverlayManager {
       );
     }
 
-    // Execute immediately in test environment, otherwise defer to next frame  
+    // Execute immediately in test environment, otherwise defer to next frame
     try {
       // Check if we're in a test environment
       if (WidgetsBinding.instance.runtimeType.toString().contains('Test')) {
@@ -148,7 +146,7 @@ class UiOverlayManager {
       );
     }
 
-    // Execute immediately in test environment, otherwise defer to next frame  
+    // Execute immediately in test environment, otherwise defer to next frame
     try {
       // Check if we're in a test environment
       if (WidgetsBinding.instance.runtimeType.toString().contains('Test')) {
@@ -187,7 +185,7 @@ class UiOverlayManager {
       );
     }
 
-    // Execute immediately in test environment, otherwise defer to next frame  
+    // Execute immediately in test environment, otherwise defer to next frame
     try {
       // Check if we're in a test environment
       if (WidgetsBinding.instance.runtimeType.toString().contains('Test')) {
@@ -222,7 +220,7 @@ class UiOverlayManager {
   }) {
     // Check if overlay is still mounted before creating animation controller
     if (!overlay.mounted) return;
-    
+
     final animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       reverseDuration: const Duration(milliseconds: 300),
@@ -234,11 +232,11 @@ class UiOverlayManager {
     void dismiss() {
       if (isDismissed) return;
       isDismissed = true;
-      
+
       // Cancel timer from the entry
       final entry = _activeComponents[handle.id];
       entry?.autoCloseTimer?.cancel();
-      
+
       // Dispose controller and remove immediately for testing
       try {
         animationController.dispose();
@@ -255,17 +253,20 @@ class UiOverlayManager {
         animationController: animationController,
         transitionsBuilder: transitionsBuilder,
         child: Align(
-          alignment: behavior == SnackBarBehavior.floating 
-            ? Alignment.bottomCenter 
-            : Alignment.bottomCenter,
+          alignment: behavior == SnackBarBehavior.floating
+              ? Alignment.bottomCenter
+              : Alignment.bottomCenter,
           child: Container(
             width: width,
             margin: margin ?? const EdgeInsets.all(16),
             child: Material(
-              color: backgroundColor ?? Theme.of(context).snackBarTheme.backgroundColor,
+              color: backgroundColor ??
+                  Theme.of(context).snackBarTheme.backgroundColor,
               elevation: elevation ?? 6.0,
-              shape: shape ?? RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-            child: Dismissible(
+              shape: shape ??
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.0)),
+              child: Dismissible(
                 key: Key(handle.id),
                 direction: dismissDirection,
                 onDismissed: (_) => dismiss(),
@@ -277,7 +278,9 @@ class UiOverlayManager {
                     decoration: TextDecoration.none,
                   ),
                   child: Padding(
-                    padding: padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: padding ??
+                        const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -342,7 +345,7 @@ class UiOverlayManager {
   }) {
     // Check if overlay is still mounted before creating animation controller
     if (!overlay.mounted) return;
-    
+
     final animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       reverseDuration: const Duration(milliseconds: 300),
@@ -354,7 +357,7 @@ class UiOverlayManager {
     void dismiss() {
       if (isDismissed) return;
       isDismissed = true;
-      
+
       // Dispose controller and remove immediately for testing
       try {
         animationController.dispose();
@@ -386,23 +389,26 @@ class UiOverlayManager {
             Align(
               alignment: Alignment.bottomCenter,
               child: Material(
-                color: backgroundColor ?? Theme.of(context).bottomSheetTheme.backgroundColor,
+                color: backgroundColor ??
+                    Theme.of(context).bottomSheetTheme.backgroundColor,
                 elevation: elevation ?? 16.0,
-                shape: shape ?? const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                ),
+                shape: shape ??
+                    const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(16)),
+                    ),
                 clipBehavior: clipBehavior ?? Clip.none,
                 child: Container(
                   constraints: constraints,
                   width: double.infinity,
                   child: enableDrag
-                    ? GestureDetector(
-                        onVerticalDragUpdate: (details) {
-                          // Handle drag to dismiss logic if needed
-                        },
-                        child: content,
-                      )
-                    : content,
+                      ? GestureDetector(
+                          onVerticalDragUpdate: (details) {
+                            // Handle drag to dismiss logic if needed
+                          },
+                          child: content,
+                        )
+                      : content,
                 ),
               ),
             ),
@@ -434,7 +440,7 @@ class UiOverlayManager {
   }) {
     // Check if overlay is still mounted before creating animation controller
     if (!overlay.mounted) return;
-    
+
     final animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       reverseDuration: const Duration(milliseconds: 300),
@@ -446,11 +452,11 @@ class UiOverlayManager {
     void dismiss() {
       if (isDismissed) return;
       isDismissed = true;
-      
+
       // Cancel timer from the entry
       final entry = _activeComponents[handle.id];
       entry?.autoCloseTimer?.cancel();
-      
+
       // Dispose controller and remove immediately for testing
       try {
         animationController.dispose();
@@ -578,7 +584,7 @@ class UiOverlayManager {
       entry.overlayEntry.remove();
     }
     _activeComponents.clear();
-    
+
     // Reset keys for testing
     _navigatorKey = null;
     _overlayKey = null;

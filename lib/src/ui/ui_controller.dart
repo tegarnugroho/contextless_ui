@@ -8,7 +8,7 @@ import 'ui_overlay_manager.dart';
 class UiController {
   UiOverlayManager? _overlayManager;
   late StreamController<UiEvent> _eventController;
-  
+
   bool get isInitialized => _overlayManager?.isInitialized ?? false;
 
   /// Initializes the UI controller
@@ -44,7 +44,7 @@ class UiController {
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
     final handle = UiHandle(id: id, tag: tag, type: UiType.snackbar);
-    
+
     _overlayManager!.showSnackbar(
       handle: handle,
       content: content,
@@ -63,12 +63,12 @@ class UiController {
       transitionsBuilder: transitionsBuilder,
       onDismissed: () => _handleClosed(handle, null),
     );
-    
+
     _eventController.add(UiEvent(
       handle: handle,
       type: UiEventType.opened,
     ));
-    
+
     return handle;
   }
 
@@ -93,7 +93,7 @@ class UiController {
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
     final handle = UiHandle(id: id, tag: tag, type: UiType.bottomSheet);
-    
+
     _overlayManager!.showBottomSheet(
       handle: handle,
       content: content,
@@ -113,12 +113,12 @@ class UiController {
       transitionsBuilder: transitionsBuilder,
       onDismissed: () => _handleClosed(handle, null),
     );
-    
+
     _eventController.add(UiEvent(
       handle: handle,
       type: UiEventType.opened,
     ));
-    
+
     return handle;
   }
 
@@ -133,7 +133,7 @@ class UiController {
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
     final handle = UiHandle(id: id, tag: tag, type: UiType.toast);
-    
+
     _overlayManager!.showToast(
       handle: handle,
       content: content,
@@ -143,12 +143,12 @@ class UiController {
       transitionsBuilder: transitionsBuilder,
       onDismissed: () => _handleClosed(handle, null),
     );
-    
+
     _eventController.add(UiEvent(
       handle: handle,
       type: UiEventType.opened,
     ));
-    
+
     return handle;
   }
 
@@ -172,7 +172,7 @@ class UiController {
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
     final handle = UiHandle.async(id: id, tag: tag, type: UiType.snackbar);
-    
+
     _overlayManager!.showSnackbar(
       handle: handle,
       content: content,
@@ -191,12 +191,12 @@ class UiController {
       transitionsBuilder: transitionsBuilder,
       onDismissed: () => _handleClosed(handle, null),
     );
-    
+
     _eventController.add(UiEvent(
       handle: handle,
       type: UiEventType.opened,
     ));
-    
+
     return handle.future<T>();
   }
 
@@ -221,7 +221,7 @@ class UiController {
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
     final handle = UiHandle.async(id: id, tag: tag, type: UiType.bottomSheet);
-    
+
     _overlayManager!.showBottomSheet(
       handle: handle,
       content: content,
@@ -241,12 +241,12 @@ class UiController {
       transitionsBuilder: transitionsBuilder,
       onDismissed: () => _handleClosed(handle, null),
     );
-    
+
     _eventController.add(UiEvent(
       handle: handle,
       type: UiEventType.opened,
     ));
-    
+
     return handle.future<T>();
   }
 
@@ -261,7 +261,7 @@ class UiController {
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
     final handle = UiHandle.async(id: id, tag: tag, type: UiType.toast);
-    
+
     _overlayManager!.showToast(
       handle: handle,
       content: content,
@@ -271,18 +271,18 @@ class UiController {
       transitionsBuilder: transitionsBuilder,
       onDismissed: () => _handleClosed(handle, null),
     );
-    
+
     _eventController.add(UiEvent(
       handle: handle,
       type: UiEventType.opened,
     ));
-    
+
     return handle.future<T>();
   }
 
   /// Closes a UI component by its handle
   bool close(UiHandle handle, [dynamic result]) {
-    final success = result != null 
+    final success = result != null
         ? _overlayManager!.removeUiComponentWithResult(handle.id, result)
         : _overlayManager!.removeUiComponent(handle.id);
     if (success) {
@@ -363,7 +363,7 @@ class UiController {
     if (handle.isAsync && !handle.isCompleted) {
       handle.complete(result);
     }
-    
+
     _eventController.add(UiEvent(
       handle: handle,
       type: UiEventType.closed,

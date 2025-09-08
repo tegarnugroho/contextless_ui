@@ -6,21 +6,21 @@ import 'ui_handle.dart';
 import '../dialogs/contextless_dialogs_core.dart';
 
 /// Main static API for contextless UI components.
-/// 
-/// This extends contextless dialogs to include snackbars, bottom sheets, 
+///
+/// This extends contextless dialogs to include snackbars, bottom sheets,
 /// toasts, and other UI components that don't require BuildContext.
 class ContextlessUi {
   static UiController? _controller;
-  
+
   /// Private constructor to prevent instantiation.
   ContextlessUi._();
-  
+
   /// Initializes the contextless UI system.
   /// This also initializes ContextlessDialogs if not already initialized.
-  /// 
+  ///
   /// Either [navigatorKey] or [overlayKey] must be provided.
   /// If [navigatorKey] is provided, the overlay will be obtained from it.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final navigatorKey = GlobalKey<NavigatorState>();
@@ -36,7 +36,7 @@ class ContextlessUi {
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
-    
+
     // Also initialize ContextlessDialogs if not already initialized
     if (!ContextlessDialogs.isInitialized) {
       ContextlessDialogs.init(
@@ -45,16 +45,16 @@ class ContextlessUi {
       );
     }
   }
-  
+
   /// Whether the system has been initialized.
   static bool get isInitialized => _controller?.isInitialized ?? false;
 
   // SNACKBAR METHODS
 
   /// Shows a snackbar without requiring a BuildContext.
-  /// 
+  ///
   /// Returns a [UiHandle] that can be used to close the snackbar later.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final handle = ContextlessUi.showSnackbar(
@@ -102,7 +102,7 @@ class ContextlessUi {
   }
 
   /// Shows a snackbar and returns a Future that completes when dismissed.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// await ContextlessUi.showSnackbarAsync<String>(
@@ -156,9 +156,9 @@ class ContextlessUi {
   // BOTTOM SHEET METHODS
 
   /// Shows a bottom sheet without requiring a BuildContext.
-  /// 
+  ///
   /// Returns a [UiHandle] that can be used to close the bottom sheet later.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final handle = ContextlessUi.showBottomSheet(
@@ -210,7 +210,7 @@ class ContextlessUi {
   }
 
   /// Shows a bottom sheet and returns a Future that completes when dismissed.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await ContextlessUi.showBottomSheetAsync<String>(
@@ -262,9 +262,9 @@ class ContextlessUi {
   // TOAST METHODS
 
   /// Shows a toast notification without requiring a BuildContext.
-  /// 
+  ///
   /// Returns a [UiHandle] that can be used to close the toast later.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final handle = ContextlessUi.showToast(
@@ -300,7 +300,7 @@ class ContextlessUi {
   }
 
   /// Shows a toast and returns a Future that completes when dismissed.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// await ContextlessUi.showToastAsync(
@@ -332,9 +332,9 @@ class ContextlessUi {
   // CONTROL METHODS
 
   /// Closes a UI component by its handle.
-  /// 
+  ///
   /// Returns true if the component was found and closed, false otherwise.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final handle = ContextlessUi.showSnackbar(Text('Hello'));
@@ -347,9 +347,9 @@ class ContextlessUi {
   }
 
   /// Closes a UI component by its ID.
-  /// 
+  ///
   /// Returns true if the component was found and closed, false otherwise.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ContextlessUi.showSnackbar(Text('Hello'), id: 'my-snackbar');
@@ -362,9 +362,9 @@ class ContextlessUi {
   }
 
   /// Closes all UI components with the specified tag.
-  /// 
+  ///
   /// Returns the number of components that were closed.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ContextlessUi.showSnackbar(Text('1'), tag: 'notifications');
@@ -378,9 +378,9 @@ class ContextlessUi {
   }
 
   /// Closes all UI components of a specific type.
-  /// 
+  ///
   /// Returns the number of components that were closed.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final count = ContextlessUi.closeByType(UiType.snackbar);
@@ -391,7 +391,7 @@ class ContextlessUi {
   }
 
   /// Closes all currently open UI components.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ContextlessUi.closeAll();
@@ -404,16 +404,16 @@ class ContextlessUi {
   // QUERY METHODS
 
   /// Checks if a UI component is currently open.
-  /// 
+  ///
   /// Accepts either a [UiHandle] or a [String] ID.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final handle = ContextlessUi.showSnackbar(Text('Hello'));
   /// if (ContextlessUi.isOpen(handle)) {
   ///   print('Snackbar is still open');
   /// }
-  /// 
+  ///
   /// // Or by ID:
   /// if (ContextlessUi.isOpen('my-component-id')) {
   ///   print('Component is still open');
@@ -425,7 +425,7 @@ class ContextlessUi {
   }
 
   /// Gets all currently open UI component handles.
-  /// 
+  ///
   /// Useful for debugging or advanced use cases.
   static List<UiHandle> get openUiComponents {
     if (!isInitialized) return [];
@@ -439,9 +439,9 @@ class ContextlessUi {
   }
 
   /// Stream of UI component events (opened/closed).
-  /// 
+  ///
   /// Listen to this stream to react to UI component lifecycle changes.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ContextlessUi.events.listen((event) {
@@ -458,7 +458,7 @@ class ContextlessUi {
   }
 
   /// Disposes the contextless UI system and closes all components.
-  /// 
+  ///
   /// This should typically be called when the app is shutting down.
   /// After calling dispose, you'll need to call init again before using the system.
   static void dispose() {

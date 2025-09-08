@@ -25,7 +25,8 @@ void main() {
     });
 
     group('Initialization', () {
-      testWidgets('initialization with navigator key', (WidgetTester tester) async {
+      testWidgets('initialization with navigator key',
+          (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             navigatorKey: navigatorKey,
@@ -35,10 +36,12 @@ void main() {
 
         ContextlessUi.init(navigatorKey: navigatorKey);
         expect(ContextlessUi.isInitialized, isTrue);
-        expect(ContextlessDialogs.isInitialized, isTrue); // Should also initialize dialogs
+        expect(ContextlessDialogs.isInitialized,
+            isTrue); // Should also initialize dialogs
       });
 
-      testWidgets('throws error when not initialized', (WidgetTester tester) async {
+      testWidgets('throws error when not initialized',
+          (WidgetTester tester) async {
         expect(
           () => ContextlessUi.showSnackbar(const Text('Test')),
           throwsA(isA<StateError>()),
@@ -62,13 +65,14 @@ void main() {
           const Text('Test Snackbar'),
           duration: const Duration(seconds: 10), // Long duration for testing
         );
-        
+
         expect(handle.id, isNotNull);
         expect(handle.type, equals(UiType.snackbar));
         expect(ContextlessUi.openUiComponentCount, equals(1));
 
         await tester.pump();
-        await tester.pump(const Duration(milliseconds: 300)); // Wait for animation
+        await tester
+            .pump(const Duration(milliseconds: 300)); // Wait for animation
 
         // Verify snackbar is displayed
         expect(find.text('Test Snackbar'), findsOneWidget);
@@ -80,10 +84,12 @@ void main() {
         expect(ContextlessUi.isOpen(handle), isFalse);
 
         await tester.pump();
-        await tester.pump(const Duration(milliseconds: 300)); // Wait for animation
+        await tester
+            .pump(const Duration(milliseconds: 300)); // Wait for animation
       });
 
-      testWidgets('snackbar auto-dismisses after duration', (WidgetTester tester) async {
+      testWidgets('snackbar auto-dismisses after duration',
+          (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             navigatorKey: navigatorKey,
@@ -162,7 +168,8 @@ void main() {
         await tester.pump();
       });
 
-      testWidgets('async bottom sheet with result', (WidgetTester tester) async {
+      testWidgets('async bottom sheet with result',
+          (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             navigatorKey: navigatorKey,
@@ -204,7 +211,8 @@ void main() {
               color: Colors.black87,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Text('Test Toast', style: TextStyle(color: Colors.white)),
+            child:
+                const Text('Test Toast', style: TextStyle(color: Colors.white)),
           ),
           duration: const Duration(seconds: 10),
         );
@@ -221,7 +229,8 @@ void main() {
         await tester.pump();
       });
 
-      testWidgets('toast auto-dismisses after duration', (WidgetTester tester) async {
+      testWidgets('toast auto-dismisses after duration',
+          (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             navigatorKey: navigatorKey,
@@ -511,7 +520,8 @@ void main() {
 
         // Show UI components
         final toastHandle = ContextlessUi.showToast(const Text('Toast'));
-        final snackbarHandle = ContextlessUi.showSnackbar(const Text('Snackbar'));
+        final snackbarHandle =
+            ContextlessUi.showSnackbar(const Text('Snackbar'));
 
         // Show dialog
         final dialogHandle = ContextlessDialogs.show(

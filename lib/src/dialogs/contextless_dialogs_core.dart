@@ -7,15 +7,15 @@ import 'dialog_handle.dart';
 /// Main static API for contextless dialogs.
 class ContextlessDialogs {
   static DialogController? _controller;
-  
+
   /// Private constructor to prevent instantiation.
   ContextlessDialogs._();
-  
+
   /// Initializes the contextless dialogs system.
-  /// 
+  ///
   /// Either [navigatorKey] or [overlayKey] must be provided.
   /// If [navigatorKey] is provided, the overlay will be obtained from it.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final navigatorKey = GlobalKey<NavigatorState>();
@@ -31,14 +31,14 @@ class ContextlessDialogs {
       overlayKey: overlayKey,
     );
   }
-  
+
   /// Whether the system has been initialized.
   static bool get isInitialized => _controller?.isInitialized ?? false;
-  
+
   /// Shows a dialog without requiring a BuildContext.
-  /// 
+  ///
   /// Returns a [DialogHandle] that can be used to close the dialog later.
-  /// 
+  ///
   /// Parameters:
   /// - [dialog]: The widget to display as a dialog
   /// - [id]: Optional custom ID for the dialog (UUID generated if not provided)
@@ -47,7 +47,7 @@ class ContextlessDialogs {
   /// - [barrierColor]: Color of the barrier behind the dialog
   /// - [transitionDuration]: Duration of the show/hide animation
   /// - [transitionsBuilder]: Custom transition animation builder
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final handle = ContextlessDialogs.show(
@@ -77,12 +77,12 @@ class ContextlessDialogs {
       transitionsBuilder: transitionsBuilder,
     );
   }
-  
+
   /// Shows a dialog and returns a Future that completes when the dialog is closed.
-  /// 
+  ///
   /// The Future completes with the result passed to the close methods,
   /// or null if the dialog is dismissed by tapping the barrier.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await ContextlessDialogs.showAsync<String>(
@@ -113,11 +113,11 @@ class ContextlessDialogs {
       transitionsBuilder: transitionsBuilder,
     );
   }
-  
+
   /// Closes a specific dialog by its handle.
-  /// 
+  ///
   /// Returns true if the dialog was found and closed, false otherwise.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final handle = ContextlessDialogs.show(myDialog);
@@ -128,11 +128,11 @@ class ContextlessDialogs {
     _ensureInitialized();
     return _controller!.close(handle, result);
   }
-  
+
   /// Closes a specific dialog by its ID.
-  /// 
+  ///
   /// Returns true if the dialog was found and closed, false otherwise.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ContextlessDialogs.show(myDialog, id: 'my-dialog');
@@ -143,11 +143,11 @@ class ContextlessDialogs {
     _ensureInitialized();
     return _controller!.closeById(id, result);
   }
-  
+
   /// Closes all dialogs with the specified tag.
-  /// 
+  ///
   /// Returns the number of dialogs that were closed.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ContextlessDialogs.show(dialog1, tag: 'progress');
@@ -159,9 +159,9 @@ class ContextlessDialogs {
     _ensureInitialized();
     return _controller!.closeByTag(tag, result);
   }
-  
+
   /// Closes all currently open dialogs.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ContextlessDialogs.closeAll();
@@ -170,18 +170,18 @@ class ContextlessDialogs {
     _ensureInitialized();
     _controller!.closeAll(result);
   }
-  
+
   /// Checks if a dialog is currently open.
-  /// 
+  ///
   /// Accepts either a [DialogHandle] or a [String] ID.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final handle = ContextlessDialogs.show(myDialog);
   /// if (ContextlessDialogs.isOpen(handle)) {
   ///   print('Dialog is still open');
   /// }
-  /// 
+  ///
   /// // Or by ID:
   /// if (ContextlessDialogs.isOpen('my-dialog-id')) {
   ///   print('Dialog is still open');
@@ -191,11 +191,11 @@ class ContextlessDialogs {
     if (!isInitialized) return false;
     return _controller!.isOpen(handleOrId);
   }
-  
+
   /// Stream of dialog events (opened/closed).
-  /// 
+  ///
   /// Listen to this stream to react to dialog lifecycle changes.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ContextlessDialogs.events.listen((event) {
@@ -210,30 +210,30 @@ class ContextlessDialogs {
     _ensureInitialized();
     return _controller!.events;
   }
-  
+
   /// Gets all currently open dialog handles.
-  /// 
+  ///
   /// Useful for debugging or advanced use cases.
   static List<DialogHandle> get openDialogs {
     if (!isInitialized) return [];
     return _controller!.openDialogs;
   }
-  
+
   /// Gets the count of currently open dialogs.
   static int get openDialogCount {
     if (!isInitialized) return 0;
     return _controller!.openDialogCount;
   }
-  
+
   /// Disposes the contextless dialogs system and closes all dialogs.
-  /// 
+  ///
   /// This should typically be called when the app is shutting down.
   /// After calling dispose, you'll need to call init again before using the system.
   static void dispose() {
     _controller?.dispose();
     _controller = null;
   }
-  
+
   static void _ensureInitialized() {
     if (_controller == null) {
       throw StateError(

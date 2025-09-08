@@ -24,7 +24,8 @@ void main() {
       }
     });
 
-    testWidgets('initialization with navigator key', (WidgetTester tester) async {
+    testWidgets('initialization with navigator key',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           navigatorKey: navigatorKey,
@@ -36,7 +37,8 @@ void main() {
       expect(ContextlessDialogs.isInitialized, isTrue);
     });
 
-    testWidgets('throws error when not initialized', (WidgetTester tester) async {
+    testWidgets('throws error when not initialized',
+        (WidgetTester tester) async {
       expect(
         () => ContextlessDialogs.show(const Text('Test')),
         throwsA(isA<StateError>()),
@@ -63,7 +65,7 @@ void main() {
       expect(ContextlessDialogs.openDialogCount, equals(1));
 
       await tester.pump();
-      
+
       // Verify dialog is displayed
       expect(find.text('Test Dialog'), findsOneWidget);
       expect(ContextlessDialogs.isOpen(handle), isTrue);
@@ -75,7 +77,7 @@ void main() {
       expect(ContextlessDialogs.openDialogCount, equals(0));
 
       await tester.pump();
-      
+
       // Verify dialog is removed
       expect(find.text('Test Dialog'), findsNothing);
     });
@@ -136,7 +138,7 @@ void main() {
       expect(ContextlessDialogs.isOpen(dialogId), isTrue);
 
       await tester.pump();
-      
+
       final closed = ContextlessDialogs.closeById(dialogId);
       expect(closed, isTrue);
       expect(ContextlessDialogs.isOpen(dialogId), isFalse);
@@ -175,14 +177,14 @@ void main() {
       // Close dialogs by tag
       final count = ContextlessDialogs.closeByTag('group1');
       expect(count, equals(2));
-      
+
       expect(ContextlessDialogs.isOpen(handle1), isFalse);
       expect(ContextlessDialogs.isOpen(handle2), isFalse);
       expect(ContextlessDialogs.isOpen(handle3), isTrue);
       expect(ContextlessDialogs.openDialogCount, equals(1));
 
       await tester.pump();
-      
+
       // Clean up
       ContextlessDialogs.close(handle3);
     });
@@ -233,13 +235,15 @@ void main() {
         barrierDismissible: true,
       );
 
-      await tester.pump(const Duration(milliseconds: 300)); // Wait for animation
+      await tester
+          .pump(const Duration(milliseconds: 300)); // Wait for animation
 
       expect(find.text('Dismissible Dialog'), findsOneWidget);
       expect(ContextlessDialogs.isOpen(handle), isTrue);
 
       // Tap on the barrier (outside the dialog)
-      await tester.tapAt(const Offset(50, 50)); // Top-left corner, outside dialog
+      await tester
+          .tapAt(const Offset(50, 50)); // Top-left corner, outside dialog
       await tester.pump(const Duration(milliseconds: 300));
 
       expect(ContextlessDialogs.isOpen(handle), isFalse);
@@ -293,17 +297,17 @@ void main() {
     test('async dialog handle', () {
       final handle = DialogHandle.async<String>(id: 'test');
       expect(handle.isAsync, isTrue);
-      
+
       final future = handle.future;
       handle.complete('test result');
-      
+
       expect(future, completion('test result'));
     });
 
     test('dialog handle toString', () {
       final handle = DialogHandle(id: 'test-id', tag: 'test-tag');
       final string = handle.toString();
-      
+
       expect(string, contains('test-id'));
       expect(string, contains('test-tag'));
       expect(string, contains('DialogHandle'));

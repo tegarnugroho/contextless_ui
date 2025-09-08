@@ -7,7 +7,7 @@ class SnackbarBuilder {
   SnackbarBuilder._();
 
   /// Creates a simple text snackbar
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// SnackbarBuilder.text('Hello World!');
@@ -37,7 +37,7 @@ class SnackbarBuilder {
   }
 
   /// Creates a success snackbar with green styling
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// SnackbarBuilder.success('Operation completed successfully!');
@@ -75,7 +75,7 @@ class SnackbarBuilder {
   }
 
   /// Creates an error snackbar with red styling
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// SnackbarBuilder.error('Something went wrong!');
@@ -115,7 +115,7 @@ class SnackbarBuilder {
   }
 
   /// Creates a warning snackbar with orange styling
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// SnackbarBuilder.warning('Please check your input!');
@@ -155,7 +155,7 @@ class SnackbarBuilder {
   }
 
   /// Creates an info snackbar with blue styling
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// SnackbarBuilder.info('New feature available!');
@@ -195,7 +195,7 @@ class SnackbarBuilder {
   }
 
   /// Creates a loading snackbar with progress indicator
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final handle = SnackbarBuilder.loading('Processing...');
@@ -237,9 +237,9 @@ class SnackbarBuilder {
   }
 
   /// Creates an action snackbar that awaits user response
-  /// 
+  ///
   /// Returns a Future that completes with the action result.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await SnackbarBuilder.actionAsync(

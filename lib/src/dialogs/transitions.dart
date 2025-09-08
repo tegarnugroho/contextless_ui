@@ -22,7 +22,7 @@ class DialogTransitions {
       ),
     );
   }
-  
+
   /// Simple fade transition.
   static Widget fade(
     BuildContext context,
@@ -35,7 +35,7 @@ class DialogTransitions {
       child: child,
     );
   }
-  
+
   /// Scale transition.
   static Widget scale(
     BuildContext context,
@@ -51,7 +51,7 @@ class DialogTransitions {
       child: child,
     );
   }
-  
+
   /// Slide from bottom transition.
   static Widget slideFromBottom(
     BuildContext context,
@@ -70,7 +70,7 @@ class DialogTransitions {
       child: child,
     );
   }
-  
+
   /// Slide from top transition.
   static Widget slideFromTop(
     BuildContext context,

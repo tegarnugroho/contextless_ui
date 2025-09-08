@@ -7,7 +7,7 @@ class BottomSheetBuilder {
   BottomSheetBuilder._();
 
   /// Creates a simple bottom sheet with custom content
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// BottomSheetBuilder.content(
@@ -42,7 +42,7 @@ class BottomSheetBuilder {
   }
 
   /// Creates a list bottom sheet for selecting from options
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await BottomSheetBuilder.listAsync<String>(
@@ -95,17 +95,18 @@ class BottomSheetBuilder {
           ...options.map((option) => ListTile(
                 leading: option.icon,
                 title: Text(option.title),
-                subtitle: option.subtitle != null ? Text(option.subtitle!) : null,
-              onTap: () {
-                if (id != null) {
-                  ContextlessUi.closeById(id, option.value);
-                } else if (tag != null) {
-                  ContextlessUi.closeByTag(tag, option.value);
-                } else {
-                  // Fallback: close all bottom sheets
-                  ContextlessUi.closeByType(UiType.bottomSheet, option.value);
-                }
-              },
+                subtitle:
+                    option.subtitle != null ? Text(option.subtitle!) : null,
+                onTap: () {
+                  if (id != null) {
+                    ContextlessUi.closeById(id, option.value);
+                  } else if (tag != null) {
+                    ContextlessUi.closeByTag(tag, option.value);
+                  } else {
+                    // Fallback: close all bottom sheets
+                    ContextlessUi.closeByType(UiType.bottomSheet, option.value);
+                  }
+                },
               )),
           // Cancel button
           if (cancelButton != null) ...[
@@ -142,7 +143,7 @@ class BottomSheetBuilder {
   }
 
   /// Creates a confirmation bottom sheet
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final confirmed = await BottomSheetBuilder.confirmAsync(
@@ -259,7 +260,7 @@ class BottomSheetBuilder {
   }
 
   /// Creates a form bottom sheet with text input
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await BottomSheetBuilder.inputAsync(
@@ -284,7 +285,7 @@ class BottomSheetBuilder {
     bool obscureText = false,
   }) {
     final controller = TextEditingController(text: initialValue);
-    
+
     return ContextlessUi.showBottomSheetAsync<String>(
       Column(
         mainAxisSize: MainAxisSize.min,
@@ -355,11 +356,14 @@ class BottomSheetBuilder {
                     onPressed: () {
                       final value = controller.text.trim();
                       if (id != null) {
-                        ContextlessUi.closeById(id, value.isEmpty ? null : value);
+                        ContextlessUi.closeById(
+                            id, value.isEmpty ? null : value);
                       } else if (tag != null) {
-                        ContextlessUi.closeByTag(tag, value.isEmpty ? null : value);
+                        ContextlessUi.closeByTag(
+                            tag, value.isEmpty ? null : value);
                       } else {
-                        ContextlessUi.closeByType(UiType.bottomSheet, value.isEmpty ? null : value);
+                        ContextlessUi.closeByType(
+                            UiType.bottomSheet, value.isEmpty ? null : value);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -385,16 +389,16 @@ class BottomSheetBuilder {
 class BottomSheetOption<T> {
   /// The display title
   final String title;
-  
+
   /// The value to return when selected
   final T value;
-  
+
   /// Optional subtitle text
   final String? subtitle;
-  
+
   /// Optional leading icon
   final Widget? icon;
-  
+
   /// Creates a new bottom sheet option
   const BottomSheetOption(
     this.title,

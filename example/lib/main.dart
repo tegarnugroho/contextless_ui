@@ -582,23 +582,23 @@ class _MyHomeState extends State<MyHome> {
   void _showProgressToast() {
     double progress = 0.0;
     UiHandle? currentHandle;
-    
+
     void updateProgress() {
       // Close previous toast if exists
       if (currentHandle != null) {
         ContextlessUi.close(currentHandle!);
       }
-      
+
       // Show new progress toast
       currentHandle = ToastBuilder.progress(
-        'Downloading...', 
-        progress: progress, 
+        'Downloading...',
+        progress: progress,
         id: 'download-${DateTime.now().millisecondsSinceEpoch}', // Unique ID
       );
     }
-    
+
     updateProgress(); // Initial toast
-    
+
     Timer.periodic(const Duration(milliseconds: 300), (timer) {
       progress += 0.1;
       if (progress >= 1.0) {

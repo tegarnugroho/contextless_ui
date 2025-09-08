@@ -7,7 +7,7 @@ A comprehensive Flutter package for displaying **UI components without requiring
 
 ## 🎥 Demo
 
-[![Contextless UI Demo](./contextless_ui.gif)](./contextless_ui.mp4)
+[![Contextless UI Demo](./contextless_ui.gif)](https://www.youtube.com/watch?v=2pprA48Dmmc)
 
 > Click the preview above to watch the full demo video showcasing all features of the contextless_ui package
 
