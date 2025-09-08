@@ -1,0 +1,22 @@
+name: contextless_ui
+description: A Flutter package for displaying UI components (dialogs, snackbars, toasts, bottom sheets) without BuildContext and managing them by handle or ID.
+version: 0.1.0
+homepage: https://github.com/tegarnugroho/contextless_ui
+repository: https://github.com/tegarnugroho/contextless_ui
+issue_tracker: https://github.com/tegarnugroho/contextless_ui/issues
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  # This ensures the package is recognized as a Flutter package
