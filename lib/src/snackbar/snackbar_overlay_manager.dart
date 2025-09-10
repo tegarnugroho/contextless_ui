@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import '../core/base_components.dart';
 import 'snackbar_handle.dart';
 import 'snackbar_transitions.dart';

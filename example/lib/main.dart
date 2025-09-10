@@ -55,8 +55,8 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> {
-  String _lastResult = 'No result yet';
-  int _openDialogCount = 0;
+  final String _lastResult = 'No result yet';
+  final int _openDialogCount = 0;
 
   @override
   void initState() {

@@ -216,7 +216,7 @@ class _BottomSheetWrapper extends StatelessWidget {
     return GestureDetector(
       onTap: isDismissible ? onDismiss : null,
       child: Container(
-        color: Colors.black.withOpacity(0.5 * animation.value),
+        color: Colors.black.withValues(alpha: 0.5 * animation.value),
         child: GestureDetector(
           onTap: () {}, // Prevent taps on the bottom sheet from dismissing
           child: Align(
