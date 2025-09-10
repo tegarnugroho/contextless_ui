@@ -289,14 +289,14 @@ class _MyHomeState extends State<MyHome> {
           icon: Icons.check_circle_outline,
           color: const Color(0xFF16A34A),
           onTap: () =>
-              ContextlessUi.snackbar.show(const Text('Operation completed successfully!')),
+              ContextlessSnackbars.show('Operation completed successfully!'),
         ),
         _DialogDemo(
           title: 'Error Alert',
           description: 'Display error message',
           icon: Icons.error_outline,
           color: const Color(0xFFDC2626),
-          onTap: () => ContextlessUi.snackbar.show(const Text('Something went wrong!')),
+          onTap: () => ContextlessSnackbars.show('Something went wrong!'),
         ),
         _DialogDemo(
           title: 'Loading Progress',
@@ -344,22 +344,23 @@ class _MyHomeState extends State<MyHome> {
           description: 'Basic toast notification',
           icon: Icons.message_outlined,
           color: const Color(0xFF6B7280),
-          onTap: () => ContextlessUi.toast.show(const Text('Hello World!')),
+          onTap: () => ContextlessToasts.show('Hello World!'),
         ),
         _DialogDemo(
           title: 'Success Toast',
           description: 'Success notification toast',
           icon: Icons.check_circle_outline,
           color: const Color(0xFF16A34A),
-          onTap: () => ToastBuilder.success('Task completed successfully!'),
+          onTap: () => ContextlessToasts.show('Task completed successfully!'),
         ),
         _DialogDemo(
           title: 'Custom Toast',
           description: 'Toast with custom icon',
           icon: Icons.favorite_outline,
           color: const Color(0xFFEC4899),
-          onTap: () => ToastBuilder.withIcon(
-              Icons.favorite, 'Added to favorites',
+          onTap: () => ContextlessToasts.show(
+              'Added to favorites',
+              iconLeft: const Icon(Icons.favorite, color: Colors.white, size: 20),
               backgroundColor: Colors.pink),
         ),
         _DialogDemo(
@@ -503,15 +504,17 @@ class _MyHomeState extends State<MyHome> {
 
   // Snackbar methods
   void _showLoadingSnackbar() {
-    final handle = ContextlessUi.snackbar.show('Processing your request...');
+    final handle = ContextlessSnackbars.show('Processing your request...');
     Timer(const Duration(seconds: 3), () {
       handle.close();
-      SnackbarBuilder.success('Processing completed!');
+      ContextlessSnackbars.show('Processing completed!',
+          backgroundColor: Colors.green,
+          iconLeft: const Icon(Icons.check_circle, color: Colors.white));
     });
   }
 
   void _showActionSnackbar() async {
-    final result = await SnackbarBuilder.actionAsync<bool>(
+    final result = await ContextlessSnackbars.actionAsync<bool>(
       'Delete this item?',
       actionLabel: 'DELETE',
       actionValue: true,
@@ -522,55 +525,169 @@ class _MyHomeState extends State<MyHome> {
     );
 
     if (result == true) {
-      SnackbarBuilder.success('Item deleted successfully!');
+      ContextlessSnackbars.show('Item deleted successfully!',
+          backgroundColor: Colors.green,
+          iconLeft: const Icon(Icons.check_circle, color: Colors.white));
     }
   }
 
   // Bottom sheet methods
   void _showOptionsBottomSheet() async {
     final options = [
-      const BottomSheetOption('Camera', 'camera', icon: Icon(Icons.camera_alt)),
-      const BottomSheetOption('Gallery', 'gallery',
-          icon: Icon(Icons.photo_library)),
-      const BottomSheetOption('Files', 'files', icon: Icon(Icons.folder)),
+      {'title': 'Camera', 'value': 'camera', 'icon': const Icon(Icons.camera_alt)},
+      {'title': 'Gallery', 'value': 'gallery', 'icon': const Icon(Icons.photo_library)},
+      {'title': 'Files', 'value': 'files', 'icon': const Icon(Icons.folder)},
     ];
 
-    final result = await BottomSheetBuilder.listAsync<String>(
-      options,
-      title: 'Select Source',
+    final completer = Completer<String?>();
+    BottomSheetHandle? handle;
+    
+    handle = ContextlessBottomSheets.show(
+      Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Select Source', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            ...options.map((option) => ListTile(
+              leading: option['icon'] as Widget,
+              title: Text(option['title'] as String),
+              onTap: () {
+                completer.complete(option['value'] as String);
+                handle?.close();
+              },
+            )),
+          ],
+        ),
+      ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
     );
 
+    final result = await completer.future;
+
     if (result != null) {
-      ContextlessUi.toast.show(Text('Selected: $result'),
-      );
+      ContextlessToasts.show('Selected: $result');
     }
   }
 
   void _showConfirmationBottomSheet() async {
-    final confirmed = await BottomSheetBuilder.confirmAsync(
-      title: 'Clear Cache',
-      message:
-          'This will clear all cached data and free up storage space. Continue?',
-      confirmText: 'Clear',
-      cancelText: 'Cancel',
-      confirmColor: Colors.orange,
+    final completer = Completer<bool?>();
+    BottomSheetHandle? handle;
+    
+    handle = ContextlessBottomSheets.show(
+      Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Clear Cache', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            const Text('This will clear all cached data and free up storage space. Continue?'),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      completer.complete(false);
+                      handle?.close();
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                    onPressed: () {
+                      completer.complete(true);
+                      handle?.close();
+                    },
+                    child: const Text('Clear', style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
     );
 
+    final confirmed = await completer.future;
+
     if (confirmed == true) {
-      ToastBuilder.success('Cache cleared successfully!');
+      ContextlessToasts.show('Cache cleared successfully!',
+          backgroundColor: Colors.green,
+          iconLeft: const Icon(Icons.check_circle, color: Colors.white));
     }
   }
 
   void _showInputBottomSheet() async {
-    final result = await BottomSheetBuilder.inputAsync(
-      title: 'Add Note',
-      hintText: 'Enter your note...',
-      confirmText: 'Save',
-      maxLines: 3,
+    final completer = Completer<String?>();
+    final textController = TextEditingController();
+    BottomSheetHandle? handle;
+    
+    handle = ContextlessBottomSheets.show(
+      Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Add Note', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            TextField(
+              controller: textController,
+              decoration: const InputDecoration(
+                hintText: 'Enter your note...',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+              autofocus: true,
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      completer.complete(null);
+                      handle?.close();
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      completer.complete(textController.text);
+                      handle?.close();
+                    },
+                    child: const Text('Save'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
     );
 
+    final result = await completer.future;
+
     if (result != null && result.isNotEmpty) {
-      ToastBuilder.success('Note saved: $result');
+      ContextlessToasts.show('Note saved: $result',
+          backgroundColor: Colors.green,
+          iconLeft: const Icon(Icons.check_circle, color: Colors.white));
     }
   }
 
@@ -586,7 +703,7 @@ class _MyHomeState extends State<MyHome> {
       }
 
       // Show new progress toast
-      currentHandle = ToastBuilder.progress(
+      currentHandle = ContextlessToasts.progress(
         'Downloading...',
         progress: progress,
         id: 'download-${DateTime.now().millisecondsSinceEpoch}', // Unique ID
@@ -602,7 +719,9 @@ class _MyHomeState extends State<MyHome> {
         if (currentHandle != null) {
           currentHandle!.close();
         }
-        ToastBuilder.success('Download completed!');
+        ContextlessToasts.show('Download completed!',
+            backgroundColor: Colors.green,
+            iconLeft: const Icon(Icons.check_circle, color: Colors.white));
       } else {
         updateProgress();
       }
@@ -612,22 +731,65 @@ class _MyHomeState extends State<MyHome> {
   // Mixed components
   void _showMixedComponents() {
     // Show a combination of different UI components
-    ToastBuilder.info('Starting multi-component demo...');
+    ContextlessToasts.show('Starting multi-component demo...',
+        backgroundColor: Colors.blue,
+        iconLeft: const Icon(Icons.info, color: Colors.white));
 
     Timer(const Duration(milliseconds: 500), () {
-      SnackbarBuilder.warning('Please wait while we prepare your content');
+      ContextlessSnackbars.show('Please wait while we prepare your content',
+          backgroundColor: Colors.orange,
+          iconLeft: const Icon(Icons.warning, color: Colors.white));
     });
 
     Timer(const Duration(seconds: 2), () async {
-      final result = await BottomSheetBuilder.confirmAsync(
-        title: 'Ready!',
-        message: 'Your content is ready. Would you like to view it now?',
-        confirmText: 'View',
-        cancelText: 'Later',
+      final completer = Completer<bool?>();
+      BottomSheetHandle? handle;
+      
+      handle = ContextlessBottomSheets.show(
+        Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Ready!', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              const Text('Your content is ready. Would you like to view it now?'),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        completer.complete(false);
+                        handle?.close();
+                      },
+                      child: const Text('Later'),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        completer.complete(true);
+                        handle?.close();
+                      },
+                      child: const Text('View'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
       );
 
+      final result = await completer.future;
+
       if (result == true) {
-        ContextlessUi.dialog.show(
+        ContextlessDialogs.instance.show(
           const WelcomeDialog(),
           tag: 'mixed-demo',
         );
@@ -636,7 +798,9 @@ class _MyHomeState extends State<MyHome> {
   }
 
   void _showSuccessMessage(String message) {
-    SnackbarBuilder.success(message);
+    ContextlessSnackbars.show(message,
+        backgroundColor: Colors.green,
+        iconLeft: const Icon(Icons.check_circle, color: Colors.white));
   }
 
   String _colorName(Color color) {

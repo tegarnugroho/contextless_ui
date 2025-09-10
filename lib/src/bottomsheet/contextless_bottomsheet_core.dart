@@ -23,19 +23,19 @@ class ContextlessBottomSheets {
   /// final navigatorKey = GlobalKey<NavigatorState>();
   /// ContextlessBottomSheets.init(navigatorKey: navigatorKey);
   /// ```
-   void init({
+  static void init({
     GlobalKey<NavigatorState>? navigatorKey,
     GlobalKey<OverlayState>? overlayKey,
   }) {
-    _controller = BottomSheetController();
-    _controller!.init(
+    instance._controller = BottomSheetController();
+    instance._controller!.init(
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
   }
 
   /// Whether the system has been initialized.
-   bool get isInitialized => _controller?.isInitialized ?? false;
+  static bool get isInitialized => instance._controller?.isInitialized ?? false;
 
   /// Shows a bottom sheet without requiring a BuildContext.
   ///
@@ -75,7 +75,7 @@ class ContextlessBottomSheets {
   ///   ),
   /// );
   /// ```
-   BottomSheetHandle show(
+  static BottomSheetHandle show(
     Widget content, {
     String? id,
     String? tag,
@@ -87,8 +87,8 @@ class ContextlessBottomSheets {
     BoxConstraints? constraints,
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
-    _ensureInitialized();
-    return _controller!.showBottomSheet(
+    instance._ensureInitialized();
+    return instance._controller!.showBottomSheet(
       content,
       id: id,
       tag: tag,
@@ -118,7 +118,7 @@ class ContextlessBottomSheets {
   /// final result = await handle.result<String>();
   /// print('Bottom sheet result: $result');
   /// ```
-   BottomSheetHandle showAsync<T>(
+  static BottomSheetHandle showAsync<T>(
     Widget content, {
     String? id,
     String? tag,
@@ -130,11 +130,11 @@ class ContextlessBottomSheets {
     BoxConstraints? constraints,
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
-    _ensureInitialized();
+    instance._ensureInitialized();
     
     final handle = BottomSheetHandle.async(id: id, tag: tag);
     
-    _controller!.show(
+    instance._controller!.show(
       content,
       id: handle.id,
       tag: tag,
@@ -162,9 +162,9 @@ class ContextlessBottomSheets {
   /// // Later...
   /// final closed = await ContextlessBottomSheets.close(handle);
   /// ```
-   Future<bool> close(BottomSheetHandle handle) async {
-    if (_controller == null) return false;
-    return await _controller!.close(handle);
+  static Future<bool> close(BottomSheetHandle handle) async {
+    if (instance._controller == null) return false;
+    return await instance._controller!.close(handle);
   }
 
   /// Closes a bottom sheet by its ID.
@@ -177,9 +177,9 @@ class ContextlessBottomSheets {
   /// // Later...
   /// final closed = await ContextlessBottomSheets.closeById('my-bottom-sheet');
   /// ```
-   Future<bool> closeById(String id) async {
-    if (_controller == null) return false;
-    return await _controller!.closeById(id);
+  static Future<bool> closeById(String id) async {
+    if (instance._controller == null) return false;
+    return await instance._controller!.closeById(id);
   }
 
   /// Closes all bottom sheets with a specific tag.
@@ -193,9 +193,9 @@ class ContextlessBottomSheets {
   /// // Later...
   /// final count = await ContextlessBottomSheets.closeByTag('settings'); // Returns 2
   /// ```
-   Future<int> closeByTag(String tag) async {
-    if (_controller == null) return 0;
-    return await _controller!.closeByTag(tag);
+  static Future<int> closeByTag(String tag) async {
+    if (instance._controller == null) return 0;
+    return await instance._controller!.closeByTag(tag);
   }
 
   /// Closes all currently active bottom sheets.
@@ -207,9 +207,9 @@ class ContextlessBottomSheets {
   /// final count = await ContextlessBottomSheets.closeAll();
   /// print('Closed $count bottom sheets');
   /// ```
-   Future<int> closeAll() async {
-    if (_controller == null) return 0;
-    return await _controller!.closeAll();
+  static Future<int> closeAll() async {
+    if (instance._controller == null) return 0;
+    return await instance._controller!.closeAll();
   }
 
   /// Gets all currently active bottom sheet handles.
@@ -221,9 +221,9 @@ class ContextlessBottomSheets {
   /// final activeSheets = ContextlessBottomSheets.getActiveHandles();
   /// print('Currently showing ${activeSheets.length} bottom sheets');
   /// ```
-   List<BottomSheetHandle> getActiveHandles() {
-    if (_controller == null) return [];
-    return _controller!.activeHandles;
+  static List<BottomSheetHandle> getActiveHandles() {
+    if (instance._controller == null) return [];
+    return instance._controller!.activeHandles;
   }
 
   /// Gets a specific bottom sheet handle by its ID.
@@ -237,9 +237,9 @@ class ContextlessBottomSheets {
   ///   print('Bottom sheet is still active');
   /// }
   /// ```
-   BottomSheetHandle? getById(String id) {
-    if (_controller == null) return null;
-    return _controller!.getById(id);
+  static BottomSheetHandle? getById(String id) {
+    if (instance._controller == null) return null;
+    return instance._controller!.getById(id);
   }
 
   /// Gets all bottom sheet handles with a specific tag.
@@ -249,9 +249,9 @@ class ContextlessBottomSheets {
   /// final settingsSheets = ContextlessBottomSheets.getByTag('settings');
   /// print('${settingsSheets.length} settings bottom sheets active');
   /// ```
-   List<BottomSheetHandle> getByTag(String tag) {
-    if (_controller == null) return [];
-    return _controller!.getByTag(tag);
+  static List<BottomSheetHandle> getByTag(String tag) {
+    if (instance._controller == null) return [];
+    return instance._controller!.getByTag(tag);
   }
 
   /// Checks if a bottom sheet with the given ID is currently active.
@@ -262,9 +262,9 @@ class ContextlessBottomSheets {
   ///   print('Bottom sheet is still showing');
   /// }
   /// ```
-   bool isActive(String id) {
-    if (_controller == null) return false;
-    return _controller!.overlayManager?.isActive(id) ?? false;
+  static bool isActive(String id) {
+    if (instance._controller == null) return false;
+    return instance._controller!.overlayManager?.isActive(id) ?? false;
   }
 
   /// Gets the count of currently active bottom sheets.
@@ -274,9 +274,9 @@ class ContextlessBottomSheets {
   /// final count = ContextlessBottomSheets.getActiveCount();
   /// print('Currently showing $count bottom sheets');
   /// ```
-   int getActiveCount() {
-    if (_controller == null) return 0;
-    return _controller!.overlayManager?.activeCount ?? 0;
+  static int getActiveCount() {
+    if (instance._controller == null) return 0;
+    return instance._controller!.overlayManager?.activeCount ?? 0;
   }
 
   /// Disposes the bottom sheet system and closes all active bottom sheets.
@@ -288,13 +288,13 @@ class ContextlessBottomSheets {
   /// ```dart
   /// ContextlessBottomSheets.dispose();
   /// ```
-   void dispose() {
-    _controller?.dispose();
-    _controller = null;
+  static void dispose() {
+    instance._controller?.dispose();
+    instance._controller = null;
   }
 
   /// Ensures the system is initialized before use.
-   void _ensureInitialized() {
+  void _ensureInitialized() {
     if (!isInitialized) {
       throw StateError(
         'ContextlessBottomSheets not initialized. Call ContextlessBottomSheets.init() first.',

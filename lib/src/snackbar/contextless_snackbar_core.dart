@@ -23,19 +23,19 @@ class ContextlessSnackbars {
   /// final navigatorKey = GlobalKey<NavigatorState>();
   /// ContextlessSnackbars.init(navigatorKey: navigatorKey);
   /// ```
-   void init({
+  static void init({
     GlobalKey<NavigatorState>? navigatorKey,
     GlobalKey<OverlayState>? overlayKey,
   }) {
-    _controller = SnackbarController();
-    _controller!.init(
+    instance._controller = SnackbarController();
+    instance._controller!.init(
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
   }
 
   /// Whether the system has been initialized.
-   bool get isInitialized => _controller?.isInitialized ?? false;
+  static bool get isInitialized => instance._controller?.isInitialized ?? false;
 
   /// Shows a snackbar without requiring a BuildContext.
   ///
@@ -71,26 +71,70 @@ class ContextlessSnackbars {
   ///   ),
   /// );
   /// ```
-   SnackbarHandle show(
-    Widget content, {
+  /// Shows a snackbar with customizable styling.
+  ///
+  /// Returns a [SnackbarHandle] that can be used to close the snackbar later.
+  ///
+  /// Parameters:
+  /// - [message]: The text message to display
+  /// - [backgroundColor]: Background color of the snackbar
+  /// - [textColor]: Text color of the message
+  /// - [iconLeft]: Optional icon to display on the left side
+  /// - [iconRight]: Optional icon to display on the right side
+  /// - [action]: Optional action widget (usually a SnackBarAction)
+  /// - [duration]: How long the snackbar should be displayed
+  /// - [margin]: Margin around the snackbar
+  /// - [padding]: Internal padding of the snackbar
+  /// - [elevation]: Shadow elevation
+  /// - [behavior]: Whether snackbar floats or is fixed
+  /// - [shape]: Custom shape for the snackbar
+  /// - [id]: Optional custom ID for the snackbar
+  /// - [tag]: Optional tag for grouping snackbars
+  ///
+  /// Example:
+  /// ```dart
+  /// final handle = ContextlessSnackbars.show(
+  ///   'Operation completed successfully!',
+  ///   backgroundColor: Colors.green,
+  ///   iconLeft: Icon(Icons.check_circle, color: Colors.white),
+  ///   action: SnackBarAction(
+  ///     label: 'Undo',
+  ///     onPressed: () => print('Undo pressed'),
+  ///   ),
+  /// );
+  /// ```
+  static SnackbarHandle show(
+    String message, {
     String? id,
     String? tag,
     Duration duration = const Duration(seconds: 4),
     Color? backgroundColor,
+    Color? textColor,
+    Widget? iconLeft,
+    Widget? iconRight,
+    SnackBarAction? action,
     EdgeInsetsGeometry? margin,
     EdgeInsetsGeometry? padding,
     double? elevation,
     ShapeBorder? shape,
     SnackBarBehavior behavior = SnackBarBehavior.floating,
-    SnackBarAction? action,
     double? width,
     DismissDirection dismissDirection = DismissDirection.down,
     bool showCloseIcon = false,
     Color? closeIconColor,
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
-    _ensureInitialized();
-    return _controller!.showSnackbar(
+    instance._ensureInitialized();
+    
+    // Build content widget with icons
+    Widget content = instance._buildSnackbarContent(
+      message: message,
+      textColor: textColor,
+      iconLeft: iconLeft,
+      iconRight: iconRight,
+    );
+    
+    return instance._controller!.showSnackbar(
       content,
       id: id,
       tag: tag,
@@ -117,49 +161,50 @@ class ContextlessSnackbars {
   ///
   /// Example:
   /// ```dart
-  /// final handle = ContextlessSnackbars.showAsync<String>(
-  ///   Row(
-  ///     children: [
-  ///       Text('Do you want to continue?'),
-  ///       TextButton(
-  ///         onPressed: () => handle.complete('yes'),
-  ///         child: Text('Yes'),
-  ///       ),
-  ///       TextButton(
-  ///         onPressed: () => handle.complete('no'),
-  ///         child: Text('No'),
-  ///       ),
-  ///     ],
+  /// final result = await ContextlessSnackbars.showAsync<String>(
+  ///   'Do you want to continue?',
+  ///   iconLeft: Icon(Icons.question_mark),
+  ///   action: SnackBarAction(
+  ///     label: 'Yes',
+  ///     onPressed: () => handle.complete('yes'),
   ///   ),
   ///   duration: Duration.zero, // Persistent until user responds
   /// );
-  /// 
-  /// final result = await handle.result<String>();
-  /// print('User selected: $result');
   /// ```
-   SnackbarHandle showAsync<T>(
-    Widget content, {
+  static SnackbarHandle showAsync<T>(
+    String message, {
     String? id,
     String? tag,
     Duration duration = const Duration(seconds: 4),
     Color? backgroundColor,
+    Color? textColor,
+    Widget? iconLeft,
+    Widget? iconRight,
+    SnackBarAction? action,
     EdgeInsetsGeometry? margin,
     EdgeInsetsGeometry? padding,
     double? elevation,
     ShapeBorder? shape,
     SnackBarBehavior behavior = SnackBarBehavior.floating,
-    SnackBarAction? action,
     double? width,
     DismissDirection dismissDirection = DismissDirection.down,
     bool showCloseIcon = false,
     Color? closeIconColor,
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
-    _ensureInitialized();
+    instance._ensureInitialized();
     
     final handle = SnackbarHandle.async(id: id, tag: tag);
     
-    _controller!.show(
+    // Build content widget with icons
+    Widget content = instance._buildSnackbarContent(
+      message: message,
+      textColor: textColor,
+      iconLeft: iconLeft,
+      iconRight: iconRight,
+    );
+    
+    instance._controller!.show(
       content,
       id: handle.id,
       tag: tag,
@@ -182,7 +227,10 @@ class ContextlessSnackbars {
     
     return handle;
   }
-
+  /// 
+  /// final result = await handle.result<String>();
+  /// print('User selected: $result');
+  /// ```
   /// Closes a specific snackbar by its handle.
   ///
   /// Returns true if the snackbar was found and closed, false otherwise.
@@ -208,9 +256,9 @@ class ContextlessSnackbars {
   /// // Later...
   /// final closed = await ContextlessSnackbars.closeById('my-snackbar');
   /// ```
-   Future<bool> closeById(String id) async {
-    if (_controller == null) return false;
-    return await _controller!.closeById(id);
+   static Future<bool> closeById(String id) async {
+    if (instance._controller == null) return false;
+    return await instance._controller!.closeById(id);
   }
 
   /// Closes all snackbars with a specific tag.
@@ -224,9 +272,9 @@ class ContextlessSnackbars {
   /// // Later...
   /// final count = await ContextlessSnackbars.closeByTag('notifications'); // Returns 2
   /// ```
-   Future<int> closeByTag(String tag) async {
-    if (_controller == null) return 0;
-    return await _controller!.closeByTag(tag);
+  static Future<int> closeByTag(String tag) async {
+    if (instance._controller == null) return 0;
+    return await instance._controller!.closeByTag(tag);
   }
 
   /// Closes all currently active snackbars.
@@ -238,9 +286,9 @@ class ContextlessSnackbars {
   /// final count = await ContextlessSnackbars.closeAll();
   /// print('Closed $count snackbars');
   /// ```
-   Future<int> closeAll() async {
-    if (_controller == null) return 0;
-    return await _controller!.closeAll();
+  static Future<int> closeAll() async {
+    if (instance._controller == null) return 0;
+    return await instance._controller!.closeAll();
   }
 
   /// Gets all currently active snackbar handles.
@@ -305,9 +353,9 @@ class ContextlessSnackbars {
   /// final count = ContextlessSnackbars.getActiveCount();
   /// print('Currently showing $count snackbars');
   /// ```
-   int getActiveCount() {
-    if (_controller == null) return 0;
-    return _controller!.overlayManager?.activeCount ?? 0;
+  static int getActiveCount() {
+    if (instance._controller == null) return 0;
+    return instance._controller!.overlayManager?.activeCount ?? 0;
   }
 
   /// Disposes the snackbar system and closes all active snackbars.
@@ -319,17 +367,143 @@ class ContextlessSnackbars {
   /// ```dart
   /// ContextlessSnackbars.dispose();
   /// ```
-   void dispose() {
-    _controller?.dispose();
-    _controller = null;
+  static void dispose() {
+    instance._controller?.dispose();
+    instance._controller = null;
+  }
+
+  /// Shows an async snackbar with an action button that returns a value when pressed.
+  ///
+  /// This is a convenience method for creating action-based snackbars that
+  /// return a specific value when the action is pressed.
+  ///
+  /// Parameters:
+  /// - [message]: The text message to display
+  /// - [actionLabel]: The text for the action button
+  /// - [actionValue]: The value to return when the action is pressed
+  /// - [actionTextColor]: Color of the action button text
+  /// - Other parameters same as [show] method
+  ///
+  /// Returns a Future that completes with the [actionValue] when the action
+  /// is pressed, or null if the snackbar is dismissed without action.
+  ///
+  /// Example:
+  /// ```dart
+  /// final result = await ContextlessSnackbars.actionAsync<bool>(
+  ///   'Delete this item?',
+  ///   actionLabel: 'DELETE',
+  ///   actionValue: true,
+  ///   backgroundColor: Colors.red,
+  /// );
+  /// 
+  /// if (result == true) {
+  ///   print('User confirmed deletion');
+  /// }
+  /// ```
+  static Future<T?> actionAsync<T>(
+    String message, {
+    required String actionLabel,
+    required T actionValue,
+    String? id,
+    String? tag,
+    Duration duration = const Duration(seconds: 6),
+    Color? backgroundColor,
+    Color? textColor,
+    Color? actionTextColor,
+    Widget? iconLeft,
+    Widget? iconRight,
+    EdgeInsetsGeometry? margin,
+    EdgeInsetsGeometry? padding,
+    double? elevation,
+    ShapeBorder? shape,
+    SnackBarBehavior behavior = SnackBarBehavior.floating,
+    double? width,
+    DismissDirection dismissDirection = DismissDirection.down,
+    bool showCloseIcon = false,
+    Color? closeIconColor,
+    RouteTransitionsBuilder? transitionsBuilder,
+  }) async {
+    instance._ensureInitialized();
+    
+    final completer = Completer<T?>();
+    final snackbarId = id ?? 'action-${DateTime.now().millisecondsSinceEpoch}';
+    
+    final action = SnackBarAction(
+      label: actionLabel,
+      textColor: actionTextColor,
+      onPressed: () {
+        completer.complete(actionValue);
+        closeById(snackbarId);
+      },
+    );
+    
+    final handle = show(
+      message,
+      id: snackbarId,
+      tag: tag,
+      duration: duration,
+      backgroundColor: backgroundColor,
+      textColor: textColor,
+      iconLeft: iconLeft,
+      iconRight: iconRight,
+      action: action,
+      margin: margin,
+      padding: padding,
+      elevation: elevation,
+      shape: shape,
+      behavior: behavior,
+      width: width,
+      dismissDirection: dismissDirection,
+      showCloseIcon: showCloseIcon,
+      closeIconColor: closeIconColor,
+      transitionsBuilder: transitionsBuilder,
+    );
+    
+    // Complete with null if snackbar is closed without action
+    handle.result().then((_) {
+      if (!completer.isCompleted) {
+        completer.complete(null);
+      }
+    });
+    
+    return completer.future;
   }
 
   /// Ensures the system is initialized before use.
-   void _ensureInitialized() {
+  void _ensureInitialized() {
     if (!isInitialized) {
       throw StateError(
         'ContextlessSnackbars not initialized. Call ContextlessSnackbars.init() first.',
       );
     }
+  }
+
+  /// Builds the snackbar content widget with optional icons.
+  Widget _buildSnackbarContent({
+    required String message,
+    Color? textColor,
+    Widget? iconLeft,
+    Widget? iconRight,
+  }) {
+    List<Widget> children = [];
+    
+    if (iconLeft != null) {
+      children.add(iconLeft);
+      children.add(const SizedBox(width: 8));
+    }
+    
+    children.add(Expanded(
+      child: Text(
+        message,
+        style: TextStyle(color: textColor),
+      ),
+    ));
+    
+    if (iconRight != null) {
+      children.add(const SizedBox(width: 8));
+      children.add(iconRight);
+    }
+    
+    return Row(children: children);
   }
 }

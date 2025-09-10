@@ -59,22 +59,22 @@ class ContextlessUi {
     GlobalKey<OverlayState>? overlayKey,
   }) {
     // Initialize all subsystems
-    dialog.init(
+    ContextlessDialogs.instance.init(
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
 
-    toast.init(
+    ContextlessToasts.init(
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
 
-    bottomSheet.init(
+    ContextlessBottomSheets.init(
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
 
-    snackbar.init(
+    ContextlessSnackbars.init(
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
