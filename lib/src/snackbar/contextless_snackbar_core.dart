@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'snackbar_controller.dart';
 import 'snackbar_handle.dart';
 
-/// Main static API for contextless snackbars.
+/// Main  API for contextless snackbars.
 class ContextlessSnackbars {
-  static SnackbarController? _controller;
+   SnackbarController? _controller;
 
   /// Private constructor to prevent instantiation.
   ContextlessSnackbars._();
+
+  static final ContextlessSnackbars instance = ContextlessSnackbars._();
 
   /// Initializes the contextless snackbars system.
   ///
@@ -21,7 +23,7 @@ class ContextlessSnackbars {
   /// final navigatorKey = GlobalKey<NavigatorState>();
   /// ContextlessSnackbars.init(navigatorKey: navigatorKey);
   /// ```
-  static void init({
+   void init({
     GlobalKey<NavigatorState>? navigatorKey,
     GlobalKey<OverlayState>? overlayKey,
   }) {
@@ -33,7 +35,7 @@ class ContextlessSnackbars {
   }
 
   /// Whether the system has been initialized.
-  static bool get isInitialized => _controller?.isInitialized ?? false;
+   bool get isInitialized => _controller?.isInitialized ?? false;
 
   /// Shows a snackbar without requiring a BuildContext.
   ///
@@ -69,7 +71,7 @@ class ContextlessSnackbars {
   ///   ),
   /// );
   /// ```
-  static SnackbarHandle show(
+   SnackbarHandle show(
     Widget content, {
     String? id,
     String? tag,
@@ -135,7 +137,7 @@ class ContextlessSnackbars {
   /// final result = await handle.result<String>();
   /// print('User selected: $result');
   /// ```
-  static SnackbarHandle showAsync<T>(
+   SnackbarHandle showAsync<T>(
     Widget content, {
     String? id,
     String? tag,
@@ -191,7 +193,7 @@ class ContextlessSnackbars {
   /// // Later...
   /// final closed = await ContextlessSnackbars.close(handle);
   /// ```
-  static Future<bool> close(SnackbarHandle handle) async {
+   Future<bool> close(SnackbarHandle handle) async {
     if (_controller == null) return false;
     return await _controller!.close(handle);
   }
@@ -206,7 +208,7 @@ class ContextlessSnackbars {
   /// // Later...
   /// final closed = await ContextlessSnackbars.closeById('my-snackbar');
   /// ```
-  static Future<bool> closeById(String id) async {
+   Future<bool> closeById(String id) async {
     if (_controller == null) return false;
     return await _controller!.closeById(id);
   }
@@ -222,7 +224,7 @@ class ContextlessSnackbars {
   /// // Later...
   /// final count = await ContextlessSnackbars.closeByTag('notifications'); // Returns 2
   /// ```
-  static Future<int> closeByTag(String tag) async {
+   Future<int> closeByTag(String tag) async {
     if (_controller == null) return 0;
     return await _controller!.closeByTag(tag);
   }
@@ -236,7 +238,7 @@ class ContextlessSnackbars {
   /// final count = await ContextlessSnackbars.closeAll();
   /// print('Closed $count snackbars');
   /// ```
-  static Future<int> closeAll() async {
+   Future<int> closeAll() async {
     if (_controller == null) return 0;
     return await _controller!.closeAll();
   }
@@ -250,7 +252,7 @@ class ContextlessSnackbars {
   /// final activeSnackbars = ContextlessSnackbars.getActiveHandles();
   /// print('Currently showing ${activeSnackbars.length} snackbars');
   /// ```
-  static List<SnackbarHandle> getActiveHandles() {
+   List<SnackbarHandle> getActiveHandles() {
     if (_controller == null) return [];
     return _controller!.activeHandles;
   }
@@ -266,7 +268,7 @@ class ContextlessSnackbars {
   ///   print('Snackbar is still active');
   /// }
   /// ```
-  static SnackbarHandle? getById(String id) {
+   SnackbarHandle? getById(String id) {
     if (_controller == null) return null;
     return _controller!.getById(id);
   }
@@ -278,7 +280,7 @@ class ContextlessSnackbars {
   /// final notificationSnackbars = ContextlessSnackbars.getByTag('notifications');
   /// print('${notificationSnackbars.length} notification snackbars active');
   /// ```
-  static List<SnackbarHandle> getByTag(String tag) {
+   List<SnackbarHandle> getByTag(String tag) {
     if (_controller == null) return [];
     return _controller!.getByTag(tag);
   }
@@ -291,7 +293,7 @@ class ContextlessSnackbars {
   ///   print('Snackbar is still showing');
   /// }
   /// ```
-  static bool isActive(String id) {
+   bool isActive(String id) {
     if (_controller == null) return false;
     return _controller!.overlayManager?.isActive(id) ?? false;
   }
@@ -303,7 +305,7 @@ class ContextlessSnackbars {
   /// final count = ContextlessSnackbars.getActiveCount();
   /// print('Currently showing $count snackbars');
   /// ```
-  static int getActiveCount() {
+   int getActiveCount() {
     if (_controller == null) return 0;
     return _controller!.overlayManager?.activeCount ?? 0;
   }
@@ -317,13 +319,13 @@ class ContextlessSnackbars {
   /// ```dart
   /// ContextlessSnackbars.dispose();
   /// ```
-  static void dispose() {
+   void dispose() {
     _controller?.dispose();
     _controller = null;
   }
 
   /// Ensures the system is initialized before use.
-  static void _ensureInitialized() {
+   void _ensureInitialized() {
     if (!isInitialized) {
       throw StateError(
         'ContextlessSnackbars not initialized. Call ContextlessSnackbars.init() first.',

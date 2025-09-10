@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'toast_controller.dart';
 import 'toast_handle.dart';
 
-/// Main static API for contextless toasts.
+/// Main  API for contextless toasts.
 class ContextlessToasts {
-  static ToastController? _controller;
+   ToastController? _controller;
 
   /// Private constructor to prevent instantiation.
   ContextlessToasts._();
+
+  static final ContextlessToasts instance = ContextlessToasts._();
 
   /// Initializes the contextless toasts system.
   ///
@@ -21,7 +23,7 @@ class ContextlessToasts {
   /// final navigatorKey = GlobalKey<NavigatorState>();
   /// ContextlessToasts.init(navigatorKey: navigatorKey);
   /// ```
-  static void init({
+   void init({
     GlobalKey<NavigatorState>? navigatorKey,
     GlobalKey<OverlayState>? overlayKey,
   }) {
@@ -33,7 +35,7 @@ class ContextlessToasts {
   }
 
   /// Whether the system has been initialized.
-  static bool get isInitialized => _controller?.isInitialized ?? false;
+   bool get isInitialized => _controller?.isInitialized ?? false;
 
   /// Shows a toast without requiring a BuildContext.
   ///
@@ -62,7 +64,7 @@ class ContextlessToasts {
   ///   alignment: Alignment.bottomCenter,
   /// );
   /// ```
-  static ToastHandle show(
+   ToastHandle show(
     Widget content, {
     String? id,
     String? tag,
@@ -91,7 +93,7 @@ class ContextlessToasts {
   /// // Later...
   /// final closed = await ContextlessToasts.close(handle);
   /// ```
-  static Future<bool> close(ToastHandle handle) async {
+   Future<bool> close(ToastHandle handle) async {
     if (_controller == null) return false;
     return await _controller!.close(handle);
   }
@@ -106,7 +108,7 @@ class ContextlessToasts {
   /// // Later...
   /// final closed = await ContextlessToasts.closeById('my-toast');
   /// ```
-  static Future<bool> closeById(String id) async {
+   Future<bool> closeById(String id) async {
     if (_controller == null) return false;
     return await _controller!.closeById(id);
   }
@@ -122,7 +124,7 @@ class ContextlessToasts {
   /// // Later...
   /// final count = await ContextlessToasts.closeByTag('notifications'); // Returns 2
   /// ```
-  static Future<int> closeByTag(String tag) async {
+   Future<int> closeByTag(String tag) async {
     if (_controller == null) return 0;
     return await _controller!.closeByTag(tag);
   }
@@ -136,7 +138,7 @@ class ContextlessToasts {
   /// final count = await ContextlessToasts.closeAll();
   /// print('Closed $count toasts');
   /// ```
-  static Future<int> closeAll() async {
+   Future<int> closeAll() async {
     if (_controller == null) return 0;
     return await _controller!.closeAll();
   }
@@ -150,7 +152,7 @@ class ContextlessToasts {
   /// final activeToasts = ContextlessToasts.getActiveHandles();
   /// print('Currently showing ${activeToasts.length} toasts');
   /// ```
-  static List<ToastHandle> getActiveHandles() {
+   List<ToastHandle> getActiveHandles() {
     if (_controller == null) return [];
     return _controller!.activeHandles;
   }
@@ -166,7 +168,7 @@ class ContextlessToasts {
   ///   print('Toast is still active');
   /// }
   /// ```
-  static ToastHandle? getById(String id) {
+   ToastHandle? getById(String id) {
     if (_controller == null) return null;
     return _controller!.getById(id);
   }
@@ -178,7 +180,7 @@ class ContextlessToasts {
   /// final notificationToasts = ContextlessToasts.getByTag('notifications');
   /// print('${notificationToasts.length} notification toasts active');
   /// ```
-  static List<ToastHandle> getByTag(String tag) {
+   List<ToastHandle> getByTag(String tag) {
     if (_controller == null) return [];
     return _controller!.getByTag(tag);
   }
@@ -191,7 +193,7 @@ class ContextlessToasts {
   ///   print('Toast is still showing');
   /// }
   /// ```
-  static bool isActive(String id) {
+   bool isActive(String id) {
     if (_controller == null) return false;
     return _controller!.overlayManager?.isActive(id) ?? false;
   }
@@ -203,7 +205,7 @@ class ContextlessToasts {
   /// final count = ContextlessToasts.getActiveCount();
   /// print('Currently showing $count toasts');
   /// ```
-  static int getActiveCount() {
+   int getActiveCount() {
     if (_controller == null) return 0;
     return _controller!.overlayManager?.activeCount ?? 0;
   }
@@ -217,13 +219,13 @@ class ContextlessToasts {
   /// ```dart
   /// ContextlessToasts.dispose();
   /// ```
-  static void dispose() {
+   void dispose() {
     _controller?.dispose();
     _controller = null;
   }
 
   /// Ensures the system is initialized before use.
-  static void _ensureInitialized() {
+   void _ensureInitialized() {
     if (!isInitialized) {
       throw StateError(
         'ContextlessToasts not initialized. Call ContextlessToasts.init() first.',

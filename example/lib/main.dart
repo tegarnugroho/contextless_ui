@@ -155,7 +155,7 @@ class _MyHomeState extends State<MyHome> {
           ),
           if (_openDialogCount > 0)
             FilledButton(
-              onPressed: () => ContextlessDialogs.closeAll(),
+              onPressed: () => ContextlessUi.dialog.closeAll(),
               style: FilledButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.error,
                 foregroundColor: Theme.of(context).colorScheme.onError,
@@ -289,14 +289,14 @@ class _MyHomeState extends State<MyHome> {
           icon: Icons.check_circle_outline,
           color: const Color(0xFF16A34A),
           onTap: () =>
-              SnackbarBuilder.success('Operation completed successfully!'),
+              ContextlessUi.snackbar.show(const Text('Operation completed successfully!')),
         ),
         _DialogDemo(
           title: 'Error Alert',
           description: 'Display error message',
           icon: Icons.error_outline,
           color: const Color(0xFFDC2626),
-          onTap: () => SnackbarBuilder.error('Something went wrong!'),
+          onTap: () => ContextlessUi.snackbar.show(const Text('Something went wrong!')),
         ),
         _DialogDemo(
           title: 'Loading Progress',
@@ -344,7 +344,7 @@ class _MyHomeState extends State<MyHome> {
           description: 'Basic toast notification',
           icon: Icons.message_outlined,
           color: const Color(0xFF6B7280),
-          onTap: () => ToastBuilder.text('Hello World!'),
+          onTap: () => ContextlessUi.toast.show(const Text('Hello World!')),
         ),
         _DialogDemo(
           title: 'Success Toast',
@@ -404,14 +404,14 @@ class _MyHomeState extends State<MyHome> {
 
   // Dialog implementations
   void _showWelcomeDialog() {
-    ContextlessDialogs.show(
+    ContextlessUi.dialog.show(
       const WelcomeDialog(),
       tag: 'welcome',
     );
   }
 
   void _showProcessingDialog() {
-    final handle = ContextlessDialogs.show(
+    final handle = ContextlessUi.dialog.show(
       const ProcessingDialog(),
       tag: 'processing',
       barrierDismissible: false,
@@ -419,13 +419,13 @@ class _MyHomeState extends State<MyHome> {
 
     // Auto close after 3 seconds
     Timer(const Duration(seconds: 3), () {
-      ContextlessDialogs.close(handle, 'completed');
+      ContextlessUi.dialog.close(handle, 'completed');
       _showSuccessMessage('Process completed successfully');
     });
   }
 
   void _showColorPicker() async {
-    final color = await ContextlessDialogs.showAsync<Color>(
+    final color = await ContextlessUi.dialog.showAsync<Color>(
       const ColorPickerDialog(),
       tag: 'picker',
     );
@@ -436,7 +436,7 @@ class _MyHomeState extends State<MyHome> {
   }
 
   void _showUserInputDialog() async {
-    final result = await ContextlessDialogs.showAsync<Map<String, String>>(
+    final result = await ContextlessUi.dialog.showAsync<Map<String, String>>(
       const UserInputDialog(),
       tag: 'input',
     );
@@ -447,7 +447,7 @@ class _MyHomeState extends State<MyHome> {
   }
 
   void _showConfirmationDialog() async {
-    final result = await ContextlessDialogs.showAsync<bool>(
+    final result = await ContextlessUi.dialog.showAsync<bool>(
       const DeleteConfirmationDialog(),
       tag: 'confirm',
     );
@@ -461,10 +461,10 @@ class _MyHomeState extends State<MyHome> {
 
   void _showMultipleDialogs() {
     for (int i = 1; i <= 3; i++) {
-      ContextlessDialogs.show(
+      ContextlessUi.dialog.show(
         TaskDialog(
           taskNumber: i,
-          onClose: () => ContextlessDialogs.closeByTag('task-$i'),
+          onClose: () => ContextlessUi.dialog.closeByTag('task-$i'),
         ),
         tag: 'task-$i',
         id: 'multi-$i',
@@ -484,7 +484,7 @@ class _MyHomeState extends State<MyHome> {
     for (int i = 0; i < transitions.length; i++) {
       final (name, transition) = transitions[i];
       Timer(Duration(milliseconds: i * 400), () {
-        ContextlessDialogs.show(
+        ContextlessUi.dialog.show(
           TransitionDemo(name: name),
           tag: 'transitions',
           transitionsBuilder: transition,
@@ -503,7 +503,7 @@ class _MyHomeState extends State<MyHome> {
 
   // Snackbar methods
   void _showLoadingSnackbar() {
-    final handle = SnackbarBuilder.loading('Processing your request...');
+    final handle = ContextlessUi.snackbar.show('Processing your request...');
     Timer(const Duration(seconds: 3), () {
       handle.close();
       SnackbarBuilder.success('Processing completed!');
@@ -541,7 +541,8 @@ class _MyHomeState extends State<MyHome> {
     );
 
     if (result != null) {
-      ToastBuilder.success('Selected: $result');
+      ContextlessUi.toast.show(Text('Selected: $result'),
+      );
     }
   }
 
@@ -626,7 +627,7 @@ class _MyHomeState extends State<MyHome> {
       );
 
       if (result == true) {
-        ContextlessDialogs.show(
+        ContextlessUi.dialog.show(
           const WelcomeDialog(),
           tag: 'mixed-demo',
         );
@@ -713,7 +714,7 @@ class WelcomeDialog extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: () => ContextlessDialogs.closeAll('understood'),
+                onPressed: () => ContextlessUi.dialog.closeAll('understood'),
                 child: const Text('Got it'),
               ),
             ),
@@ -813,7 +814,7 @@ class ColorPickerDialog extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () => ContextlessDialogs.closeAll(),
+                onPressed: () => ContextlessUi.dialog.closeAll(),
                 child: const Text('Cancel'),
               ),
             ),
@@ -837,7 +838,7 @@ class ColorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => ContextlessDialogs.closeAll(color),
+      onTap: () => ContextlessUi.dialog.closeAll(color),
       borderRadius: BorderRadius.circular(12),
       child: Container(
         decoration: BoxDecoration(
@@ -961,7 +962,7 @@ class _UserInputDialogState extends State<UserInputDialog> {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () => ContextlessDialogs.closeAll(),
+                      onPressed: () => ContextlessUi.dialog.closeAll(),
                       child: const Text('Cancel'),
                     ),
                   ),
@@ -983,7 +984,7 @@ class _UserInputDialogState extends State<UserInputDialog> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      ContextlessDialogs.closeAll({
+      ContextlessUi.dialog.closeAll({
         'name': _nameController.text.trim(),
         'email': _emailController.text.trim(),
       });
@@ -1074,14 +1075,14 @@ class DeleteConfirmationDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () => ContextlessDialogs.closeAll(false),
+                    onPressed: () => ContextlessUi.dialog.closeAll(false),
                     child: const Text('Cancel'),
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: FilledButton(
-                    onPressed: () => ContextlessDialogs.closeAll(true),
+                    onPressed: () => ContextlessUi.dialog.closeAll(true),
                     style: FilledButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.error,
                       foregroundColor: Theme.of(context).colorScheme.onError,
@@ -1193,7 +1194,7 @@ class TransitionDemo extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             OutlinedButton(
-              onPressed: () => ContextlessDialogs.closeByTag('transitions'),
+              onPressed: () => ContextlessUi.dialog.closeByTag('transitions'),
               child: const Text('Close All Transitions'),
             ),
           ],
@@ -1207,7 +1208,7 @@ class TransitionDemo extends StatelessWidget {
 class BackgroundService {
   static void processData() {
     Timer(const Duration(seconds: 2), () {
-      ContextlessDialogs.show(
+      ContextlessUi.dialog.show(
         const ServiceNotificationDialog(),
         tag: 'service',
       );
@@ -1260,7 +1261,7 @@ class ServiceNotificationDialog extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: () => ContextlessDialogs.closeByTag('service'),
+                onPressed: () => ContextlessUi.dialog.closeByTag('service'),
                 child: const Text('Awesome!'),
               ),
             ),

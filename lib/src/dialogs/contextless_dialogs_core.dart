@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'dialog_controller.dart';
 import 'dialog_handle.dart';
 
-/// Main static API for contextless dialogs.
+/// Main  API for contextless dialogs.
 class ContextlessDialogs {
-  static DialogController? _controller;
+  DialogController? _controller;
 
   /// Private constructor to prevent instantiation.
   ContextlessDialogs._();
+
+  static final ContextlessDialogs instance = ContextlessDialogs._();
 
   /// Initializes the contextless dialogs system.
   ///
@@ -21,7 +23,7 @@ class ContextlessDialogs {
   /// final navigatorKey = GlobalKey<NavigatorState>();
   /// ContextlessDialogs.init(navigatorKey: navigatorKey);
   /// ```
-  static void init({
+  void init({
     GlobalKey<NavigatorState>? navigatorKey,
     GlobalKey<OverlayState>? overlayKey,
   }) {
@@ -33,7 +35,7 @@ class ContextlessDialogs {
   }
 
   /// Whether the system has been initialized.
-  static bool get isInitialized => _controller?.isInitialized ?? false;
+  bool get isInitialized => _controller?.isInitialized ?? false;
 
   /// Shows a dialog without requiring a BuildContext.
   ///
@@ -57,7 +59,7 @@ class ContextlessDialogs {
   ///   tag: 'info',
   /// );
   /// ```
-  static DialogHandle show(
+  DialogHandle show(
     Widget dialog, {
     String? id,
     String? tag,
@@ -93,7 +95,7 @@ class ContextlessDialogs {
   ///   // Use the selected color
   /// }
   /// ```
-  static Future<T?> showAsync<T>(
+  Future<T?> showAsync<T>(
     Widget dialog, {
     String? id,
     String? tag,
@@ -124,7 +126,7 @@ class ContextlessDialogs {
   /// // Later...
   /// await ContextlessDialogs.close(handle);
   /// ```
-  static Future<bool> close(DialogHandle handle, [dynamic result]) {
+  Future<bool> close(DialogHandle handle, [dynamic result]) {
     _ensureInitialized();
     return _controller!.close(handle);
   }
@@ -139,7 +141,7 @@ class ContextlessDialogs {
   /// // Later...
   /// await ContextlessDialogs.closeById('my-dialog');
   /// ```
-  static Future<bool> closeById(String id, [dynamic result]) {
+  Future<bool> closeById(String id, [dynamic result]) {
     _ensureInitialized();
     return _controller!.closeById(id);
   }
@@ -155,7 +157,7 @@ class ContextlessDialogs {
   /// // Later...
   /// final count = await ContextlessDialogs.closeByTag('progress'); // Returns 2
   /// ```
-  static Future<int> closeByTag(String tag, [dynamic result]) {
+  Future<int> closeByTag(String tag, [dynamic result]) {
     _ensureInitialized();
     return _controller!.closeByTag(tag);
   }
@@ -166,7 +168,7 @@ class ContextlessDialogs {
   /// ```dart
   /// await ContextlessDialogs.closeAll();
   /// ```
-  static Future<int> closeAll([dynamic result]) {
+  Future<int> closeAll([dynamic result]) {
     _ensureInitialized();
     return _controller!.closeAll();
   }
@@ -182,7 +184,7 @@ class ContextlessDialogs {
   ///   print('Dialog is still open');
   /// }
   /// ```
-  static bool isOpen(String id) {
+  bool isOpen(String id) {
     if (!isInitialized) return false;
     final handle = _controller!.getById(id);
     return handle != null;
@@ -191,13 +193,13 @@ class ContextlessDialogs {
   /// Gets all currently open dialog handles.
   ///
   /// Useful for debugging or advanced use cases.
-  static List<DialogHandle> get openDialogs {
+  List<DialogHandle> get openDialogs {
     if (!isInitialized) return [];
     return _controller!.activeHandles;
   }
 
   /// Gets the count of currently open dialogs.
-  static int get openDialogCount {
+  int get openDialogCount {
     if (!isInitialized) return 0;
     return _controller!.activeHandles.length;
   }
@@ -206,12 +208,12 @@ class ContextlessDialogs {
   ///
   /// This should typically be called when the app is shutting down.
   /// After calling dispose, you'll need to call init again before using the system.
-  static void dispose() {
+  void dispose() {
     _controller?.dispose();
     _controller = null;
   }
 
-  static void _ensureInitialized() {
+  void _ensureInitialized() {
     if (_controller == null) {
       throw StateError(
         'ContextlessDialogs not initialized. Call ContextlessDialogs.init() first.',
