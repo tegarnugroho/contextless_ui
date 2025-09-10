@@ -10,7 +10,7 @@ export 'src/bottomsheet/contextless_bottomsheet_core.dart';
 export 'src/snackbar/contextless_snackbar_core.dart';
 
 // Export handles
-export 'src/dialogs/dialog_handle.dart' show DialogHandle;
+export 'src/dialogs/dialogs.dart' show DialogHandle;
 export 'src/toast/toast_handle.dart' show ToastHandle;
 export 'src/bottomsheet/bottomsheet_handle.dart' show BottomSheetHandle;
 export 'src/snackbar/snackbar_handle.dart' show SnackbarHandle;
@@ -27,8 +27,8 @@ export 'src/bottomsheet/bottomsheet_transitions.dart' show BottomSheetTransition
 export 'src/snackbar/snackbar_transitions.dart' show SnackbarTransitions;
 
 // Export observer for legacy compatibility
-export 'src/ui/contextless_observer.dart' show ContextlessObserver;
+export 'src/core/common/contextless_observer.dart' show ContextlessObserver;
 
 // Export base components for advanced customization
-export 'src/core/base_handle.dart' show BaseHandle;
-export 'src/core/base_components.dart' show BaseOverlayManager, BaseController;
+export 'src/core/base/base_handle.dart' show BaseHandle;
+export 'src/core/base/base_components.dart' show BaseOverlayManager, BaseController;

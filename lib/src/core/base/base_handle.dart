@@ -1,5 +1,5 @@
 import 'dart:async';
-import '../common/utils/id.dart';
+import '../common/id.dart';
 
 /// Base typedef for component IDs.
 typedef ComponentId = String;

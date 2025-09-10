@@ -1,5 +1,5 @@
 import 'dart:async';
-import '../core/base_handle.dart';
+import '../core/base/base_handle.dart';
 
 /// A handle that represents an active bottom sheet.
 ///

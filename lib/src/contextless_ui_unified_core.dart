@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'dialogs/contextless_dialogs_core.dart';
-import 'toast/contextless_toast_core.dart';
-import 'bottomsheet/contextless_bottomsheet_core.dart';
-import 'snackbar/contextless_snackbar_core.dart';
+import 'bottomsheet/bottomsheet.dart';
+import 'dialogs/dialogs.dart';
+import 'snackbar/snackbar.dart';
+import 'toast/toast.dart';
 
 /// Unified core that initializes all contextless UI subsystems.
 /// 
