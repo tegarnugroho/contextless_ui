@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'contextless_ui_core.dart';
+import '../contextless_ui_unified_core.dart';
 
 /// A [NavigatorObserver] that automatically initializes ContextlessUi
 /// when the first route is pushed. This is the most convenient approach

@@ -1,19 +1,19 @@
 import 'dart:async';
 import '../core/base_handle.dart';
 
-/// A handle that represents an open dialog.
+/// A handle that represents an active snackbar.
 ///
-/// This handle can be used to close a specific dialog or check if it's still open.
-class DialogHandle extends BaseHandle {
-  /// Creates a new dialog handle.
-  DialogHandle({
+/// This handle can be used to close a specific snackbar or check if it's still active.
+class SnackbarHandle extends BaseHandle {
+  /// Creates a new snackbar handle.
+  SnackbarHandle({
     super.id,
     super.tag,
     super.openedAt,
   });
 
-  /// Creates a dialog handle for async operations.
-  DialogHandle._withCompleter({
+  /// Creates a snackbar handle for async operations.
+  SnackbarHandle._withCompleter({
     String? id,
     String? tag,
     DateTime? openedAt,
@@ -25,14 +25,14 @@ class DialogHandle extends BaseHandle {
          completer: completer,
        );
 
-  /// Creates a dialog handle for async operations.
-  static DialogHandle async({
+  /// Creates a snackbar handle for async operations.
+  static SnackbarHandle async({
     String? id,
     String? tag,
     DateTime? openedAt,
   }) {
     final completer = Completer<dynamic>();
-    return DialogHandle._withCompleter(
+    return SnackbarHandle._withCompleter(
       id: id,
       tag: tag,
       openedAt: openedAt,
@@ -42,10 +42,11 @@ class DialogHandle extends BaseHandle {
 
   @override
   Future<bool> close() async {
-    // This will be implemented by the main ContextlessDialogs class
+    // This will be implemented by the main ContextlessUi class
     // to avoid circular dependency issues
     throw UnimplementedError(
-      'Dialog closing should be handled through ContextlessDialogs.close(handle)'
+      'Snackbar closing should be handled through ContextlessSnackbars.close(handle) '
+      'or ContextlessUi.snackbars.close(handle)'
     );
   }
 }

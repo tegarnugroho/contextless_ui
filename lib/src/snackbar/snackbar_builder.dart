@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'contextless_ui_core.dart';
-import 'ui_handle.dart';
+import 'contextless_snackbar_core.dart';
+import 'snackbar_handle.dart';
 
 /// Builder class for creating common snackbar types easily
 class SnackbarBuilder {
@@ -12,27 +12,29 @@ class SnackbarBuilder {
   /// ```dart
   /// SnackbarBuilder.text('Hello World!');
   /// ```
-  static UiHandle text(
+  static SnackbarHandle text(
     String message, {
     String? id,
     String? tag,
     Duration duration = const Duration(seconds: 4),
     Color? backgroundColor,
     Color? textColor,
+    EdgeInsetsGeometry? margin,
+    EdgeInsetsGeometry? padding,
     SnackBarAction? action,
-    bool showCloseIcon = false,
   }) {
-    return ContextlessUi.showSnackbar(
+    return ContextlessSnackbars.show(
       Text(
         message,
-        style: TextStyle(color: textColor),
+        style: TextStyle(color: textColor ?? Colors.white),
       ),
       id: id,
       tag: tag,
       duration: duration,
-      backgroundColor: backgroundColor,
+      backgroundColor: backgroundColor ?? Colors.black87,
+      margin: margin,
+      padding: padding,
       action: action,
-      showCloseIcon: showCloseIcon,
     );
   }
 
@@ -42,26 +44,25 @@ class SnackbarBuilder {
   /// ```dart
   /// SnackbarBuilder.success('Operation completed successfully!');
   /// ```
-  static UiHandle success(
+  static SnackbarHandle success(
     String message, {
     String? id,
     String? tag,
     Duration duration = const Duration(seconds: 4),
-    bool showCloseIcon = false,
+    Color? backgroundColor,
+    Color? textColor,
+    Widget? icon,
+    SnackBarAction? action,
   }) {
-    return ContextlessUi.showSnackbar(
+    return ContextlessSnackbars.show(
       Row(
         children: [
-          const Icon(
-            Icons.check_circle,
-            color: Colors.white,
-            size: 20,
-          ),
+          icon ?? const Icon(Icons.check_circle, color: Colors.white, size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: textColor ?? Colors.white),
             ),
           ),
         ],
@@ -69,8 +70,8 @@ class SnackbarBuilder {
       id: id,
       tag: tag,
       duration: duration,
-      backgroundColor: Colors.green,
-      showCloseIcon: showCloseIcon,
+      backgroundColor: backgroundColor ?? Colors.green,
+      action: action,
     );
   }
 
@@ -80,27 +81,25 @@ class SnackbarBuilder {
   /// ```dart
   /// SnackbarBuilder.error('Something went wrong!');
   /// ```
-  static UiHandle error(
+  static SnackbarHandle error(
     String message, {
     String? id,
     String? tag,
-    Duration duration = const Duration(seconds: 6),
-    bool showCloseIcon = true,
+    Duration duration = const Duration(seconds: 4),
+    Color? backgroundColor,
+    Color? textColor,
+    Widget? icon,
     SnackBarAction? action,
   }) {
-    return ContextlessUi.showSnackbar(
+    return ContextlessSnackbars.show(
       Row(
         children: [
-          const Icon(
-            Icons.error,
-            color: Colors.white,
-            size: 20,
-          ),
+          icon ?? const Icon(Icons.error, color: Colors.white, size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: textColor ?? Colors.white),
             ),
           ),
         ],
@@ -108,8 +107,7 @@ class SnackbarBuilder {
       id: id,
       tag: tag,
       duration: duration,
-      backgroundColor: Colors.red,
-      showCloseIcon: showCloseIcon,
+      backgroundColor: backgroundColor ?? Colors.red,
       action: action,
     );
   }
@@ -120,27 +118,25 @@ class SnackbarBuilder {
   /// ```dart
   /// SnackbarBuilder.warning('Please check your input!');
   /// ```
-  static UiHandle warning(
+  static SnackbarHandle warning(
     String message, {
     String? id,
     String? tag,
-    Duration duration = const Duration(seconds: 5),
-    bool showCloseIcon = false,
+    Duration duration = const Duration(seconds: 4),
+    Color? backgroundColor,
+    Color? textColor,
+    Widget? icon,
     SnackBarAction? action,
   }) {
-    return ContextlessUi.showSnackbar(
+    return ContextlessSnackbars.show(
       Row(
         children: [
-          const Icon(
-            Icons.warning,
-            color: Colors.white,
-            size: 20,
-          ),
+          icon ?? const Icon(Icons.warning, color: Colors.white, size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: textColor ?? Colors.white),
             ),
           ),
         ],
@@ -148,8 +144,7 @@ class SnackbarBuilder {
       id: id,
       tag: tag,
       duration: duration,
-      backgroundColor: Colors.orange,
-      showCloseIcon: showCloseIcon,
+      backgroundColor: backgroundColor ?? Colors.orange,
       action: action,
     );
   }
@@ -158,29 +153,27 @@ class SnackbarBuilder {
   ///
   /// Example:
   /// ```dart
-  /// SnackbarBuilder.info('New feature available!');
+  /// SnackbarBuilder.info('Here is some information');
   /// ```
-  static UiHandle info(
+  static SnackbarHandle info(
     String message, {
     String? id,
     String? tag,
     Duration duration = const Duration(seconds: 4),
-    bool showCloseIcon = false,
+    Color? backgroundColor,
+    Color? textColor,
+    Widget? icon,
     SnackBarAction? action,
   }) {
-    return ContextlessUi.showSnackbar(
+    return ContextlessSnackbars.show(
       Row(
         children: [
-          const Icon(
-            Icons.info,
-            color: Colors.white,
-            size: 20,
-          ),
+          icon ?? const Icon(Icons.info, color: Colors.white, size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: textColor ?? Colors.white),
             ),
           ),
         ],
@@ -188,8 +181,7 @@ class SnackbarBuilder {
       id: id,
       tag: tag,
       duration: duration,
-      backgroundColor: Colors.blue,
-      showCloseIcon: showCloseIcon,
+      backgroundColor: backgroundColor ?? Colors.blue,
       action: action,
     );
   }
@@ -199,17 +191,16 @@ class SnackbarBuilder {
   /// Example:
   /// ```dart
   /// final handle = SnackbarBuilder.loading('Processing...');
-  /// // Later close it when done:
-  /// ContextlessUi.close(handle);
+  /// // Later: handle.close();
   /// ```
-  static UiHandle loading(
+  static SnackbarHandle loading(
     String message, {
     String? id,
     String? tag,
-    Duration? duration, // No auto-dismiss by default
     Color? backgroundColor,
+    Color? textColor,
   }) {
-    return ContextlessUi.showSnackbar(
+    return ContextlessSnackbars.show(
       Row(
         children: [
           const SizedBox(
@@ -224,63 +215,73 @@ class SnackbarBuilder {
           Expanded(
             child: Text(
               message,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: textColor ?? Colors.white),
             ),
           ),
         ],
       ),
       id: id,
       tag: tag,
-      duration: duration ?? const Duration(days: 1), // Very long duration
-      backgroundColor: backgroundColor ?? Colors.grey[700],
+      duration: Duration.zero, // Persistent until manually closed
+      backgroundColor: backgroundColor ?? Colors.blueGrey,
     );
   }
 
-  /// Creates an action snackbar that awaits user response
-  ///
-  /// Returns a Future that completes with the action result.
+  /// Creates a snackbar with an action button that returns a result
   ///
   /// Example:
   /// ```dart
-  /// final result = await SnackbarBuilder.actionAsync(
+  /// final result = await SnackbarBuilder.actionAsync<bool>(
   ///   'Delete this item?',
   ///   actionLabel: 'DELETE',
-  ///   actionResult: true,
+  ///   actionValue: true,
   /// );
   /// if (result == true) {
-  ///   // User confirmed deletion
+  ///   // User confirmed
   /// }
   /// ```
   static Future<T?> actionAsync<T>(
     String message, {
     required String actionLabel,
-    required T actionResult,
+    required T actionValue,
     String? id,
     String? tag,
     Duration duration = const Duration(seconds: 8),
     Color? backgroundColor,
-    Color? actionColor,
-  }) {
-    return ContextlessUi.showSnackbarAsync<T>(
-      Text(
-        message,
-        style: const TextStyle(color: Colors.white),
+    Color? textColor,
+    Color? actionTextColor,
+    Widget? icon,
+  }) async {
+    late final SnackbarHandle handle;
+    
+    handle = ContextlessSnackbars.showAsync<T>(
+      Row(
+        children: [
+          if (icon != null) ...[
+            icon,
+            const SizedBox(width: 12),
+          ],
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(color: textColor ?? Colors.white),
+            ),
+          ),
+        ],
       ),
       id: id,
       tag: tag,
       duration: duration,
-      backgroundColor: backgroundColor,
+      backgroundColor: backgroundColor ?? Colors.black87,
       action: SnackBarAction(
         label: actionLabel,
-        textColor: actionColor,
+        textColor: actionTextColor ?? Colors.white,
         onPressed: () {
-          if (id != null) {
-            ContextlessUi.closeById(id, actionResult);
-          } else if (tag != null) {
-            ContextlessUi.closeByTag(tag, actionResult);
-          }
+          handle.complete(actionValue);
         },
       ),
     );
+    
+    return await handle.result<T>();
   }
 }

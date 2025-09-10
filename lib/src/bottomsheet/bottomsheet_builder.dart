@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'contextless_ui_core.dart';
-import 'ui_handle.dart';
+import 'contextless_bottomsheet_core.dart';
+import 'bottomsheet_handle.dart';
 
 /// Builder class for creating common bottom sheet types easily
 class BottomSheetBuilder {
@@ -17,7 +17,7 @@ class BottomSheetBuilder {
   ///   ),
   /// );
   /// ```
-  static UiHandle content(
+  static BottomSheetHandle content(
     Widget content, {
     String? id,
     String? tag,
@@ -28,7 +28,7 @@ class BottomSheetBuilder {
     ShapeBorder? shape,
     BoxConstraints? constraints,
   }) {
-    return ContextlessUi.showBottomSheet(
+    return ContextlessBottomSheets.show(
       content,
       id: id,
       tag: tag,
@@ -62,8 +62,10 @@ class BottomSheetBuilder {
     bool isDismissible = true,
     bool enableDrag = true,
     Widget? cancelButton,
-  }) {
-    return ContextlessUi.showBottomSheetAsync<T>(
+  }) async {
+    late final BottomSheetHandle handle;
+    
+    handle = ContextlessBottomSheets.showAsync<T>(
       Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -98,14 +100,7 @@ class BottomSheetBuilder {
                 subtitle:
                     option.subtitle != null ? Text(option.subtitle!) : null,
                 onTap: () {
-                  if (id != null) {
-                    ContextlessUi.closeById(id, option.value);
-                  } else if (tag != null) {
-                    ContextlessUi.closeByTag(tag, option.value);
-                  } else {
-                    // Fallback: close all bottom sheets
-                    ContextlessUi.closeByType(UiType.bottomSheet, option.value);
-                  }
+                  handle.complete(option.value);
                 },
               )),
           // Cancel button
@@ -120,14 +115,7 @@ class BottomSheetBuilder {
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
               onTap: () {
-                if (id != null) {
-                  ContextlessUi.closeById(id);
-                } else if (tag != null) {
-                  ContextlessUi.closeByTag(tag);
-                } else {
-                  // Fallback: close all bottom sheets
-                  ContextlessUi.closeByType(UiType.bottomSheet);
-                }
+                handle.complete(null);
               },
             ),
           ],
@@ -140,6 +128,8 @@ class BottomSheetBuilder {
       isDismissible: isDismissible,
       enableDrag: enableDrag,
     );
+    
+    return await handle.result<T>();
   }
 
   /// Creates a confirmation bottom sheet
@@ -166,8 +156,10 @@ class BottomSheetBuilder {
     bool isDismissible = true,
     Color? confirmColor,
     Color? cancelColor,
-  }) {
-    return ContextlessUi.showBottomSheetAsync<bool>(
+  }) async {
+    late final BottomSheetHandle handle;
+    
+    handle = ContextlessBottomSheets.showAsync<bool>(
       Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -213,13 +205,7 @@ class BottomSheetBuilder {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () {
-                      if (id != null) {
-                        ContextlessUi.closeById(id, false);
-                      } else if (tag != null) {
-                        ContextlessUi.closeByTag(tag, false);
-                      } else {
-                        ContextlessUi.closeByType(UiType.bottomSheet, false);
-                      }
+                      handle.complete(false);
                     },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: cancelColor,
@@ -232,13 +218,7 @@ class BottomSheetBuilder {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      if (id != null) {
-                        ContextlessUi.closeById(id, true);
-                      } else if (tag != null) {
-                        ContextlessUi.closeByTag(tag, true);
-                      } else {
-                        ContextlessUi.closeByType(UiType.bottomSheet, true);
-                      }
+                      handle.complete(true);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: confirmColor ?? Colors.red,
@@ -257,6 +237,8 @@ class BottomSheetBuilder {
       tag: tag,
       isDismissible: isDismissible,
     );
+    
+    return await handle.result<bool>();
   }
 
   /// Creates a form bottom sheet with text input
@@ -283,10 +265,11 @@ class BottomSheetBuilder {
     int? maxLines = 1,
     int? maxLength,
     bool obscureText = false,
-  }) {
+  }) async {
     final controller = TextEditingController(text: initialValue);
+    late final BottomSheetHandle handle;
 
-    return ContextlessUi.showBottomSheetAsync<String>(
+    handle = ContextlessBottomSheets.showAsync<String>(
       Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -336,13 +319,7 @@ class BottomSheetBuilder {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () {
-                      if (id != null) {
-                        ContextlessUi.closeById(id, null);
-                      } else if (tag != null) {
-                        ContextlessUi.closeByTag(tag, null);
-                      } else {
-                        ContextlessUi.closeByType(UiType.bottomSheet, null);
-                      }
+                      handle.complete(null);
                     },
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -355,16 +332,7 @@ class BottomSheetBuilder {
                   child: ElevatedButton(
                     onPressed: () {
                       final value = controller.text.trim();
-                      if (id != null) {
-                        ContextlessUi.closeById(
-                            id, value.isEmpty ? null : value);
-                      } else if (tag != null) {
-                        ContextlessUi.closeByTag(
-                            tag, value.isEmpty ? null : value);
-                      } else {
-                        ContextlessUi.closeByType(
-                            UiType.bottomSheet, value.isEmpty ? null : value);
-                      }
+                      handle.complete(value.isEmpty ? null : value);
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -380,8 +348,9 @@ class BottomSheetBuilder {
       id: id,
       tag: tag,
       isDismissible: isDismissible,
-      isScrollControlled: true,
     );
+    
+    return await handle.result<String>();
   }
 }
 

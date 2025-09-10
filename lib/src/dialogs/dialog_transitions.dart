@@ -2,6 +2,16 @@ import 'package:flutter/material.dart';
 
 /// Default transition builders for dialogs.
 class DialogTransitions {
+  /// Default transition used when no custom transition is specified.
+  static Widget defaultTransition(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double>? secondaryAnimation,
+    Widget child,
+  ) {
+    return fadeWithScale(context, animation, secondaryAnimation ?? animation, child);
+  }
+
   /// Default fade transition with slight scale effect.
   static Widget fadeWithScale(
     BuildContext context,

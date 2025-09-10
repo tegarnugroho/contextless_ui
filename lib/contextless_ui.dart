@@ -1,18 +1,34 @@
 library contextless_ui;
 
-// Export the main UI functionality
-export 'src/ui/contextless_ui_core.dart';
-export 'src/ui/contextless_observer.dart' show ContextlessObserver;
-export 'src/ui/ui_handle.dart'
-    show UiHandle, UiEvent, UiEventType, UiId, UiType;
-export 'src/ui/snackbar_builder.dart';
-export 'src/ui/bottom_sheet_builder.dart'
-    show BottomSheetBuilder, BottomSheetOption;
-export 'src/ui/toast_builder.dart';
-export 'src/ui/ui_transitions.dart' show UiTransitions;
+// Export the unified core that handles all UI components
+export 'src/contextless_ui_unified_core.dart';
 
-// Export the dialog functionality - now integrated into contextless_ui
+// Export individual cores for advanced usage
 export 'src/dialogs/contextless_dialogs_core.dart';
-export 'src/dialogs/dialog_handle.dart'
-    show DialogHandle, DialogEvent, DialogEventType, DialogId;
-export 'src/dialogs/transitions.dart' show DialogTransitions;
+export 'src/toast/contextless_toast_core.dart';
+export 'src/bottomsheet/contextless_bottomsheet_core.dart';
+export 'src/snackbar/contextless_snackbar_core.dart';
+
+// Export handles
+export 'src/dialogs/dialog_handle.dart' show DialogHandle;
+export 'src/toast/toast_handle.dart' show ToastHandle;
+export 'src/bottomsheet/bottomsheet_handle.dart' show BottomSheetHandle;
+export 'src/snackbar/snackbar_handle.dart' show SnackbarHandle;
+
+// Export builders for easy usage
+export 'src/toast/toast_builder.dart' show ToastBuilder;
+export 'src/snackbar/snackbar_builder.dart' show SnackbarBuilder;
+export 'src/bottomsheet/bottomsheet_builder.dart' show BottomSheetBuilder, BottomSheetOption;
+
+// Export transitions
+export 'src/dialogs/dialog_transitions.dart' show DialogTransitions;
+export 'src/toast/toast_transitions.dart' show ToastTransitions;
+export 'src/bottomsheet/bottomsheet_transitions.dart' show BottomSheetTransitions;
+export 'src/snackbar/snackbar_transitions.dart' show SnackbarTransitions;
+
+// Export observer for legacy compatibility
+export 'src/ui/contextless_observer.dart' show ContextlessObserver;
+
+// Export base components for advanced customization
+export 'src/core/base_handle.dart' show BaseHandle;
+export 'src/core/base_components.dart' show BaseOverlayManager, BaseController;

@@ -67,7 +67,7 @@ class ContextlessDialogs {
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
     _ensureInitialized();
-    return _controller!.show(
+    return _controller!.showDialog(
       dialog,
       id: id,
       tag: tag,
@@ -103,7 +103,7 @@ class ContextlessDialogs {
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
     _ensureInitialized();
-    return _controller!.showAsync<T>(
+    return _controller!.showDialogAsync<T>(
       dialog,
       id: id,
       tag: tag,
@@ -122,11 +122,11 @@ class ContextlessDialogs {
   /// ```dart
   /// final handle = ContextlessDialogs.show(myDialog);
   /// // Later...
-  /// ContextlessDialogs.close(handle);
+  /// await ContextlessDialogs.close(handle);
   /// ```
-  static bool close(DialogHandle handle, [dynamic result]) {
+  static Future<bool> close(DialogHandle handle, [dynamic result]) {
     _ensureInitialized();
-    return _controller!.close(handle, result);
+    return _controller!.close(handle);
   }
 
   /// Closes a specific dialog by its ID.
@@ -137,11 +137,11 @@ class ContextlessDialogs {
   /// ```dart
   /// ContextlessDialogs.show(myDialog, id: 'my-dialog');
   /// // Later...
-  /// ContextlessDialogs.closeById('my-dialog');
+  /// await ContextlessDialogs.closeById('my-dialog');
   /// ```
-  static bool closeById(String id, [dynamic result]) {
+  static Future<bool> closeById(String id, [dynamic result]) {
     _ensureInitialized();
-    return _controller!.closeById(id, result);
+    return _controller!.closeById(id);
   }
 
   /// Closes all dialogs with the specified tag.
@@ -153,22 +153,22 @@ class ContextlessDialogs {
   /// ContextlessDialogs.show(dialog1, tag: 'progress');
   /// ContextlessDialogs.show(dialog2, tag: 'progress');
   /// // Later...
-  /// final count = ContextlessDialogs.closeByTag('progress'); // Returns 2
+  /// final count = await ContextlessDialogs.closeByTag('progress'); // Returns 2
   /// ```
-  static int closeByTag(String tag, [dynamic result]) {
+  static Future<int> closeByTag(String tag, [dynamic result]) {
     _ensureInitialized();
-    return _controller!.closeByTag(tag, result);
+    return _controller!.closeByTag(tag);
   }
 
   /// Closes all currently open dialogs.
   ///
   /// Example:
   /// ```dart
-  /// ContextlessDialogs.closeAll();
+  /// await ContextlessDialogs.closeAll();
   /// ```
-  static void closeAll([dynamic result]) {
+  static Future<int> closeAll([dynamic result]) {
     _ensureInitialized();
-    _controller!.closeAll(result);
+    return _controller!.closeAll();
   }
 
   /// Checks if a dialog is currently open.
@@ -178,37 +178,14 @@ class ContextlessDialogs {
   /// Example:
   /// ```dart
   /// final handle = ContextlessDialogs.show(myDialog);
-  /// if (ContextlessDialogs.isOpen(handle)) {
-  ///   print('Dialog is still open');
-  /// }
-  ///
-  /// // Or by ID:
-  /// if (ContextlessDialogs.isOpen('my-dialog-id')) {
+  /// if (ContextlessDialogs.isOpen(handle.id)) {
   ///   print('Dialog is still open');
   /// }
   /// ```
-  static bool isOpen(Object handleOrId) {
+  static bool isOpen(String id) {
     if (!isInitialized) return false;
-    return _controller!.isOpen(handleOrId);
-  }
-
-  /// Stream of dialog events (opened/closed).
-  ///
-  /// Listen to this stream to react to dialog lifecycle changes.
-  ///
-  /// Example:
-  /// ```dart
-  /// ContextlessDialogs.events.listen((event) {
-  ///   if (event.type == DialogEventType.opened) {
-  ///     print('Dialog ${event.handle.id} opened');
-  ///   } else {
-  ///     print('Dialog ${event.handle.id} closed with result: ${event.result}');
-  ///   }
-  /// });
-  /// ```
-  static Stream<DialogEvent> get events {
-    _ensureInitialized();
-    return _controller!.events;
+    final handle = _controller!.getById(id);
+    return handle != null;
   }
 
   /// Gets all currently open dialog handles.
@@ -216,13 +193,13 @@ class ContextlessDialogs {
   /// Useful for debugging or advanced use cases.
   static List<DialogHandle> get openDialogs {
     if (!isInitialized) return [];
-    return _controller!.openDialogs;
+    return _controller!.activeHandles;
   }
 
   /// Gets the count of currently open dialogs.
   static int get openDialogCount {
     if (!isInitialized) return 0;
-    return _controller!.openDialogCount;
+    return _controller!.activeHandles.length;
   }
 
   /// Disposes the contextless dialogs system and closes all dialogs.

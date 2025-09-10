@@ -10,8 +10,14 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // Create a global navigator key to be used by the contextless UI system
+  static final navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
+    // Initialize the contextless UI system
+    ContextlessUi.init(navigatorKey: navigatorKey);
+    
     return MaterialApp(
       title: 'Contextless UI',
       theme: ThemeData(
@@ -31,7 +37,7 @@ class MyApp extends StatelessWidget {
           margin: EdgeInsets.only(bottom: 12),
         ),
       ),
-      navigatorKey: GlobalKey<NavigatorState>(),
+      navigatorKey: navigatorKey,
       navigatorObservers: [
         ContextlessObserver(),
       ],
@@ -51,30 +57,16 @@ class MyHome extends StatefulWidget {
 class _MyHomeState extends State<MyHome> {
   String _lastResult = 'No result yet';
   int _openDialogCount = 0;
-  late StreamSubscription _eventSubscription;
 
   @override
   void initState() {
     super.initState();
-    _setupEventListener();
+    // Note: In the new API, we don't have global event streams
+    // Each component can be tracked individually using their handles
   }
 
-  void _setupEventListener() {
-    _eventSubscription = ContextlessDialogs.events.listen((event) {
-      setState(() {
-        _openDialogCount = ContextlessDialogs.openDialogCount;
-        if (event.type == DialogEventType.closed && event.result != null) {
-          _lastResult = 'Last result: ${event.result.toString()}';
-        }
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _eventSubscription.cancel();
-    super.dispose();
-  }
+  // Note: In the new API, we don't need to dispose event subscriptions
+  // since we're not using global event streams anymore
 
   @override
   Widget build(BuildContext context) {
@@ -513,7 +505,7 @@ class _MyHomeState extends State<MyHome> {
   void _showLoadingSnackbar() {
     final handle = SnackbarBuilder.loading('Processing your request...');
     Timer(const Duration(seconds: 3), () {
-      ContextlessUi.close(handle);
+      handle.close();
       SnackbarBuilder.success('Processing completed!');
     });
   }
@@ -522,10 +514,10 @@ class _MyHomeState extends State<MyHome> {
     final result = await SnackbarBuilder.actionAsync<bool>(
       'Delete this item?',
       actionLabel: 'DELETE',
-      actionResult: true,
+      actionValue: true,
       id: 'delete-snackbar',
       backgroundColor: Colors.red,
-      actionColor: Colors.white,
+      actionTextColor: Colors.white,
       duration: const Duration(seconds: 6),
     );
 
@@ -584,12 +576,12 @@ class _MyHomeState extends State<MyHome> {
   // Toast methods
   void _showProgressToast() {
     double progress = 0.0;
-    UiHandle? currentHandle;
+    ToastHandle? currentHandle;
 
     void updateProgress() {
       // Close previous toast if exists
       if (currentHandle != null) {
-        ContextlessUi.close(currentHandle!);
+        currentHandle!.close();
       }
 
       // Show new progress toast
@@ -607,7 +599,7 @@ class _MyHomeState extends State<MyHome> {
       if (progress >= 1.0) {
         timer.cancel();
         if (currentHandle != null) {
-          ContextlessUi.close(currentHandle!);
+          currentHandle!.close();
         }
         ToastBuilder.success('Download completed!');
       } else {
