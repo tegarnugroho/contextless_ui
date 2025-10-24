@@ -12,7 +12,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // Create a global navigator key to be used by the contextless UI system
+  // Global navigator key used by the contextless UI system
   static final navigatorKey = GlobalKey<NavigatorState>();
 
   @override
@@ -44,12 +44,8 @@ class _MyHomeState extends State<MyHome> {
   @override
   void initState() {
     super.initState();
-    // Note: In the new API, we don't have global event streams
-    // Each component can be tracked individually using their handles
+    // No global streams: each component is tracked via handle
   }
-
-  // Note: In the new API, we don't need to dispose event subscriptions
-  // since we're not using global event streams anymore
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +53,7 @@ class _MyHomeState extends State<MyHome> {
       appBar: AppBar(
         title: const Text(
           'Contextless UI',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
       ),
       body: SafeArea(
@@ -69,7 +62,6 @@ class _MyHomeState extends State<MyHome> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Status Header
               _buildStatusHeader(),
               const SizedBox(height: 32),
 
@@ -109,11 +101,7 @@ class _MyHomeState extends State<MyHome> {
                   : Theme.of(context).colorScheme.outline,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(
-              Icons.layers_outlined,
-              color: Colors.white,
-              size: 24,
-            ),
+            child: const Icon(Icons.layers_outlined, color: Colors.white, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -183,11 +171,7 @@ class _MyHomeState extends State<MyHome> {
                   color: demo.color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
-                  demo.icon,
-                  color: demo.color,
-                  size: 24,
-                ),
+                child: Icon(demo.icon, color: demo.color, size: 24),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -204,18 +188,14 @@ class _MyHomeState extends State<MyHome> {
                     Text(
                       demo.description,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                     ),
                   ],
                 ),
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Theme.of(context).colorScheme.outline,
-              ),
+              Icon(Icons.arrow_forward_ios,
+                  size: 16, color: Theme.of(context).colorScheme.outline),
             ],
           ),
         ),
@@ -272,8 +252,9 @@ class _MyHomeState extends State<MyHome> {
           icon: Icons.check_circle_outline,
           color: const Color(0xFF16A34A),
           onTap: () => ContextlessSnackbars.show(
-              'Operation completed successfully!',
-              backgroundColor: const Color(0xFF16A34A)),
+            'Operation completed successfully!',
+            backgroundColor: const Color(0xFF16A34A),
+          ),
         ),
         _DialogDemo(
           title: 'Error Alert',
@@ -345,10 +326,11 @@ class _MyHomeState extends State<MyHome> {
           description: 'Toast with custom icon',
           icon: Icons.favorite_outline,
           color: const Color(0xFFEC4899),
-          onTap: () => ContextlessToasts.show('Added to favorites',
-              iconLeft:
-                  const Icon(Icons.favorite, color: Colors.white, size: 20),
-              backgroundColor: Colors.pink),
+          onTap: () => ContextlessToasts.show(
+            'Added to favorites',
+            iconLeft: const Icon(Icons.favorite, color: Colors.white, size: 20),
+            backgroundColor: Colors.pink,
+          ),
         ),
         _DialogDemo(
           title: 'Progress Toast',
@@ -390,12 +372,9 @@ class _MyHomeState extends State<MyHome> {
         ),
       ];
 
-  // Dialog implementations
+  // Dialogs
   void _showWelcomeDialog() {
-    ContextlessUi.dialog.show(
-      const WelcomeDialog(),
-      tag: 'welcome',
-    );
+    ContextlessUi.dialog.show(const WelcomeDialog(), tag: 'welcome');
   }
 
   void _showProcessingDialog() {
@@ -405,7 +384,7 @@ class _MyHomeState extends State<MyHome> {
       barrierDismissible: false,
     );
 
-    // Auto close after 3 seconds
+    // Auto-close after 3 seconds via handle
     Timer(const Duration(seconds: 3), () {
       handle.close();
       _showSuccessMessage('Process completed successfully');
@@ -417,10 +396,7 @@ class _MyHomeState extends State<MyHome> {
       const ColorPickerDialog(),
       tag: 'picker',
     );
-
-    if (color != null) {
-      _showSuccessMessage('Selected ${_colorName(color)}');
-    }
+    if (color != null) _showSuccessMessage('Selected ${_colorName(color)}');
   }
 
   void _showUserInputDialog() async {
@@ -428,7 +404,6 @@ class _MyHomeState extends State<MyHome> {
       const UserInputDialog(),
       tag: 'input',
     );
-
     if (result != null) {
       _showSuccessMessage('Welcome ${result['name']}!');
     }
@@ -483,20 +458,21 @@ class _MyHomeState extends State<MyHome> {
 
   void _simulateServiceCall() {
     _showSuccessMessage('Starting background service...');
-
     Timer(const Duration(seconds: 1), () {
       BackgroundService.processData();
     });
   }
 
-  // Snackbar methods
+  // Snackbars
   void _showLoadingSnackbar() {
     final handle = ContextlessSnackbars.show('Processing your request...');
     Timer(const Duration(seconds: 3), () {
       handle.close();
-      ContextlessSnackbars.show('Processing completed!',
-          backgroundColor: Colors.green,
-          iconLeft: const Icon(Icons.check_circle, color: Colors.white));
+      ContextlessSnackbars.show(
+        'Processing completed!',
+        backgroundColor: Colors.green,
+        iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+      );
     });
   }
 
@@ -512,25 +488,19 @@ class _MyHomeState extends State<MyHome> {
     );
 
     if (result == true) {
-      ContextlessSnackbars.show('Item deleted successfully!',
-          backgroundColor: Colors.green,
-          iconLeft: const Icon(Icons.check_circle, color: Colors.white));
+      ContextlessSnackbars.show(
+        'Item deleted successfully!',
+        backgroundColor: Colors.green,
+        iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+      );
     }
   }
 
-  // Bottom sheet methods
+  // Bottom sheets
   void _showOptionsBottomSheet() async {
     final options = [
-      {
-        'title': 'Camera',
-        'value': 'camera',
-        'icon': const Icon(Icons.camera_alt)
-      },
-      {
-        'title': 'Gallery',
-        'value': 'gallery',
-        'icon': const Icon(Icons.photo_library)
-      },
+      {'title': 'Camera', 'value': 'camera', 'icon': const Icon(Icons.camera_alt)},
+      {'title': 'Gallery', 'value': 'gallery', 'icon': const Icon(Icons.photo_library)},
       {'title': 'Files', 'value': 'files', 'icon': const Icon(Icons.folder)},
     ];
 
@@ -563,7 +533,6 @@ class _MyHomeState extends State<MyHome> {
     );
 
     final result = await completer.future;
-
     if (result != null) {
       ContextlessToasts.show('Selected: $result');
     }
@@ -597,14 +566,13 @@ class _MyHomeState extends State<MyHome> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
                     onPressed: () {
                       completer.complete(true);
                       ContextlessBottomSheets.closeByTag('confirm-clear-cache');
                     },
-                    child: const Text('Clear',
-                        style: TextStyle(color: Colors.white)),
+                    child:
+                        const Text('Clear', style: TextStyle(color: Colors.white)),
                   ),
                 ),
               ],
@@ -619,11 +587,12 @@ class _MyHomeState extends State<MyHome> {
     );
 
     final confirmed = await completer.future;
-
     if (confirmed == true) {
-      ContextlessToasts.show('Cache cleared successfully!',
-          backgroundColor: Colors.green,
-          iconLeft: const Icon(Icons.check_circle, color: Colors.white));
+      ContextlessToasts.show(
+        'Cache cleared successfully!',
+        backgroundColor: Colors.green,
+        iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+      );
     }
   }
 
@@ -683,62 +652,64 @@ class _MyHomeState extends State<MyHome> {
     );
 
     final result = await completer.future;
-
     if (result != null && result.isNotEmpty) {
-      ContextlessToasts.show('Note saved: $result',
-          backgroundColor: Colors.green,
-          iconLeft: const Icon(Icons.check_circle, color: Colors.white));
+      ContextlessToasts.show(
+        'Note saved: $result',
+        backgroundColor: Colors.green,
+        iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+      );
     }
   }
 
-  // Toast methods
+  // Toasts
   void _showProgressToast() {
     double progress = 0.0;
     ToastHandle? currentHandle;
 
     void updateProgress() {
-      // Close previous toast if exists
-      if (currentHandle != null) {
-        currentHandle!.close();
-      }
+      // Replace previous toast if present
+      currentHandle?.close();
 
-      // Show new progress toast
+      // Show a new progress toast
       currentHandle = ContextlessToasts.progress(
         'Downloading...',
         progress: progress,
-        id: 'download-${DateTime.now().millisecondsSinceEpoch}', // Unique ID
+        id: 'download-${DateTime.now().millisecondsSinceEpoch}', // unique id
       );
     }
 
-    updateProgress(); // Initial toast
+    updateProgress();
 
     Timer.periodic(const Duration(milliseconds: 300), (timer) {
       progress += 0.1;
       if (progress >= 1.0) {
         timer.cancel();
-        if (currentHandle != null) {
-          currentHandle!.close();
-        }
-        ContextlessToasts.show('Download completed!',
-            backgroundColor: Colors.green,
-            iconLeft: const Icon(Icons.check_circle, color: Colors.white));
+        currentHandle?.close();
+        ContextlessToasts.show(
+          'Download completed!',
+          backgroundColor: Colors.green,
+          iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+        );
       } else {
         updateProgress();
       }
     });
   }
 
-  // Mixed components
+  // Mixed components showcase
   void _showMixedComponents() {
-    // Show a combination of different UI components
-    ContextlessToasts.show('Starting multi-component demo...',
-        backgroundColor: Colors.blue,
-        iconLeft: const Icon(Icons.info, color: Colors.white));
+    ContextlessToasts.show(
+      'Starting multi-component demo...',
+      backgroundColor: Colors.blue,
+      iconLeft: const Icon(Icons.info, color: Colors.white),
+    );
 
     Timer(const Duration(milliseconds: 500), () {
-      ContextlessSnackbars.show('Please wait while we prepare your content',
-          backgroundColor: Colors.orange,
-          iconLeft: const Icon(Icons.warning, color: Colors.white));
+      ContextlessSnackbars.show(
+        'Please wait while we prepare your content',
+        backgroundColor: Colors.orange,
+        iconLeft: const Icon(Icons.warning, color: Colors.white),
+      );
     });
 
     Timer(const Duration(seconds: 2), () async {
@@ -754,8 +725,7 @@ class _MyHomeState extends State<MyHome> {
               const Text('Ready!',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              const Text(
-                  'Your content is ready. Would you like to view it now?'),
+              const Text('Your content is ready. Would you like to view it now?'),
               const SizedBox(height: 24),
               Row(
                 children: [
@@ -800,9 +770,11 @@ class _MyHomeState extends State<MyHome> {
   }
 
   void _showSuccessMessage(String message) {
-    ContextlessSnackbars.show(message,
-        backgroundColor: Colors.green,
-        iconLeft: const Icon(Icons.check_circle, color: Colors.white));
+    ContextlessSnackbars.show(
+      message,
+      backgroundColor: Colors.green,
+      iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+    );
   }
 
   String _colorName(Color color) {
@@ -816,7 +788,7 @@ class _MyHomeState extends State<MyHome> {
   }
 }
 
-// Dialog demo data class
+// Data class for demo items
 class _DialogDemo {
   final String title;
   final String description;
@@ -995,11 +967,7 @@ class ColorButton extends StatelessWidget {
   final Color color;
   final String name;
 
-  const ColorButton({
-    super.key,
-    required this.color,
-    required this.name,
-  });
+  const ColorButton({super.key, required this.color, required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -1010,10 +978,7 @@ class ColorButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Colors.white,
-            width: 2,
-          ),
+          border: Border.all(color: Colors.white, width: 2),
           boxShadow: [
             BoxShadow(
               color: color.withValues(alpha: 0.3),
@@ -1116,8 +1081,7 @@ class _UserInputDialogState extends State<UserInputDialog> {
                   if (value == null || value.trim().isEmpty) {
                     return 'Please enter your email';
                   }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                      .hasMatch(value)) {
+                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
                   return null;
@@ -1182,11 +1146,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
                     color: Colors.orange,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
-                    Icons.restaurant,
-                    color: Colors.white,
-                    size: 16,
-                  ),
+                  child: const Icon(Icons.restaurant, color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 8),
                 Container(
@@ -1195,11 +1155,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
                     color: Colors.purple,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
-                    Icons.shopping_bag,
-                    color: Colors.white,
-                    size: 16,
-                  ),
+                  child: const Icon(Icons.shopping_bag, color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 8),
                 Container(
@@ -1208,16 +1164,11 @@ class DeleteConfirmationDialog extends StatelessWidget {
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
-                    Icons.local_taxi,
-                    color: Colors.white,
-                    size: 16,
-                  ),
+                  child: const Icon(Icons.local_taxi, color: Colors.white, size: 16),
                 ),
               ],
             ),
             const SizedBox(height: 24),
-
             Text(
               'Delete account across apps?',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -1226,7 +1177,6 @@ class DeleteConfirmationDialog extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-
             Text(
               'Once deleted, you\'ll lose access to the account and saved details across all connected apps.',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -1236,7 +1186,6 @@ class DeleteConfirmationDialog extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
-
             Row(
               children: [
                 Expanded(
@@ -1270,11 +1219,7 @@ class TaskDialog extends StatelessWidget {
   final int taskNumber;
   final VoidCallback onClose;
 
-  const TaskDialog({
-    super.key,
-    required this.taskNumber,
-    required this.onClose,
-  });
+  const TaskDialog({super.key, required this.taskNumber, required this.onClose});
 
   @override
   Widget build(BuildContext context) {
@@ -1337,11 +1282,7 @@ class TransitionDemo extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.animation,
-              size: 48,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            Icon(Icons.animation, size: 48, color: Theme.of(context).colorScheme.primary),
             const SizedBox(height: 16),
             Text(
               name,
@@ -1374,10 +1315,7 @@ class TransitionDemo extends StatelessWidget {
 class BackgroundService {
   static void processData() {
     Timer(const Duration(seconds: 2), () {
-      ContextlessUi.dialog.show(
-        const ServiceNotificationDialog(),
-        tag: 'service',
-      );
+      ContextlessUi.dialog.show(const ServiceNotificationDialog(), tag: 'service');
     });
   }
 }
@@ -1401,11 +1339,7 @@ class ServiceNotificationDialog extends StatelessWidget {
                 color: Colors.green.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(50),
               ),
-              child: const Icon(
-                Icons.cloud_done,
-                size: 48,
-                color: Colors.green,
-              ),
+              child: const Icon(Icons.cloud_done, size: 48, color: Colors.green),
             ),
             const SizedBox(height: 24),
             Text(
