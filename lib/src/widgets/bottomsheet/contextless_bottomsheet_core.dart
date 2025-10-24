@@ -32,6 +32,9 @@ class ContextlessBottomSheets {
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
+    
+    // Set the close callback for handles
+    BottomSheetHandle.setCloseCallback(close);
   }
 
   /// Whether the system has been initialized.

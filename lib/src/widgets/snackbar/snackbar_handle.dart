@@ -5,6 +5,10 @@ import '../../core/base/base_handle.dart';
 ///
 /// This handle can be used to close a specific snackbar or check if it's still active.
 class SnackbarHandle extends BaseHandle {
+  /// Static callback function for closing snackbars.
+  /// This is set by the ContextlessSnackbars system during initialization.
+  static Future<bool> Function(SnackbarHandle)? _closeCallback;
+
   /// Creates a new snackbar handle.
   SnackbarHandle({
     super.id,
@@ -40,12 +44,19 @@ class SnackbarHandle extends BaseHandle {
     );
   }
 
+  /// Sets the close callback function. This is called internally by the system.
+  static void setCloseCallback(Future<bool> Function(SnackbarHandle) callback) {
+    _closeCallback = callback;
+  }
+
   @override
   Future<bool> close() async {
-    // This will be implemented by the main ContextlessUi class
-    // to avoid circular dependency issues
-    throw UnimplementedError(
-        'Snackbar closing should be handled through ContextlessSnackbars.close(handle) '
-        'or ContextlessUi.snackbars.close(handle)');
+    if (_closeCallback == null) {
+      throw StateError(
+        'SnackbarHandle close callback not set. '
+        'Make sure ContextlessSnackbars.init() has been called.'
+      );
+    }
+    return await _closeCallback!(this);
   }
 }

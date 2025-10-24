@@ -32,6 +32,9 @@ class ContextlessDialogs {
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
+    
+    // Set the close callback for handles
+    DialogHandle.setCloseCallback((handle) => close(handle));
   }
 
   /// Whether the system has been initialized.

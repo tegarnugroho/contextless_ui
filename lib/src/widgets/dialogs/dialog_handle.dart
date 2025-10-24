@@ -5,6 +5,10 @@ import '../../core/base/base_handle.dart';
 ///
 /// This handle can be used to close a specific dialog or check if it's still open.
 class DialogHandle extends BaseHandle {
+  /// Static callback function for closing dialogs.
+  /// This is set by the ContextlessDialogs system during initialization.
+  static Future<bool> Function(DialogHandle)? _closeCallback;
+
   /// Creates a new dialog handle.
   DialogHandle({
     super.id,
@@ -40,11 +44,19 @@ class DialogHandle extends BaseHandle {
     );
   }
 
+  /// Sets the close callback function. This is called internally by the system.
+  static void setCloseCallback(Future<bool> Function(DialogHandle) callback) {
+    _closeCallback = callback;
+  }
+
   @override
   Future<bool> close() async {
-    // This will be implemented by the main ContextlessDialogs class
-    // to avoid circular dependency issues
-    throw UnimplementedError(
-        'Dialog closing should be handled through ContextlessDialogs.close(handle)');
+    if (_closeCallback == null) {
+      throw StateError(
+        'DialogHandle close callback not set. '
+        'Make sure ContextlessDialogs.init() has been called.'
+      );
+    }
+    return await _closeCallback!(this);
   }
 }

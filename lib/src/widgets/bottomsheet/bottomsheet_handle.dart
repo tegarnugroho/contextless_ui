@@ -5,6 +5,10 @@ import '../../core/base/base_handle.dart';
 ///
 /// This handle can be used to close a specific bottom sheet or check if it's still active.
 class BottomSheetHandle extends BaseHandle {
+  /// Static callback function for closing bottom sheets.
+  /// This is set by the ContextlessBottomSheets system during initialization.
+  static Future<bool> Function(BottomSheetHandle)? _closeCallback;
+
   /// Creates a new bottom sheet handle.
   BottomSheetHandle({
     super.id,
@@ -40,12 +44,19 @@ class BottomSheetHandle extends BaseHandle {
     );
   }
 
+  /// Sets the close callback function. This is called internally by the system.
+  static void setCloseCallback(Future<bool> Function(BottomSheetHandle) callback) {
+    _closeCallback = callback;
+  }
+
   @override
   Future<bool> close() async {
-    // This will be implemented by the main ContextlessUi class
-    // to avoid circular dependency issues
-    throw UnimplementedError(
-        'BottomSheet closing should be handled through ContextlessBottomSheets.close(handle) '
-        'or ContextlessUi.bottomSheets.close(handle)');
+    if (_closeCallback == null) {
+      throw StateError(
+        'BottomSheetHandle close callback not set. '
+        'Make sure ContextlessBottomSheets.init() has been called.'
+      );
+    }
+    return await _closeCallback!(this);
   }
 }

@@ -33,6 +33,9 @@ class ContextlessSnackbars {
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
+    
+    // Set the close callback for handles
+    SnackbarHandle.setCloseCallback((handle) => instance.close(handle));
   }
 
   /// Whether the system has been initialized.

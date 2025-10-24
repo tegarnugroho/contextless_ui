@@ -5,6 +5,10 @@ import '../../core/base/base_handle.dart';
 ///
 /// This handle can be used to close a specific toast or check if it's still active.
 class ToastHandle extends BaseHandle {
+  /// Static callback function for closing toasts.
+  /// This is set by the ContextlessToasts system during initialization.
+  static Future<bool> Function(ToastHandle)? _closeCallback;
+
   /// Creates a new toast handle.
   ToastHandle({
     super.id,
@@ -40,12 +44,19 @@ class ToastHandle extends BaseHandle {
     );
   }
 
+  /// Sets the close callback function. This is called internally by the system.
+  static void setCloseCallback(Future<bool> Function(ToastHandle) callback) {
+    _closeCallback = callback;
+  }
+
   @override
   Future<bool> close() async {
-    // This will be implemented by the main ContextlessUi class
-    // to avoid circular dependency issues
-    throw UnimplementedError(
-        'Toast closing should be handled through ContextlessToasts.close(handle) '
-        'or ContextlessUi.toasts.close(handle)');
+    if (_closeCallback == null) {
+      throw StateError(
+        'ToastHandle close callback not set. '
+        'Make sure ContextlessToasts.init() has been called.'
+      );
+    }
+    return await _closeCallback!(this);
   }
 }

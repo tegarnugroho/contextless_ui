@@ -32,6 +32,9 @@ class ContextlessToasts {
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
+    
+    // Set the close callback for handles
+    ToastHandle.setCloseCallback(close);
   }
 
   /// Whether the system has been initialized.
