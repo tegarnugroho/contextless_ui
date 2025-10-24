@@ -75,10 +75,10 @@ class SnackbarOverlayManager extends BaseOverlayManager<SnackbarHandle> {
           transitionsBuilder: transitionsBuilder,
           child: Material(
             elevation: elevation ?? 4.0,
-            color: backgroundColor ?? Theme.of(context).snackBarTheme.backgroundColor,
+            color: backgroundColor ?? Colors.white,
             shape: shape,
             child: Container(
-              padding: padding ?? const EdgeInsets.symmetric(horizontal: 14.0),
+              padding: padding ?? const EdgeInsets.all(16.0),
               child: Row(
                 children: [
                   Expanded(child: content),

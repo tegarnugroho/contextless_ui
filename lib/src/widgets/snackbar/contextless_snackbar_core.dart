@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:contextless_ui/src/core/extensions/color_extension.dart';
 import 'package:flutter/material.dart';
 
 import 'snackbar_controller.dart';
@@ -6,7 +7,7 @@ import 'snackbar_handle.dart';
 
 /// Main  API for contextless snackbars.
 class ContextlessSnackbars {
-   SnackbarController? _controller;
+  SnackbarController? _controller;
 
   /// Private constructor to prevent instantiation.
   ContextlessSnackbars._();
@@ -125,15 +126,15 @@ class ContextlessSnackbars {
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
     instance._ensureInitialized();
-    
+
     // Build content widget with icons
     Widget content = instance._buildSnackbarContent(
       message: message,
-      textColor: textColor,
+      textColor: textColor.autoTextOn,
       iconLeft: iconLeft,
       iconRight: iconRight,
     );
-    
+
     return instance._controller!.showSnackbar(
       content,
       id: id,
@@ -193,17 +194,17 @@ class ContextlessSnackbars {
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
     instance._ensureInitialized();
-    
+
     final handle = SnackbarHandle.async(id: id, tag: tag);
-    
+
     // Build content widget with icons
     Widget content = instance._buildSnackbarContent(
       message: message,
-      textColor: textColor,
+      textColor: textColor.autoTextOn,
       iconLeft: iconLeft,
       iconRight: iconRight,
     );
-    
+
     instance._controller!.show(
       content,
       id: handle.id,
@@ -224,10 +225,11 @@ class ContextlessSnackbars {
         'transitionsBuilder': transitionsBuilder,
       },
     );
-    
+
     return handle;
   }
-  /// 
+
+  ///
   /// final result = await handle.result<String>();
   /// print('User selected: $result');
   /// ```
@@ -241,7 +243,7 @@ class ContextlessSnackbars {
   /// // Later...
   /// final closed = await ContextlessSnackbars.close(handle);
   /// ```
-   Future<bool> close(SnackbarHandle handle) async {
+  Future<bool> close(SnackbarHandle handle) async {
     if (_controller == null) return false;
     return await _controller!.close(handle);
   }
@@ -256,7 +258,7 @@ class ContextlessSnackbars {
   /// // Later...
   /// final closed = await ContextlessSnackbars.closeById('my-snackbar');
   /// ```
-   static Future<bool> closeById(String id) async {
+  static Future<bool> closeById(String id) async {
     if (instance._controller == null) return false;
     return await instance._controller!.closeById(id);
   }
@@ -300,7 +302,7 @@ class ContextlessSnackbars {
   /// final activeSnackbars = ContextlessSnackbars.getActiveHandles();
   /// print('Currently showing ${activeSnackbars.length} snackbars');
   /// ```
-   List<SnackbarHandle> getActiveHandles() {
+  List<SnackbarHandle> getActiveHandles() {
     if (_controller == null) return [];
     return _controller!.activeHandles;
   }
@@ -316,11 +318,12 @@ class ContextlessSnackbars {
   ///   print('Snackbar is still active');
   /// }
   /// ```
-   SnackbarHandle? getById(String id) {
+  SnackbarHandle? getById(String id) {
     if (_controller == null) return null;
     return _controller!.getById(id);
   }
 
+  /// Gets all snackbar handles with a specific tag.
   /// Gets all snackbar handles with a specific tag.
   ///
   /// Example:
@@ -328,7 +331,7 @@ class ContextlessSnackbars {
   /// final notificationSnackbars = ContextlessSnackbars.getByTag('notifications');
   /// print('${notificationSnackbars.length} notification snackbars active');
   /// ```
-   List<SnackbarHandle> getByTag(String tag) {
+  List<SnackbarHandle> getByTag(String tag) {
     if (_controller == null) return [];
     return _controller!.getByTag(tag);
   }
@@ -341,7 +344,7 @@ class ContextlessSnackbars {
   ///   print('Snackbar is still showing');
   /// }
   /// ```
-   bool isActive(String id) {
+  bool isActive(String id) {
     if (_controller == null) return false;
     return _controller!.overlayManager?.isActive(id) ?? false;
   }
@@ -395,7 +398,7 @@ class ContextlessSnackbars {
   ///   actionValue: true,
   ///   backgroundColor: Colors.red,
   /// );
-  /// 
+  ///
   /// if (result == true) {
   ///   print('User confirmed deletion');
   /// }
@@ -424,10 +427,10 @@ class ContextlessSnackbars {
     RouteTransitionsBuilder? transitionsBuilder,
   }) async {
     instance._ensureInitialized();
-    
+
     final completer = Completer<T?>();
     final snackbarId = id ?? 'action-${DateTime.now().millisecondsSinceEpoch}';
-    
+
     final action = SnackBarAction(
       label: actionLabel,
       textColor: actionTextColor,
@@ -436,7 +439,7 @@ class ContextlessSnackbars {
         closeById(snackbarId);
       },
     );
-    
+
     final handle = show(
       message,
       id: snackbarId,
@@ -458,14 +461,14 @@ class ContextlessSnackbars {
       closeIconColor: closeIconColor,
       transitionsBuilder: transitionsBuilder,
     );
-    
+
     // Complete with null if snackbar is closed without action
     handle.result().then((_) {
       if (!completer.isCompleted) {
         completer.complete(null);
       }
     });
-    
+
     return completer.future;
   }
 
@@ -486,24 +489,28 @@ class ContextlessSnackbars {
     Widget? iconRight,
   }) {
     List<Widget> children = [];
-    
+
     if (iconLeft != null) {
       children.add(iconLeft);
       children.add(const SizedBox(width: 8));
     }
-    
+
     children.add(Expanded(
       child: Text(
         message,
         style: TextStyle(color: textColor),
       ),
     ));
-    
+
     if (iconRight != null) {
       children.add(const SizedBox(width: 8));
       children.add(iconRight);
     }
-    
-    return Row(children: children);
+
+    // NEW: Make icons follow the same color as text
+    return IconTheme.merge(
+      data: IconThemeData(color: textColor),
+      child: Row(children: children),
+    );
   }
 }

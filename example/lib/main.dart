@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:contextless_ui/contextless_ui.dart';
 
+import 'app_theme.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
@@ -17,30 +19,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Initialize the contextless UI system
     ContextlessUi.init(navigatorKey: navigatorKey);
-    
+
     return MaterialApp(
       title: 'Contextless UI',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF6366F1),
-          brightness: Brightness.light,
-        ),
-        appBarTheme: const AppBarTheme(
-          centerTitle: false,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-        ),
-        cardTheme: const CardThemeData(
-          elevation: 0,
-          margin: EdgeInsets.only(bottom: 12),
-        ),
-      ),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.system,
       navigatorKey: navigatorKey,
-      navigatorObservers: [
-        ContextlessObserver(),
-      ],
+      navigatorObservers: [ContextlessObserver()],
       home: const MyHome(),
       debugShowCheckedModeBanner: false,
     );
@@ -288,15 +274,19 @@ class _MyHomeState extends State<MyHome> {
           description: 'Show success notification',
           icon: Icons.check_circle_outline,
           color: const Color(0xFF16A34A),
-          onTap: () =>
-              ContextlessSnackbars.show('Operation completed successfully!'),
+          onTap: () => ContextlessSnackbars.show(
+              'Operation completed successfully!',
+              backgroundColor: const Color(0xFF16A34A)),
         ),
         _DialogDemo(
           title: 'Error Alert',
           description: 'Display error message',
           icon: Icons.error_outline,
           color: const Color(0xFFDC2626),
-          onTap: () => ContextlessSnackbars.show('Something went wrong!'),
+          onTap: () => ContextlessSnackbars.show(
+            'Something went wrong!',
+            backgroundColor: const Color(0xFFDC2626),
+          ),
         ),
         _DialogDemo(
           title: 'Loading Progress',
@@ -358,9 +348,9 @@ class _MyHomeState extends State<MyHome> {
           description: 'Toast with custom icon',
           icon: Icons.favorite_outline,
           color: const Color(0xFFEC4899),
-          onTap: () => ContextlessToasts.show(
-              'Added to favorites',
-              iconLeft: const Icon(Icons.favorite, color: Colors.white, size: 20),
+          onTap: () => ContextlessToasts.show('Added to favorites',
+              iconLeft:
+                  const Icon(Icons.favorite, color: Colors.white, size: 20),
               backgroundColor: Colors.pink),
         ),
         _DialogDemo(
@@ -534,30 +524,39 @@ class _MyHomeState extends State<MyHome> {
   // Bottom sheet methods
   void _showOptionsBottomSheet() async {
     final options = [
-      {'title': 'Camera', 'value': 'camera', 'icon': const Icon(Icons.camera_alt)},
-      {'title': 'Gallery', 'value': 'gallery', 'icon': const Icon(Icons.photo_library)},
+      {
+        'title': 'Camera',
+        'value': 'camera',
+        'icon': const Icon(Icons.camera_alt)
+      },
+      {
+        'title': 'Gallery',
+        'value': 'gallery',
+        'icon': const Icon(Icons.photo_library)
+      },
       {'title': 'Files', 'value': 'files', 'icon': const Icon(Icons.folder)},
     ];
 
     final completer = Completer<String?>();
     BottomSheetHandle? handle;
-    
+
     handle = ContextlessBottomSheets.show(
       Container(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Select Source', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Select Source',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             ...options.map((option) => ListTile(
-              leading: option['icon'] as Widget,
-              title: Text(option['title'] as String),
-              onTap: () {
-                completer.complete(option['value'] as String);
-                handle?.close();
-              },
-            )),
+                  leading: option['icon'] as Widget,
+                  title: Text(option['title'] as String),
+                  onTap: () {
+                    completer.complete(option['value'] as String);
+                    handle?.close();
+                  },
+                )),
           ],
         ),
       ),
@@ -576,16 +575,18 @@ class _MyHomeState extends State<MyHome> {
   void _showConfirmationBottomSheet() async {
     final completer = Completer<bool?>();
     BottomSheetHandle? handle;
-    
+
     handle = ContextlessBottomSheets.show(
       Container(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Clear Cache', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Clear Cache',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
-            const Text('This will clear all cached data and free up storage space. Continue?'),
+            const Text(
+                'This will clear all cached data and free up storage space. Continue?'),
             const SizedBox(height: 24),
             Row(
               children: [
@@ -601,12 +602,14 @@ class _MyHomeState extends State<MyHome> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange),
                     onPressed: () {
                       completer.complete(true);
                       handle?.close();
                     },
-                    child: const Text('Clear', style: TextStyle(color: Colors.white)),
+                    child: const Text('Clear',
+                        style: TextStyle(color: Colors.white)),
                   ),
                 ),
               ],
@@ -632,14 +635,15 @@ class _MyHomeState extends State<MyHome> {
     final completer = Completer<String?>();
     final textController = TextEditingController();
     BottomSheetHandle? handle;
-    
+
     handle = ContextlessBottomSheets.show(
       Container(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Add Note', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Add Note',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             TextField(
               controller: textController,
@@ -744,16 +748,18 @@ class _MyHomeState extends State<MyHome> {
     Timer(const Duration(seconds: 2), () async {
       final completer = Completer<bool?>();
       BottomSheetHandle? handle;
-      
+
       handle = ContextlessBottomSheets.show(
         Container(
           padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Ready!', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text('Ready!',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              const Text('Your content is ready. Would you like to view it now?'),
+              const Text(
+                  'Your content is ready. Would you like to view it now?'),
               const SizedBox(height: 24),
               Row(
                 children: [
