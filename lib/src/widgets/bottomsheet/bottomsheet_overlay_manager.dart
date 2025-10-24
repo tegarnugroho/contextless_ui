@@ -39,13 +39,14 @@ class BottomSheetOverlayManager extends BaseOverlayManager<BottomSheetHandle> {
     }
 
     final handle = BottomSheetHandle(id: id, tag: tag);
-    
+
     // Extract options
     final isDismissible = options?['isDismissible'] as bool? ?? true;
     final backgroundColor = options?['backgroundColor'] as Color?;
     final shape = options?['shape'] as ShapeBorder?;
     final constraints = options?['constraints'] as BoxConstraints?;
-    final transitionsBuilder = options?['transitionsBuilder'] as RouteTransitionsBuilder?;
+    final transitionsBuilder =
+        options?['transitionsBuilder'] as RouteTransitionsBuilder?;
 
     // Create animation controller
     final animationController = AnimationController(
@@ -68,7 +69,7 @@ class BottomSheetOverlayManager extends BaseOverlayManager<BottomSheetHandle> {
               constraints: constraints,
               decoration: BoxDecoration(
                 color: backgroundColor ?? Colors.white,
-                borderRadius: shape is RoundedRectangleBorder 
+                borderRadius: shape is RoundedRectangleBorder
                     ? (shape).borderRadius
                     : null,
               ),
@@ -103,19 +104,19 @@ class BottomSheetOverlayManager extends BaseOverlayManager<BottomSheetHandle> {
     try {
       // Animate out
       await entry.animationController.reverse();
-      
+
       // Remove from overlay
       entry.overlayEntry.remove();
-      
+
       // Dispose animation controller
       entry.animationController.dispose();
-      
+
       // Remove from tracking
       _activeBottomSheets.remove(handle.id);
-      
+
       // Complete handle if async
       handle.complete();
-      
+
       return true;
     } catch (e) {
       // Clean up even if animation fails
@@ -138,10 +139,9 @@ class BottomSheetOverlayManager extends BaseOverlayManager<BottomSheetHandle> {
 
   @override
   Future<int> closeByTag(String tag) async {
-    final entries = _activeBottomSheets.values
-        .where((entry) => entry.tag == tag)
-        .toList();
-    
+    final entries =
+        _activeBottomSheets.values.where((entry) => entry.tag == tag).toList();
+
     int closed = 0;
     for (final entry in entries) {
       if (await close(entry.handle)) {
@@ -155,7 +155,7 @@ class BottomSheetOverlayManager extends BaseOverlayManager<BottomSheetHandle> {
   Future<int> closeAll() async {
     final entries = _activeBottomSheets.values.toList();
     int closed = 0;
-    
+
     for (final entry in entries) {
       if (await close(entry.handle)) {
         closed++;

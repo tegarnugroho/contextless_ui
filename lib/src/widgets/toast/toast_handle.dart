@@ -19,11 +19,11 @@ class ToastHandle extends BaseHandle {
     DateTime? openedAt,
     required Completer<dynamic> completer,
   }) : super.withCompleter(
-         id: id,
-         tag: tag,
-         openedAt: openedAt,
-         completer: completer,
-       );
+          id: id,
+          tag: tag,
+          openedAt: openedAt,
+          completer: completer,
+        );
 
   /// Creates a toast handle for async operations.
   static ToastHandle async({
@@ -45,8 +45,7 @@ class ToastHandle extends BaseHandle {
     // This will be implemented by the main ContextlessUi class
     // to avoid circular dependency issues
     throw UnimplementedError(
-      'Toast closing should be handled through ContextlessToasts.close(handle) '
-      'or ContextlessUi.toasts.close(handle)'
-    );
+        'Toast closing should be handled through ContextlessToasts.close(handle) '
+        'or ContextlessUi.toasts.close(handle)');
   }
 }

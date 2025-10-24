@@ -6,7 +6,7 @@ import 'bottomsheet_handle.dart';
 
 /// Main  API for contextless bottom sheets.
 class ContextlessBottomSheets {
-   BottomSheetController? _controller;
+  BottomSheetController? _controller;
 
   /// Private constructor to prevent instantiation.
   ContextlessBottomSheets._();
@@ -114,7 +114,7 @@ class ContextlessBottomSheets {
   ///     onResult: (result) => handle.complete(result),
   ///   ),
   /// );
-  /// 
+  ///
   /// final result = await handle.result<String>();
   /// print('Bottom sheet result: $result');
   /// ```
@@ -131,9 +131,9 @@ class ContextlessBottomSheets {
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
     instance._ensureInitialized();
-    
+
     final handle = BottomSheetHandle.async(id: id, tag: tag);
-    
+
     instance._controller!.show(
       content,
       id: handle.id,
@@ -148,7 +148,7 @@ class ContextlessBottomSheets {
         'transitionsBuilder': transitionsBuilder,
       },
     );
-    
+
     return handle;
   }
 

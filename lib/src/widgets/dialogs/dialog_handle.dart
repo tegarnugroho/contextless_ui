@@ -19,11 +19,11 @@ class DialogHandle extends BaseHandle {
     DateTime? openedAt,
     required Completer<dynamic> completer,
   }) : super.withCompleter(
-         id: id,
-         tag: tag,
-         openedAt: openedAt,
-         completer: completer,
-       );
+          id: id,
+          tag: tag,
+          openedAt: openedAt,
+          completer: completer,
+        );
 
   /// Creates a dialog handle for async operations.
   static DialogHandle async({
@@ -45,7 +45,6 @@ class DialogHandle extends BaseHandle {
     // This will be implemented by the main ContextlessDialogs class
     // to avoid circular dependency issues
     throw UnimplementedError(
-      'Dialog closing should be handled through ContextlessDialogs.close(handle)'
-    );
+        'Dialog closing should be handled through ContextlessDialogs.close(handle)');
   }
 }

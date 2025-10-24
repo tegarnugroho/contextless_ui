@@ -9,7 +9,8 @@ class DialogTransitions {
     Animation<double>? secondaryAnimation,
     Widget child,
   ) {
-    return fadeWithScale(context, animation, secondaryAnimation ?? animation, child);
+    return fadeWithScale(
+        context, animation, secondaryAnimation ?? animation, child);
   }
 
   /// Default fade transition with slight scale effect.

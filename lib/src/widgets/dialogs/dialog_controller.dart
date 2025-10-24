@@ -44,7 +44,7 @@ class DialogController extends BaseController<DialogHandle> {
     RouteTransitionsBuilder? transitionsBuilder,
   }) async {
     final handle = DialogHandle.async(id: id, tag: tag);
-    
+
     if (overlayManager is DialogOverlayManager) {
       await (overlayManager as DialogOverlayManager).showDialogAsync(
         dialog,
@@ -55,7 +55,7 @@ class DialogController extends BaseController<DialogHandle> {
         transitionsBuilder: transitionsBuilder,
       );
     }
-    
+
     return await handle.result<T>();
   }
 

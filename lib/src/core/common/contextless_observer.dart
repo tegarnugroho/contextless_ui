@@ -28,9 +28,9 @@ class ContextlessObserver extends NavigatorObserver {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPush(route, previousRoute);
-    
+
     if (_inited) return;
-    
+
     final nav = navigator;
     if (nav != null) {
       // Try to get the navigatorKey from the navigator widget
@@ -38,17 +38,17 @@ class ContextlessObserver extends NavigatorObserver {
       if (nav.widget.key is GlobalKey<NavigatorState>) {
         navKey = nav.widget.key as GlobalKey<NavigatorState>;
       }
-      
+
       // Initialize ContextlessUi with the navigator's overlay
       ContextlessUi.init(
         navigatorKey: navKey,
         overlayKey: nav.overlay != null ? GlobalKey<OverlayState>() : null,
       );
-      
+
       _inited = true;
     }
   }
-  
+
   /// Manually reset the initialization state.
   /// Useful for testing or if you need to reinitialize.
   void reset() {

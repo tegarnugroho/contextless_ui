@@ -36,14 +36,16 @@ class AppTheme {
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           minimumSize: const Size(48, 44),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           textStyle: const TextStyle(fontWeight: FontWeight.w600),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(48, 44),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           backgroundColor: cs.tertiaryContainer,
           foregroundColor: cs.onTertiaryContainer,
           elevation: 0,
@@ -68,7 +70,8 @@ class AppTheme {
         focusedBorder: _inputBorder(cs, focused: true),
         errorBorder: _inputBorder(cs, error: true),
         focusedErrorBorder: _inputBorder(cs, focused: true, error: true),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       ),
 
       // Card style
@@ -156,7 +159,6 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: cs.surface,
       textTheme: _textTheme(Brightness.dark, cs),
-
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -164,18 +166,19 @@ class AppTheme {
         foregroundColor: cs.onSurface,
         titleTextStyle: _textTheme(Brightness.dark, cs).titleLarge,
       ),
-
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           minimumSize: const Size(48, 44),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           textStyle: const TextStyle(fontWeight: FontWeight.w600),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(48, 44),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           backgroundColor: cs.tertiaryContainer,
           foregroundColor: cs.onTertiaryContainer,
           elevation: 0,
@@ -188,7 +191,6 @@ class AppTheme {
           textStyle: const TextStyle(fontWeight: FontWeight.w600),
         ),
       ),
-
       inputDecorationTheme: InputDecorationTheme(
         isDense: true,
         filled: true,
@@ -199,22 +201,20 @@ class AppTheme {
         focusedBorder: _inputBorder(cs, focused: true),
         errorBorder: _inputBorder(cs, error: true),
         focusedErrorBorder: _inputBorder(cs, focused: true, error: true),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       ),
-
       cardTheme: CardThemeData(
         color: cs.surfaceContainerHigh,
         elevation: 0,
         margin: const EdgeInsets.only(bottom: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-
       dialogTheme: DialogThemeData(
         backgroundColor: cs.surface,
         surfaceTintColor: cs.surfaceTint,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
-
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: cs.surface,
         surfaceTintColor: cs.surfaceTint,
@@ -225,7 +225,6 @@ class AppTheme {
         showDragHandle: true,
         dragHandleColor: cs.outlineVariant,
       ),
-
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: cs.inverseSurface,
@@ -234,7 +233,6 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,
       ),
-
       chipTheme: ChipThemeData(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         side: BorderSide(color: cs.outlineVariant),
@@ -254,7 +252,6 @@ class AppTheme {
         thickness: 1,
         space: 24,
       ),
-
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: {
           TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
@@ -269,9 +266,7 @@ class AppTheme {
 
   static OutlineInputBorder _inputBorder(ColorScheme cs,
       {bool focused = false, bool error = false}) {
-    final color = error
-        ? cs.error
-        : (focused ? cs.primary : cs.outlineVariant);
+    final color = error ? cs.error : (focused ? cs.primary : cs.outlineVariant);
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: color, width: focused ? 1.4 : 1),

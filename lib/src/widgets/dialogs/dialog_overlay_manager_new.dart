@@ -28,14 +28,16 @@ class DialogOverlayManager extends BaseOverlayManager<DialogHandle> {
     Map<String, dynamic>? options,
   }) {
     if (!isInitialized) {
-      throw StateError('DialogOverlayManager not initialized. Call init() first.');
+      throw StateError(
+          'DialogOverlayManager not initialized. Call init() first.');
     }
 
     final handle = DialogHandle(id: id, tag: tag);
-    
+
     final barrierDismissible = options?['barrierDismissible'] ?? true;
     final barrierColor = options?['barrierColor'];
-    final transitionDuration = options?['transitionDuration'] ?? const Duration(milliseconds: 200);
+    final transitionDuration =
+        options?['transitionDuration'] ?? const Duration(milliseconds: 200);
     final transitionsBuilder = options?['transitionsBuilder'];
 
     _showDialog(
@@ -61,7 +63,8 @@ class DialogOverlayManager extends BaseOverlayManager<DialogHandle> {
     RouteTransitionsBuilder? transitionsBuilder,
   }) async {
     if (!isInitialized) {
-      throw StateError('DialogOverlayManager not initialized. Call init() first.');
+      throw StateError(
+          'DialogOverlayManager not initialized. Call init() first.');
     }
 
     _showDialog(
@@ -69,7 +72,8 @@ class DialogOverlayManager extends BaseOverlayManager<DialogHandle> {
       handle: handle,
       barrierDismissible: barrierDismissible,
       barrierColor: barrierColor,
-      transitionDuration: transitionDuration ?? const Duration(milliseconds: 200),
+      transitionDuration:
+          transitionDuration ?? const Duration(milliseconds: 200),
       transitionsBuilder: transitionsBuilder,
     );
 
@@ -184,7 +188,8 @@ class DialogOverlayManager extends BaseOverlayManager<DialogHandle> {
     activeComponents.remove(id);
 
     // Complete async handles
-    if (entry.handle.completer != null && !entry.handle.completer!.isCompleted) {
+    if (entry.handle.completer != null &&
+        !entry.handle.completer!.isCompleted) {
       entry.handle.complete(null);
     }
 
@@ -209,7 +214,7 @@ class DialogOverlayManager extends BaseOverlayManager<DialogHandle> {
   @override
   Future<int> closeAll() async {
     final allHandles = _activeDialogs.keys.toList();
-    
+
     int closedCount = 0;
     for (final id in allHandles) {
       final success = await closeById(id);

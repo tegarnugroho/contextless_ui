@@ -39,21 +39,26 @@ class SnackbarOverlayManager extends BaseOverlayManager<SnackbarHandle> {
     }
 
     final handle = SnackbarHandle(id: id, tag: tag);
-    
+
     // Extract options
-    final duration = options?['duration'] as Duration? ?? const Duration(seconds: 4);
+    final duration =
+        options?['duration'] as Duration? ?? const Duration(seconds: 4);
     final backgroundColor = options?['backgroundColor'] as Color?;
     final margin = options?['margin'] as EdgeInsetsGeometry?;
     final padding = options?['padding'] as EdgeInsetsGeometry?;
     final elevation = options?['elevation'] as double?;
     final shape = options?['shape'] as ShapeBorder?;
-    final behavior = options?['behavior'] as SnackBarBehavior? ?? SnackBarBehavior.floating;
+    final behavior =
+        options?['behavior'] as SnackBarBehavior? ?? SnackBarBehavior.floating;
     final action = options?['action'] as SnackBarAction?;
     final width = options?['width'] as double?;
-    final dismissDirection = options?['dismissDirection'] as DismissDirection? ?? DismissDirection.down;
+    final dismissDirection =
+        options?['dismissDirection'] as DismissDirection? ??
+            DismissDirection.down;
     final showCloseIcon = options?['showCloseIcon'] as bool? ?? false;
     final closeIconColor = options?['closeIconColor'] as Color?;
-    final transitionsBuilder = options?['transitionsBuilder'] as RouteTransitionsBuilder?;
+    final transitionsBuilder =
+        options?['transitionsBuilder'] as RouteTransitionsBuilder?;
 
     // Create animation controller
     final animationController = AnimationController(
@@ -131,19 +136,19 @@ class SnackbarOverlayManager extends BaseOverlayManager<SnackbarHandle> {
     try {
       // Animate out
       await entry.animationController.reverse();
-      
+
       // Remove from overlay
       entry.overlayEntry.remove();
-      
+
       // Dispose animation controller
       entry.animationController.dispose();
-      
+
       // Remove from tracking
       _activeSnackbars.remove(handle.id);
-      
+
       // Complete handle if async
       handle.complete();
-      
+
       return true;
     } catch (e) {
       // Clean up even if animation fails
@@ -166,10 +171,9 @@ class SnackbarOverlayManager extends BaseOverlayManager<SnackbarHandle> {
 
   @override
   Future<int> closeByTag(String tag) async {
-    final entries = _activeSnackbars.values
-        .where((entry) => entry.tag == tag)
-        .toList();
-    
+    final entries =
+        _activeSnackbars.values.where((entry) => entry.tag == tag).toList();
+
     int closed = 0;
     for (final entry in entries) {
       if (await close(entry.handle)) {
@@ -183,7 +187,7 @@ class SnackbarOverlayManager extends BaseOverlayManager<SnackbarHandle> {
   Future<int> closeAll() async {
     final entries = _activeSnackbars.values.toList();
     int closed = 0;
-    
+
     for (final entry in entries) {
       if (await close(entry.handle)) {
         closed++;
@@ -249,9 +253,10 @@ class _SnackbarWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget snackbar = Container(
       width: width,
-      margin: margin ?? (behavior == SnackBarBehavior.floating 
-          ? const EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 10.0)
-          : EdgeInsets.zero),
+      margin: margin ??
+          (behavior == SnackBarBehavior.floating
+              ? const EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 10.0)
+              : EdgeInsets.zero),
       child: child,
     );
 
@@ -272,8 +277,8 @@ class _SnackbarWrapper extends StatelessWidget {
     }
 
     return Align(
-      alignment: behavior == SnackBarBehavior.floating 
-          ? Alignment.bottomCenter 
+      alignment: behavior == SnackBarBehavior.floating
+          ? Alignment.bottomCenter
           : Alignment.bottomCenter,
       child: snackbar,
     );

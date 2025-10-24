@@ -39,11 +39,14 @@ class ToastOverlayManager extends BaseOverlayManager<ToastHandle> {
     }
 
     final handle = ToastHandle(id: id, tag: tag);
-    
+
     // Extract options
-    final duration = options?['duration'] as Duration? ?? const Duration(seconds: 3);
-    final alignment = options?['alignment'] as Alignment? ?? Alignment.bottomCenter;
-    final transitionsBuilder = options?['transitionsBuilder'] as RouteTransitionsBuilder?;
+    final duration =
+        options?['duration'] as Duration? ?? const Duration(seconds: 3);
+    final alignment =
+        options?['alignment'] as Alignment? ?? Alignment.bottomCenter;
+    final transitionsBuilder =
+        options?['transitionsBuilder'] as RouteTransitionsBuilder?;
 
     // Create animation controller
     final animationController = AnimationController(
@@ -99,19 +102,19 @@ class ToastOverlayManager extends BaseOverlayManager<ToastHandle> {
     try {
       // Animate out
       await entry.animationController.reverse();
-      
+
       // Remove from overlay
       entry.overlayEntry.remove();
-      
+
       // Dispose animation controller
       entry.animationController.dispose();
-      
+
       // Remove from tracking
       _activeToasts.remove(handle.id);
-      
+
       // Complete handle if async
       handle.complete();
-      
+
       return true;
     } catch (e) {
       // Clean up even if animation fails
@@ -134,10 +137,9 @@ class ToastOverlayManager extends BaseOverlayManager<ToastHandle> {
 
   @override
   Future<int> closeByTag(String tag) async {
-    final entries = _activeToasts.values
-        .where((entry) => entry.tag == tag)
-        .toList();
-    
+    final entries =
+        _activeToasts.values.where((entry) => entry.tag == tag).toList();
+
     int closed = 0;
     for (final entry in entries) {
       if (await close(entry.handle)) {
@@ -151,7 +153,7 @@ class ToastOverlayManager extends BaseOverlayManager<ToastHandle> {
   Future<int> closeAll() async {
     final entries = _activeToasts.values.toList();
     int closed = 0;
-    
+
     for (final entry in entries) {
       if (await close(entry.handle)) {
         closed++;

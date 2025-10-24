@@ -19,11 +19,11 @@ class BottomSheetHandle extends BaseHandle {
     DateTime? openedAt,
     required Completer<dynamic> completer,
   }) : super.withCompleter(
-         id: id,
-         tag: tag,
-         openedAt: openedAt,
-         completer: completer,
-       );
+          id: id,
+          tag: tag,
+          openedAt: openedAt,
+          completer: completer,
+        );
 
   /// Creates a bottom sheet handle for async operations.
   static BottomSheetHandle async({
@@ -45,8 +45,7 @@ class BottomSheetHandle extends BaseHandle {
     // This will be implemented by the main ContextlessUi class
     // to avoid circular dependency issues
     throw UnimplementedError(
-      'BottomSheet closing should be handled through ContextlessBottomSheets.close(handle) '
-      'or ContextlessUi.bottomSheets.close(handle)'
-    );
+        'BottomSheet closing should be handled through ContextlessBottomSheets.close(handle) '
+        'or ContextlessUi.bottomSheets.close(handle)');
   }
 }

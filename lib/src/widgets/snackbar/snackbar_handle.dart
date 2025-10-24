@@ -19,11 +19,11 @@ class SnackbarHandle extends BaseHandle {
     DateTime? openedAt,
     required Completer<dynamic> completer,
   }) : super.withCompleter(
-         id: id,
-         tag: tag,
-         openedAt: openedAt,
-         completer: completer,
-       );
+          id: id,
+          tag: tag,
+          openedAt: openedAt,
+          completer: completer,
+        );
 
   /// Creates a snackbar handle for async operations.
   static SnackbarHandle async({
@@ -45,8 +45,7 @@ class SnackbarHandle extends BaseHandle {
     // This will be implemented by the main ContextlessUi class
     // to avoid circular dependency issues
     throw UnimplementedError(
-      'Snackbar closing should be handled through ContextlessSnackbars.close(handle) '
-      'or ContextlessUi.snackbars.close(handle)'
-    );
+        'Snackbar closing should be handled through ContextlessSnackbars.close(handle) '
+        'or ContextlessUi.snackbars.close(handle)');
   }
 }

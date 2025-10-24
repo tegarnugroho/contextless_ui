@@ -6,7 +6,7 @@ import 'toast_handle.dart';
 
 /// Main  API for contextless toasts.
 class ContextlessToasts {
-   ToastController? _controller;
+  ToastController? _controller;
 
   /// Private constructor to prevent instantiation.
   ContextlessToasts._();
@@ -108,7 +108,7 @@ class ContextlessToasts {
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
     instance._ensureInitialized();
-    
+
     // Build content widget with styling and icons
     Widget content = instance._buildToastContent(
       message: message,
@@ -120,7 +120,7 @@ class ContextlessToasts {
       borderRadius: borderRadius,
       elevation: elevation,
     );
-    
+
     return instance._controller!.showToast(
       content,
       id: id,
@@ -174,7 +174,7 @@ class ContextlessToasts {
     RouteTransitionsBuilder? transitionsBuilder,
   }) {
     instance._ensureInitialized();
-    
+
     // Build content widget with progress indicator
     Widget content = instance._buildProgressToastContent(
       message: message,
@@ -186,7 +186,7 @@ class ContextlessToasts {
       borderRadius: borderRadius,
       elevation: elevation,
     );
-    
+
     return instance._controller!.showToast(
       content,
       id: id,
@@ -266,7 +266,7 @@ class ContextlessToasts {
   /// final activeToasts = ContextlessToasts.getActiveHandles();
   /// print('Currently showing ${activeToasts.length} toasts');
   /// ```
-   List<ToastHandle> getActiveHandles() {
+  List<ToastHandle> getActiveHandles() {
     if (_controller == null) return [];
     return _controller!.activeHandles;
   }
@@ -282,7 +282,7 @@ class ContextlessToasts {
   ///   print('Toast is still active');
   /// }
   /// ```
-   ToastHandle? getById(String id) {
+  ToastHandle? getById(String id) {
     if (_controller == null) return null;
     return _controller!.getById(id);
   }
@@ -294,7 +294,7 @@ class ContextlessToasts {
   /// final notificationToasts = ContextlessToasts.getByTag('notifications');
   /// print('${notificationToasts.length} notification toasts active');
   /// ```
-   List<ToastHandle> getByTag(String tag) {
+  List<ToastHandle> getByTag(String tag) {
     if (_controller == null) return [];
     return _controller!.getByTag(tag);
   }
@@ -307,7 +307,7 @@ class ContextlessToasts {
   ///   print('Toast is still showing');
   /// }
   /// ```
-   bool isActive(String id) {
+  bool isActive(String id) {
     if (_controller == null) return false;
     return _controller!.overlayManager?.isActive(id) ?? false;
   }
@@ -359,38 +359,41 @@ class ContextlessToasts {
     double? elevation,
   }) {
     List<Widget> children = [];
-    
+
     if (iconLeft != null) {
       children.add(iconLeft);
       children.add(const SizedBox(width: 8));
     }
-    
+
     children.add(Expanded(
       child: Text(
         message,
         style: TextStyle(color: textColor ?? Colors.white),
       ),
     ));
-    
+
     if (iconRight != null) {
       children.add(const SizedBox(width: 8));
       children.add(iconRight);
     }
-    
+
     Widget content = Row(children: children);
-    
+
     return Container(
-      padding: padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding:
+          padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       decoration: BoxDecoration(
         color: backgroundColor ?? Colors.black87,
         borderRadius: borderRadius ?? BorderRadius.circular(8),
-        boxShadow: elevation != null ? [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: elevation,
-            offset: Offset(0, elevation / 2),
-          ),
-        ] : null,
+        boxShadow: elevation != null
+            ? [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: elevation,
+                  offset: Offset(0, elevation / 2),
+                ),
+              ]
+            : null,
       ),
       child: content,
     );
@@ -408,7 +411,7 @@ class ContextlessToasts {
     double? elevation,
   }) {
     List<Widget> children = [];
-    
+
     // Add loading indicator
     children.add(SizedBox(
       width: 16,
@@ -421,9 +424,9 @@ class ContextlessToasts {
         value: progress, // null for indeterminate, value for determinate
       ),
     ));
-    
+
     children.add(const SizedBox(width: 12));
-    
+
     // Add message
     children.add(Expanded(
       child: Column(
@@ -438,7 +441,8 @@ class ContextlessToasts {
             const SizedBox(height: 4),
             LinearProgressIndicator(
               value: progress,
-              backgroundColor: (progressColor ?? Colors.white).withValues(alpha: 0.3),
+              backgroundColor:
+                  (progressColor ?? Colors.white).withValues(alpha: 0.3),
               valueColor: AlwaysStoppedAnimation<Color>(
                 progressColor ?? Colors.white,
               ),
@@ -447,24 +451,27 @@ class ContextlessToasts {
         ],
       ),
     ));
-    
+
     Widget content = Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: children,
     );
-    
+
     return Container(
-      padding: padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding:
+          padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       decoration: BoxDecoration(
         color: backgroundColor ?? Colors.black87,
         borderRadius: borderRadius ?? BorderRadius.circular(8),
-        boxShadow: elevation != null ? [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: elevation,
-            offset: Offset(0, elevation / 2),
-          ),
-        ] : null,
+        boxShadow: elevation != null
+            ? [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: elevation,
+                  offset: Offset(0, elevation / 2),
+                ),
+              ]
+            : null,
       ),
       child: content,
     );
