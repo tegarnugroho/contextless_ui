@@ -407,7 +407,7 @@ class _MyHomeState extends State<MyHome> {
 
     // Auto close after 3 seconds
     Timer(const Duration(seconds: 3), () {
-      ContextlessUi.dialog.close(handle, 'completed');
+      handle.close();
       _showSuccessMessage('Process completed successfully');
     });
   }
