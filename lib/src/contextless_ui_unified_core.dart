@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'bottomsheet/bottomsheet.dart';
-import 'dialogs/dialogs.dart';
-import 'snackbar/snackbar.dart';
-import 'toast/toast.dart';
+import 'widgets/bottomsheet/bottomsheet.dart';
+import 'widgets/dialogs/dialogs.dart';
+import 'widgets/snackbar/snackbar.dart';
+import 'widgets/toast/toast.dart';
 
 /// Unified core that initializes all contextless UI subsystems.
 ///

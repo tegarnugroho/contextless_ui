@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/base/base_components.dart';
+import '../../core/base/base_components.dart';
 import 'dialog_handle.dart';
 import 'dialog_overlay_manager.dart';
 

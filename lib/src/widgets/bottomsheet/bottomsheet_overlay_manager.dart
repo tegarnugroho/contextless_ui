@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/base/base_components.dart';
+import '../../core/base/base_components.dart';
 import 'bottomsheet_handle.dart';
 import 'bottomsheet_transitions.dart';
 
