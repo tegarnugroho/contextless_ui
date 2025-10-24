@@ -30,3 +30,6 @@ export 'src/core/common/contextless_observer.dart' show ContextlessObserver;
 export 'src/core/base/base_handle.dart' show BaseHandle;
 export 'src/core/base/base_components.dart'
     show BaseOverlayManager, BaseController;
+
+// Export the unified core class for centralized management
+export 'src/contextless_ui_unified_core.dart' show ContextlessUi;

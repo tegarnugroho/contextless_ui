@@ -17,9 +17,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Initialize the contextless UI system
-    ContextlessUi.init(navigatorKey: navigatorKey);
-
     return MaterialApp(
       title: 'Contextless UI',
       theme: AppTheme.light,
@@ -574,9 +571,7 @@ class _MyHomeState extends State<MyHome> {
 
   void _showConfirmationBottomSheet() async {
     final completer = Completer<bool?>();
-    BottomSheetHandle? handle;
-
-    handle = ContextlessBottomSheets.show(
+    ContextlessBottomSheets.show(
       Container(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -594,7 +589,7 @@ class _MyHomeState extends State<MyHome> {
                   child: TextButton(
                     onPressed: () {
                       completer.complete(false);
-                      handle?.close();
+                      ContextlessBottomSheets.closeByTag('confirm-clear-cache');
                     },
                     child: const Text('Cancel'),
                   ),
@@ -606,7 +601,7 @@ class _MyHomeState extends State<MyHome> {
                         backgroundColor: Colors.orange),
                     onPressed: () {
                       completer.complete(true);
-                      handle?.close();
+                      ContextlessBottomSheets.closeByTag('confirm-clear-cache');
                     },
                     child: const Text('Clear',
                         style: TextStyle(color: Colors.white)),
@@ -620,6 +615,7 @@ class _MyHomeState extends State<MyHome> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
+      tag: 'confirm-clear-cache',
     );
 
     final confirmed = await completer.future;

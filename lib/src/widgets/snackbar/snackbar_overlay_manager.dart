@@ -80,7 +80,7 @@ class SnackbarOverlayManager extends BaseOverlayManager<SnackbarHandle> {
           transitionsBuilder: transitionsBuilder,
           child: Material(
             elevation: elevation ?? 4.0,
-            color: backgroundColor ?? Colors.white,
+            color: backgroundColor ?? Theme.of(context).snackBarTheme.backgroundColor ?? Colors.white,
             shape: shape,
             child: Container(
               padding: padding ?? const EdgeInsets.all(16.0),

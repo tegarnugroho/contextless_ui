@@ -68,7 +68,7 @@ class BottomSheetOverlayManager extends BaseOverlayManager<BottomSheetHandle> {
             child: Container(
               constraints: constraints,
               decoration: BoxDecoration(
-                color: backgroundColor ?? Colors.white,
+                color: backgroundColor ?? Theme.of(context).bottomSheetTheme.backgroundColor ?? Colors.white,
                 borderRadius: shape is RoundedRectangleBorder
                     ? (shape).borderRadius
                     : null,

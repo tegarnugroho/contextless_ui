@@ -12,16 +12,16 @@ import 'widgets/toast/toast.dart';
 ///
 /// Example usage:
 /// ```dart
-/// // Initialize all subsystems at once
+/// Initialize all subsystems at once
 /// ContextlessUi.init(navigatorKey: navigatorKey);
 ///
-/// // Use subsystems directly via their static classes
+/// Use subsystems directly via their static classes
 /// ContextlessDialogs.show(myDialog);
 /// ContextlessToasts.show(myToast);
 /// ContextlessBottomSheets.show(myBottomSheet);
 /// ContextlessSnackbars.show(mySnackbar);
 ///
-/// // Global operations via unified core
+/// Global operations via unified core
 /// final totalActive = ContextlessUi.getTotalActiveCount();
 /// final closedCount = await ContextlessUi.closeAll();
 /// ```
