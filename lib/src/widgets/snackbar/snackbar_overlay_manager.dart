@@ -80,8 +80,12 @@ class SnackbarOverlayManager extends BaseOverlayManager<SnackbarHandle> {
           transitionsBuilder: transitionsBuilder,
           child: Material(
             elevation: elevation ?? 4.0,
-            color: backgroundColor ?? Theme.of(context).snackBarTheme.backgroundColor ?? Colors.white,
-            shape: shape ?? RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+            color: backgroundColor ??
+                Theme.of(context).snackBarTheme.backgroundColor ??
+                Colors.white,
+            shape: shape ??
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
             child: Container(
               padding: padding ?? const EdgeInsets.all(16.0),
               child: Row(

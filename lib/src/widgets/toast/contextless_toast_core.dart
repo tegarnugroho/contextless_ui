@@ -33,7 +33,7 @@ class ContextlessToasts {
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
-    
+
     // Set the close callback for handles
     ToastHandle.setCloseCallback(close);
   }
@@ -311,7 +311,7 @@ class ContextlessToasts {
     ToastDecoration? decoration,
   }) {
     return Container(
-      padding: decoration?.padding ?? 
+      padding: decoration?.padding ??
           const EdgeInsetsGeometry.symmetric(horizontal: 24, vertical: 12),
       decoration: BoxDecoration(
         color: decoration?.backgroundColor ?? Colors.black87,

@@ -52,10 +52,8 @@ class ToastHandle extends BaseHandle {
   @override
   Future<bool> close() async {
     if (_closeCallback == null) {
-      throw StateError(
-        'ToastHandle close callback not set. '
-        'Make sure ContextlessToasts.init() has been called.'
-      );
+      throw StateError('ToastHandle close callback not set. '
+          'Make sure ContextlessToasts.init() has been called.');
     }
     return await _closeCallback!(this);
   }

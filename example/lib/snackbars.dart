@@ -11,7 +11,8 @@ List<DialogDemo> get snackbarDemos => [
         icon: Icons.check_circle_outline,
         color: const Color(0xFF16A34A),
         onTap: () => ContextlessSnackbars.show(
-          const Text('Operation completed successfully!', style: TextStyle(color: Colors.white)),
+          const Text('Operation completed successfully!',
+              style: TextStyle(color: Colors.white)),
           decoration: const SnackbarDecoration(
             backgroundColor: Color(0xFF16A34A),
           ),
@@ -23,7 +24,8 @@ List<DialogDemo> get snackbarDemos => [
         icon: Icons.error_outline,
         color: const Color(0xFFDC2626),
         onTap: () => ContextlessSnackbars.show(
-          const Text('Something went wrong!', style: TextStyle(color: Colors.white)),
+          const Text('Something went wrong!',
+              style: TextStyle(color: Colors.white)),
           decoration: const SnackbarDecoration(
             backgroundColor: Color(0xFFDC2626),
           ),
@@ -48,7 +50,8 @@ List<DialogDemo> get snackbarDemos => [
 // Methods
 void _showLoadingSnackbar() {
   final handle = ContextlessSnackbars.show(
-    const Text('Processing your request...', style: TextStyle(color: Colors.black)),
+    const Text('Processing your request...',
+        style: TextStyle(color: Colors.black)),
   );
   Timer(const Duration(seconds: 3), () {
     handle.close();

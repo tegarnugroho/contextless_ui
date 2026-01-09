@@ -6,7 +6,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('Basic Functionality Tests', () {
-    testWidgets('ContextlessSnackbars should initialize', (WidgetTester tester) async {
+    testWidgets('ContextlessSnackbars should initialize',
+        (WidgetTester tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
       await tester.pumpWidget(MaterialApp(
         navigatorKey: navigatorKey,
@@ -18,7 +19,8 @@ void main() {
       expect(ContextlessSnackbars.isInitialized, true);
     });
 
-    testWidgets('ContextlessToasts should initialize', (WidgetTester tester) async {
+    testWidgets('ContextlessToasts should initialize',
+        (WidgetTester tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
       await tester.pumpWidget(MaterialApp(
         navigatorKey: navigatorKey,
@@ -30,7 +32,8 @@ void main() {
       expect(ContextlessToasts.isInitialized, true);
     });
 
-    testWidgets('ContextlessBottomSheets should initialize', (WidgetTester tester) async {
+    testWidgets('ContextlessBottomSheets should initialize',
+        (WidgetTester tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
       await tester.pumpWidget(MaterialApp(
         navigatorKey: navigatorKey,
@@ -42,7 +45,8 @@ void main() {
       expect(ContextlessBottomSheets.isInitialized, true);
     });
 
-    testWidgets('ContextlessUi should initialize all components', (WidgetTester tester) async {
+    testWidgets('ContextlessUi should initialize all components',
+        (WidgetTester tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
       await tester.pumpWidget(MaterialApp(
         navigatorKey: navigatorKey,
@@ -81,7 +85,8 @@ void main() {
       expect(result, 'result');
     });
 
-    testWidgets('should show and hide snackbar with content verification', (WidgetTester tester) async {
+    testWidgets('should show and hide snackbar with content verification',
+        (WidgetTester tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
       await tester.pumpWidget(MaterialApp(
         navigatorKey: navigatorKey,
@@ -103,7 +108,8 @@ void main() {
       expect(result, 'test_result');
     });
 
-    testWidgets('should show and hide dialog with content verification', (WidgetTester tester) async {
+    testWidgets('should show and hide dialog with content verification',
+        (WidgetTester tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
       await tester.pumpWidget(MaterialApp(
         navigatorKey: navigatorKey,
@@ -125,7 +131,8 @@ void main() {
       expect(result, 'dialog_result');
     });
 
-    testWidgets('should show and hide toast with content verification', (WidgetTester tester) async {
+    testWidgets('should show and hide toast with content verification',
+        (WidgetTester tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
       await tester.pumpWidget(MaterialApp(
         navigatorKey: navigatorKey,
@@ -147,7 +154,8 @@ void main() {
       expect(result, 'toast_result');
     });
 
-    testWidgets('should show and hide bottom sheet with content verification', (WidgetTester tester) async {
+    testWidgets('should show and hide bottom sheet with content verification',
+        (WidgetTester tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
       await tester.pumpWidget(MaterialApp(
         navigatorKey: navigatorKey,

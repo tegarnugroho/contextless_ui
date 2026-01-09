@@ -36,19 +36,31 @@ void main() {
 
   group('Basic Initialization Tests', () {
     test('ContextlessSnackbars should have init method', () {
-      expect(() => ContextlessSnackbars.init(navigatorKey: navigatorKey, overlayKey: overlayKey), returnsNormally);
+      expect(
+          () => ContextlessSnackbars.init(
+              navigatorKey: navigatorKey, overlayKey: overlayKey),
+          returnsNormally);
     });
 
     test('ContextlessToasts should have init method', () {
-      expect(() => ContextlessToasts.init(navigatorKey: navigatorKey, overlayKey: overlayKey), returnsNormally);
+      expect(
+          () => ContextlessToasts.init(
+              navigatorKey: navigatorKey, overlayKey: overlayKey),
+          returnsNormally);
     });
 
     test('ContextlessBottomSheets should have init method', () {
-      expect(() => ContextlessBottomSheets.init(navigatorKey: navigatorKey, overlayKey: overlayKey), returnsNormally);
+      expect(
+          () => ContextlessBottomSheets.init(
+              navigatorKey: navigatorKey, overlayKey: overlayKey),
+          returnsNormally);
     });
 
     test('ContextlessUi should have init method', () {
-      expect(() => ContextlessUi.init(navigatorKey: navigatorKey, overlayKey: overlayKey), returnsNormally);
+      expect(
+          () => ContextlessUi.init(
+              navigatorKey: navigatorKey, overlayKey: overlayKey),
+          returnsNormally);
     });
   });
 }

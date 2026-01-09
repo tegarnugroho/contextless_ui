@@ -5,35 +5,35 @@ import 'demo_item.dart';
 
 // Advanced Features
 List<DialogDemo> get advancedFeatures => [
-  DialogDemo(
-    title: 'Multiple Dialogs',
-    description: 'Manage several dialogs with tags',
-    icon: Icons.layers_outlined,
-    color: const Color(0xFF0891B2),
-    onTap: () => _showMultipleDialogs(),
-  ),
-  DialogDemo(
-    title: 'Custom Animations',
-    description: 'Showcase different transitions',
-    icon: Icons.animation,
-    color: const Color(0xFF4F46E5),
-    onTap: () => _showCustomTransitions(),
-  ),
-  DialogDemo(
-    title: 'Background Service',
-    description: 'Dialog from service layer',
-    icon: Icons.cloud_outlined,
-    color: const Color(0xFF0D9488),
-    onTap: () => _simulateServiceCall(),
-  ),
-  DialogDemo(
-    title: 'Mixed UI Components',
-    description: 'Show multiple UI types together',
-    icon: Icons.dashboard_outlined,
-    color: const Color(0xFF7C3AED),
-    onTap: () => _showMixedComponents(),
-  ),
-];
+      DialogDemo(
+        title: 'Multiple Dialogs',
+        description: 'Manage several dialogs with tags',
+        icon: Icons.layers_outlined,
+        color: const Color(0xFF0891B2),
+        onTap: () => _showMultipleDialogs(),
+      ),
+      DialogDemo(
+        title: 'Custom Animations',
+        description: 'Showcase different transitions',
+        icon: Icons.animation,
+        color: const Color(0xFF4F46E5),
+        onTap: () => _showCustomTransitions(),
+      ),
+      DialogDemo(
+        title: 'Background Service',
+        description: 'Dialog from service layer',
+        icon: Icons.cloud_outlined,
+        color: const Color(0xFF0D9488),
+        onTap: () => _simulateServiceCall(),
+      ),
+      DialogDemo(
+        title: 'Mixed UI Components',
+        description: 'Show multiple UI types together',
+        icon: Icons.dashboard_outlined,
+        color: const Color(0xFF7C3AED),
+        onTap: () => _showMixedComponents(),
+      ),
+    ];
 
 // Methods
 void _showMultipleDialogs() {
@@ -90,7 +90,8 @@ void _showMixedComponents() {
 
   Timer(const Duration(milliseconds: 500), () {
     ContextlessSnackbars.show(
-      const Text('Please wait while we prepare your content', style: TextStyle(color: Colors.white)),
+      const Text('Please wait while we prepare your content',
+          style: TextStyle(color: Colors.white)),
       iconLeft: const Icon(Icons.warning),
       decoration: const SnackbarDecoration(
         backgroundColor: Colors.orange,
@@ -111,8 +112,7 @@ void _showMixedComponents() {
             const Text('Ready!',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
-            const Text(
-                'Your content is ready. Would you like to view it now?'),
+            const Text('Your content is ready. Would you like to view it now?'),
             const SizedBox(height: 24),
             Row(
               children: [

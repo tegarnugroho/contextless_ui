@@ -4,28 +4,28 @@ import 'demo_item.dart';
 
 // Interactive Dialogs
 List<DialogDemo> get interactiveDialogs => [
-  DialogDemo(
-    title: 'Color Selection',
-    description: 'Pick a color from the palette',
-    icon: Icons.palette_outlined,
-    color: const Color(0xFF8B5CF6),
-    onTap: () => _showColorPicker(),
-  ),
-  DialogDemo(
-    title: 'User Registration',
-    description: 'Collect user information with validation',
-    icon: Icons.person_add_outlined,
-    color: const Color(0xFF059669),
-    onTap: () => _showUserInputDialog(),
-  ),
-  DialogDemo(
-    title: 'Delete Confirmation',
-    description: 'Confirm account deletion',
-    icon: Icons.delete_outline,
-    color: const Color(0xFFDC2626),
-    onTap: () => _showConfirmationDialog(),
-  ),
-];
+      DialogDemo(
+        title: 'Color Selection',
+        description: 'Pick a color from the palette',
+        icon: Icons.palette_outlined,
+        color: const Color(0xFF8B5CF6),
+        onTap: () => _showColorPicker(),
+      ),
+      DialogDemo(
+        title: 'User Registration',
+        description: 'Collect user information with validation',
+        icon: Icons.person_add_outlined,
+        color: const Color(0xFF059669),
+        onTap: () => _showUserInputDialog(),
+      ),
+      DialogDemo(
+        title: 'Delete Confirmation',
+        description: 'Confirm account deletion',
+        icon: Icons.delete_outline,
+        color: const Color(0xFFDC2626),
+        onTap: () => _showConfirmationDialog(),
+      ),
+    ];
 
 // Methods
 void _showColorPicker() async {

@@ -52,10 +52,8 @@ class SnackbarHandle extends BaseHandle {
   @override
   Future<bool> close() async {
     if (_closeCallback == null) {
-      throw StateError(
-        'SnackbarHandle close callback not set. '
-        'Make sure ContextlessSnackbars.init() has been called.'
-      );
+      throw StateError('SnackbarHandle close callback not set. '
+          'Make sure ContextlessSnackbars.init() has been called.');
     }
     return await _closeCallback!(this);
   }

@@ -52,10 +52,8 @@ class DialogHandle extends BaseHandle {
   @override
   Future<bool> close() async {
     if (_closeCallback == null) {
-      throw StateError(
-        'DialogHandle close callback not set. '
-        'Make sure ContextlessDialogs.init() has been called.'
-      );
+      throw StateError('DialogHandle close callback not set. '
+          'Make sure ContextlessDialogs.init() has been called.');
     }
     return await _closeCallback!(this);
   }

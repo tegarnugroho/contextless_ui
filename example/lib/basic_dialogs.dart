@@ -4,21 +4,21 @@ import 'demo_item.dart';
 
 // Basic Dialogs
 List<DialogDemo> get basicDialogs => [
-  DialogDemo(
-    title: 'Welcome Message',
-    description: 'Show a welcome dialog without context',
-    icon: Icons.waving_hand,
-    color: const Color(0xFF3B82F6),
-    onTap: () => _showWelcomeDialog(),
-  ),
-  DialogDemo(
-    title: 'Loading Process',
-    description: 'Display loading with auto-close',
-    icon: Icons.hourglass_empty,
-    color: const Color(0xFFF59E0B),
-    onTap: () => _showProcessingDialog(),
-  ),
-];
+      DialogDemo(
+        title: 'Welcome Message',
+        description: 'Show a welcome dialog without context',
+        icon: Icons.waving_hand,
+        color: const Color(0xFF3B82F6),
+        onTap: () => _showWelcomeDialog(),
+      ),
+      DialogDemo(
+        title: 'Loading Process',
+        description: 'Display loading with auto-close',
+        icon: Icons.hourglass_empty,
+        color: const Color(0xFFF59E0B),
+        onTap: () => _showProcessingDialog(),
+      ),
+    ];
 
 // Methods
 void _showWelcomeDialog() {

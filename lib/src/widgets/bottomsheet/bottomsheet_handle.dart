@@ -45,17 +45,16 @@ class BottomSheetHandle extends BaseHandle {
   }
 
   /// Sets the close callback function. This is called internally by the system.
-  static void setCloseCallback(Future<bool> Function(BottomSheetHandle) callback) {
+  static void setCloseCallback(
+      Future<bool> Function(BottomSheetHandle) callback) {
     _closeCallback = callback;
   }
 
   @override
   Future<bool> close() async {
     if (_closeCallback == null) {
-      throw StateError(
-        'BottomSheetHandle close callback not set. '
-        'Make sure ContextlessBottomSheets.init() has been called.'
-      );
+      throw StateError('BottomSheetHandle close callback not set. '
+          'Make sure ContextlessBottomSheets.init() has been called.');
     }
     return await _closeCallback!(this);
   }

@@ -177,7 +177,8 @@ class ContextlessSnackbars {
         'behavior': decoration?.behavior ?? SnackBarBehavior.floating,
         'action': action,
         'width': decoration?.width,
-        'dismissDirection': decoration?.dismissDirection ?? DismissDirection.down,
+        'dismissDirection':
+            decoration?.dismissDirection ?? DismissDirection.down,
         'showCloseIcon': decoration?.showCloseIcon ?? false,
         'closeIconColor': decoration?.closeIconColor,
         'transitionsBuilder': decoration?.transitionsBuilder,

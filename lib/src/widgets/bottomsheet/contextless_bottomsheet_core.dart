@@ -33,7 +33,7 @@ class ContextlessBottomSheets {
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
-    
+
     // Set the close callback for handles
     BottomSheetHandle.setCloseCallback(close);
   }

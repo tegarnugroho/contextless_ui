@@ -5,28 +5,28 @@ import 'demo_item.dart';
 
 // Bottom Sheets
 List<DialogDemo> get bottomSheetDemos => [
-  DialogDemo(
-    title: 'Option Selector',
-    description: 'Choose from a list of options',
-    icon: Icons.list_alt,
-    color: const Color(0xFF0891B2),
-    onTap: () => _showOptionsBottomSheet(),
-  ),
-  DialogDemo(
-    title: 'Confirmation Sheet',
-    description: 'Confirm user action',
-    icon: Icons.help_outline,
-    color: const Color(0xFFDC2626),
-    onTap: () => _showConfirmationBottomSheet(),
-  ),
-  DialogDemo(
-    title: 'Input Form',
-    description: 'Collect user input',
-    icon: Icons.edit,
-    color: const Color(0xFF059669),
-    onTap: () => _showInputBottomSheet(),
-  ),
-];
+      DialogDemo(
+        title: 'Option Selector',
+        description: 'Choose from a list of options',
+        icon: Icons.list_alt,
+        color: const Color(0xFF0891B2),
+        onTap: () => _showOptionsBottomSheet(),
+      ),
+      DialogDemo(
+        title: 'Confirmation Sheet',
+        description: 'Confirm user action',
+        icon: Icons.help_outline,
+        color: const Color(0xFFDC2626),
+        onTap: () => _showConfirmationBottomSheet(),
+      ),
+      DialogDemo(
+        title: 'Input Form',
+        description: 'Collect user input',
+        icon: Icons.edit,
+        color: const Color(0xFF059669),
+        onTap: () => _showInputBottomSheet(),
+      ),
+    ];
 
 // Methods
 void _showOptionsBottomSheet() async {
@@ -108,8 +108,8 @@ void _showConfirmationBottomSheet() async {
               const SizedBox(width: 16),
               Expanded(
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange),
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.orange),
                   onPressed: () {
                     completer.complete(true);
                     ContextlessBottomSheets.closeByTag('confirm-clear-cache');
