@@ -9,7 +9,7 @@ anywhere in your code.
 
 ## Demo
 
-[![Contextless UI Demo](./contextless_ui.gif)](https://www.youtube.com/watch?v=2pprA48Dmmc)
+![Contextless UI Demo](./contextless_ui.gif)
 
 ## Features
 
