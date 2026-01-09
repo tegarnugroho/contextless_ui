@@ -69,6 +69,7 @@ void _showActionSnackbar() async {
   final result = await ContextlessSnackbars.actionAsync<bool>(
     const Text('Delete this item?', style: TextStyle(color: Colors.white)),
     actionLabel: 'DELETE',
+    actionTextColor: Colors.white,
     actionValue: true,
     id: 'delete-snackbar',
     decoration: const SnackbarDecoration(
