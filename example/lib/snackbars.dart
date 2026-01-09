@@ -53,6 +53,7 @@ void _showLoadingSnackbar() {
     handle.close();
     ContextlessSnackbars.show(
       'Processing completed!',
+      textColor: Colors.white,
       backgroundColor: Colors.green,
       iconLeft: const Icon(Icons.check_circle, color: Colors.white),
     );

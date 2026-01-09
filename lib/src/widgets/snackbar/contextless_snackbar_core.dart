@@ -132,7 +132,7 @@ class ContextlessSnackbars {
     // Build content widget with icons
     Widget content = instance._buildSnackbarContent(
       message: message,
-      textColor: textColor,
+      textColor: textColor ?? Colors.white,
       iconLeft: iconLeft,
       iconRight: iconRight,
     );
@@ -202,7 +202,7 @@ class ContextlessSnackbars {
     // Build content widget with icons
     Widget content = instance._buildSnackbarContent(
       message: message,
-      textColor: textColor,
+      textColor: textColor ?? Colors.white,
       iconLeft: iconLeft,
       iconRight: iconRight,
     );
