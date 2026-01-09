@@ -60,6 +60,7 @@ class ToastOverlayManager extends BaseOverlayManager<ToastHandle> {
     if (existingEntry != null) {
       // Update the content without recreating the overlay entry
       existingEntry.contentNotifier.value = content;
+      // Don't create a new auto-dismiss timer, the existing one will handle it
       return existingEntry.handle;
     }
 
@@ -110,7 +111,7 @@ class ToastOverlayManager extends BaseOverlayManager<ToastHandle> {
     overlay!.insert(overlayEntry);
     animationController.forward();
 
-    // Auto-dismiss after duration
+    // Auto-dismiss after duration (only for new toasts)
     if (duration != Duration.zero) {
       Future.delayed(duration).then((_) => close(handle));
     }

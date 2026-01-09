@@ -56,7 +56,7 @@ void _showLoadingSnackbar() {
   Timer(const Duration(seconds: 3), () {
     handle.close();
     ContextlessUi.showSnackbar(
-      const Text('Processing completed!'),
+      const Text('Processing completed!', style: TextStyle(color: Colors.white)),
       iconLeft: const Icon(Icons.check_circle),
       decoration: const SnackbarDecoration(
         backgroundColor: Colors.green,

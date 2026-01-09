@@ -26,7 +26,7 @@ List<DialogDemo> get toastDemos => [
         icon: Icons.favorite_outline,
         color: const Color(0xFFEC4899),
         onTap: () => ContextlessUi.showToast(
-          const Text('Added to favorites'),
+          const Text('Added to favorites', style: TextStyle(color: Colors.white)),
           iconLeft: const Icon(Icons.favorite, color: Colors.white, size: 20),
           decoration: const ToastDecoration(
             backgroundColor: Colors.pink,
@@ -55,6 +55,7 @@ void _showProgressToast() {
         progress: progress,
       ),
       id: progressToastId,
+      duration: Duration.zero, // Persistent toast, close manually
     );
   }
 
