@@ -5,41 +5,43 @@ import 'demo_item.dart';
 
 // Snackbars
 List<DialogDemo> get snackbarDemos => [
-  DialogDemo(
-    title: 'Success Message',
-    description: 'Show success notification',
-    icon: Icons.check_circle_outline,
-    color: const Color(0xFF16A34A),
-    onTap: () => ContextlessSnackbars.show(
-      'Operation completed successfully!',
-      backgroundColor: const Color(0xFF16A34A),
-    ),
-  ),
-  DialogDemo(
-    title: 'Error Alert',
-    description: 'Display error message',
-    icon: Icons.error_outline,
-    color: const Color(0xFFDC2626),
-    onTap: () => ContextlessSnackbars.show(
-      'Something went wrong!',
-      backgroundColor: const Color(0xFFDC2626),
-    ),
-  ),
-  DialogDemo(
-    title: 'Loading Progress',
-    description: 'Show loading snackbar',
-    icon: Icons.hourglass_empty,
-    color: const Color(0xFFF59E0B),
-    onTap: () => _showLoadingSnackbar(),
-  ),
-  DialogDemo(
-    title: 'Action Required',
-    description: 'Snackbar with user action',
-    icon: Icons.touch_app,
-    color: const Color(0xFF8B5CF6),
-    onTap: () => _showActionSnackbar(),
-  ),
-];
+      DialogDemo(
+        title: 'Success Message',
+        description: 'Show success notification',
+        icon: Icons.check_circle_outline,
+        color: const Color(0xFF16A34A),
+        onTap: () => ContextlessSnackbars.show(
+          'Operation completed successfully!',
+          textColor: Colors.white,
+          backgroundColor: const Color(0xFF16A34A),
+        ),
+      ),
+      DialogDemo(
+        title: 'Error Alert',
+        description: 'Display error message',
+        icon: Icons.error_outline,
+        color: const Color(0xFFDC2626),
+        onTap: () => ContextlessSnackbars.show(
+          'Something went wrong!',
+          textColor: Colors.white,
+          backgroundColor: const Color(0xFFDC2626),
+        ),
+      ),
+      DialogDemo(
+        title: 'Loading Progress',
+        description: 'Show loading snackbar',
+        icon: Icons.hourglass_empty,
+        color: const Color(0xFFF59E0B),
+        onTap: () => _showLoadingSnackbar(),
+      ),
+      DialogDemo(
+        title: 'Action Required',
+        description: 'Snackbar with user action',
+        icon: Icons.touch_app,
+        color: const Color(0xFF8B5CF6),
+        onTap: () => _showActionSnackbar(),
+      ),
+    ];
 
 // Methods
 void _showLoadingSnackbar() {

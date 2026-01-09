@@ -88,6 +88,7 @@ void _showMixedComponents() {
     ContextlessSnackbars.show(
       'Please wait while we prepare your content',
       backgroundColor: Colors.orange,
+      textColor: Colors.white,
       iconLeft: const Icon(Icons.warning, color: Colors.white),
     );
   });
@@ -154,6 +155,7 @@ void _showSuccessMessage(String message) {
   ContextlessSnackbars.show(
     message,
     backgroundColor: Colors.green,
+    textColor: Colors.white,
     iconLeft: const Icon(Icons.check_circle, color: Colors.white),
   );
 }
