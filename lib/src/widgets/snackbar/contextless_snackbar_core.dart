@@ -4,6 +4,56 @@ import 'package:flutter/material.dart';
 import 'snackbar_controller.dart';
 import 'snackbar_handle.dart';
 
+/// Model for snackbar visual decoration properties.
+class SnackbarDecoration {
+  /// Background color of the snackbar
+  final Color? backgroundColor;
+
+  /// Margin around the snackbar
+  final EdgeInsetsGeometry? margin;
+
+  /// Padding inside the snackbar
+  final EdgeInsetsGeometry? padding;
+
+  /// Elevation of the snackbar
+  final double? elevation;
+
+  /// Shape border for the snackbar
+  final ShapeBorder? shape;
+
+  /// Width of the snackbar
+  final double? width;
+
+  /// Whether the snackbar is floating or fixed
+  final SnackBarBehavior behavior;
+
+  /// Direction for swipe-to-dismiss
+  final DismissDirection dismissDirection;
+
+  /// Whether to show a close icon
+  final bool showCloseIcon;
+
+  /// Color of the close icon
+  final Color? closeIconColor;
+
+  /// Custom transition animation builder
+  final RouteTransitionsBuilder? transitionsBuilder;
+
+  const SnackbarDecoration({
+    this.backgroundColor,
+    this.margin,
+    this.padding,
+    this.elevation,
+    this.shape,
+    this.width,
+    this.behavior = SnackBarBehavior.floating,
+    this.dismissDirection = DismissDirection.down,
+    this.showCloseIcon = false,
+    this.closeIconColor,
+    this.transitionsBuilder,
+  });
+}
+
 /// Main  API for contextless snackbars.
 class ContextlessSnackbars {
   SnackbarController? _controller;
@@ -45,115 +95,79 @@ class ContextlessSnackbars {
   /// Returns a [SnackbarHandle] that can be used to close the snackbar later.
   ///
   /// Parameters:
-  /// - [content]: The widget to display as a snackbar
+  /// - [content]: The widget to display as a snackbar content
   /// - [id]: Optional custom ID for the snackbar (UUID generated if not provided)
   /// - [tag]: Optional tag for grouping snackbars
   /// - [duration]: How long the snackbar should be displayed (set to Duration.zero for persistent)
-  /// - [backgroundColor]: Background color of the snackbar
-  /// - [margin]: Margin around the snackbar
-  /// - [padding]: Padding inside the snackbar
-  /// - [elevation]: Elevation of the snackbar
-  /// - [shape]: Shape border for the snackbar
-  /// - [behavior]: Whether the snackbar is floating or fixed
-  /// - [action]: Optional action button
-  /// - [width]: Width of the snackbar
-  /// - [dismissDirection]: Direction for swipe-to-dismiss
-  /// - [showCloseIcon]: Whether to show a close icon
-  /// - [closeIconColor]: Color of the close icon
-  /// - [transitionsBuilder]: Custom transition animation builder
+  /// - [action]: Optional action widget (can be any widget, not limited to SnackBarAction)
+  /// - [decoration]: Visual decoration properties for the snackbar
+  /// - [iconLeft]: Optional icon to display on the left side (shortcut for simple use cases)
+  /// - [iconRight]: Optional icon to display on the right side (shortcut for simple use cases)
   ///
   /// Example:
   /// ```dart
   /// final handle = ContextlessSnackbars.show(
-  ///   Text('Hello World!'),
+  ///   content: Text('Hello World!'),
   ///   duration: Duration(seconds: 4),
-  ///   backgroundColor: Colors.green,
+  ///   decoration: SnackbarDecoration(
+  ///     backgroundColor: Colors.green,
+  ///   ),
   ///   action: SnackBarAction(
   ///     label: 'Undo',
   ///     onPressed: () => print('Undo pressed'),
   ///   ),
   /// );
   /// ```
-  /// Shows a snackbar with customizable styling.
   ///
-  /// Returns a [SnackbarHandle] that can be used to close the snackbar later.
-  ///
-  /// Parameters:
-  /// - [message]: The text message to display
-  /// - [backgroundColor]: Background color of the snackbar
-  /// - [textColor]: Text color of the message
-  /// - [iconLeft]: Optional icon to display on the left side
-  /// - [iconRight]: Optional icon to display on the right side
-  /// - [action]: Optional action widget (usually a SnackBarAction)
-  /// - [duration]: How long the snackbar should be displayed
-  /// - [margin]: Margin around the snackbar
-  /// - [padding]: Internal padding of the snackbar
-  /// - [elevation]: Shadow elevation
-  /// - [behavior]: Whether snackbar floats or is fixed
-  /// - [shape]: Custom shape for the snackbar
-  /// - [id]: Optional custom ID for the snackbar
-  /// - [tag]: Optional tag for grouping snackbars
-  ///
-  /// Example:
+  /// For simple text messages with icons:
   /// ```dart
   /// final handle = ContextlessSnackbars.show(
-  ///   'Operation completed successfully!',
-  ///   backgroundColor: Colors.green,
-  ///   iconLeft: Icon(Icons.check_circle, color: Colors.white),
-  ///   action: SnackBarAction(
-  ///     label: 'Undo',
-  ///     onPressed: () => print('Undo pressed'),
+  ///   content: Text('Operation completed successfully!'),
+  ///   iconLeft: Icon(Icons.check_circle),
+  ///   decoration: SnackbarDecoration(
+  ///     backgroundColor: Colors.green,
   ///   ),
   /// );
   /// ```
   static SnackbarHandle show(
-    String message, {
+    Widget content, {
     String? id,
     String? tag,
     Duration duration = const Duration(seconds: 4),
-    Color? backgroundColor,
-    Color? textColor,
+    Widget? action,
+    SnackbarDecoration? decoration,
     Widget? iconLeft,
     Widget? iconRight,
-    SnackBarAction? action,
-    EdgeInsetsGeometry? margin,
-    EdgeInsetsGeometry? padding,
-    double? elevation,
-    ShapeBorder? shape,
-    SnackBarBehavior behavior = SnackBarBehavior.floating,
-    double? width,
-    DismissDirection dismissDirection = DismissDirection.down,
-    bool showCloseIcon = false,
-    Color? closeIconColor,
-    RouteTransitionsBuilder? transitionsBuilder,
   }) {
     instance._ensureInitialized();
 
-    // Build content widget with icons
-    Widget content = instance._buildSnackbarContent(
-      message: message,
-      textColor: textColor ?? Colors.white,
-      iconLeft: iconLeft,
-      iconRight: iconRight,
-    );
+    // Apply icon shortcuts if provided
+    Widget finalContent = content;
+    if (iconLeft != null || iconRight != null) {
+      finalContent = instance._buildSnackbarContentWithIcons(
+        content: content,
+        iconLeft: iconLeft,
+        iconRight: iconRight,
+      );
+    }
 
     return instance._controller!.showSnackbar(
-      content,
+      finalContent,
       id: id,
       tag: tag,
       duration: duration,
-      backgroundColor: backgroundColor,
-      margin: margin,
-      padding: padding,
-      elevation: elevation,
-      shape: shape,
-      behavior: behavior,
+      backgroundColor: decoration?.backgroundColor,
+      margin: decoration?.margin,
+      padding: decoration?.padding,
+      elevation: decoration?.elevation,
+      shape: decoration?.shape,
+      behavior: decoration?.behavior ?? SnackBarBehavior.floating,
       action: action,
-      width: width,
-      dismissDirection: dismissDirection,
-      showCloseIcon: showCloseIcon,
-      closeIconColor: closeIconColor,
-      transitionsBuilder: transitionsBuilder,
+      width: decoration?.width,
+      dismissDirection: decoration?.dismissDirection ?? DismissDirection.down,
+      showCloseIcon: decoration?.showCloseIcon ?? false,
+      closeIconColor: decoration?.closeIconColor,
+      transitionsBuilder: decoration?.transitionsBuilder,
     );
   }
 
@@ -165,7 +179,7 @@ class ContextlessSnackbars {
   /// Example:
   /// ```dart
   /// final result = await ContextlessSnackbars.showAsync<String>(
-  ///   'Do you want to continue?',
+  ///   content: Text('Do you want to continue?'),
   ///   iconLeft: Icon(Icons.question_mark),
   ///   action: SnackBarAction(
   ///     label: 'Yes',
@@ -175,56 +189,47 @@ class ContextlessSnackbars {
   /// );
   /// ```
   static SnackbarHandle showAsync<T>(
-    String message, {
+    Widget content, {
     String? id,
     String? tag,
     Duration duration = const Duration(seconds: 4),
-    Color? backgroundColor,
-    Color? textColor,
+    Widget? action,
+    SnackbarDecoration? decoration,
     Widget? iconLeft,
     Widget? iconRight,
-    SnackBarAction? action,
-    EdgeInsetsGeometry? margin,
-    EdgeInsetsGeometry? padding,
-    double? elevation,
-    ShapeBorder? shape,
-    SnackBarBehavior behavior = SnackBarBehavior.floating,
-    double? width,
-    DismissDirection dismissDirection = DismissDirection.down,
-    bool showCloseIcon = false,
-    Color? closeIconColor,
-    RouteTransitionsBuilder? transitionsBuilder,
   }) {
     instance._ensureInitialized();
 
     final handle = SnackbarHandle.async(id: id, tag: tag);
 
-    // Build content widget with icons
-    Widget content = instance._buildSnackbarContent(
-      message: message,
-      textColor: textColor ?? Colors.white,
-      iconLeft: iconLeft,
-      iconRight: iconRight,
-    );
+    // Apply icon shortcuts if provided
+    Widget finalContent = content;
+    if (iconLeft != null || iconRight != null) {
+      finalContent = instance._buildSnackbarContentWithIcons(
+        content: content,
+        iconLeft: iconLeft,
+        iconRight: iconRight,
+      );
+    }
 
     instance._controller!.show(
-      content,
+      finalContent,
       id: handle.id,
       tag: tag,
       options: {
         'duration': duration,
-        'backgroundColor': backgroundColor,
-        'margin': margin,
-        'padding': padding,
-        'elevation': elevation,
-        'shape': shape,
-        'behavior': behavior,
+        'backgroundColor': decoration?.backgroundColor,
+        'margin': decoration?.margin,
+        'padding': decoration?.padding,
+        'elevation': decoration?.elevation,
+        'shape': decoration?.shape,
+        'behavior': decoration?.behavior ?? SnackBarBehavior.floating,
         'action': action,
-        'width': width,
-        'dismissDirection': dismissDirection,
-        'showCloseIcon': showCloseIcon,
-        'closeIconColor': closeIconColor,
-        'transitionsBuilder': transitionsBuilder,
+        'width': decoration?.width,
+        'dismissDirection': decoration?.dismissDirection ?? DismissDirection.down,
+        'showCloseIcon': decoration?.showCloseIcon ?? false,
+        'closeIconColor': decoration?.closeIconColor,
+        'transitionsBuilder': decoration?.transitionsBuilder,
       },
     );
 
@@ -383,7 +388,7 @@ class ContextlessSnackbars {
   /// return a specific value when the action is pressed.
   ///
   /// Parameters:
-  /// - [message]: The text message to display
+  /// - [content]: The widget to display as snackbar content
   /// - [actionLabel]: The text for the action button
   /// - [actionValue]: The value to return when the action is pressed
   /// - [actionTextColor]: Color of the action button text
@@ -395,10 +400,12 @@ class ContextlessSnackbars {
   /// Example:
   /// ```dart
   /// final result = await ContextlessSnackbars.actionAsync<bool>(
-  ///   'Delete this item?',
+  ///   content: Text('Delete this item?'),
   ///   actionLabel: 'DELETE',
   ///   actionValue: true,
-  ///   backgroundColor: Colors.red,
+  ///   decoration: SnackbarDecoration(
+  ///     backgroundColor: Colors.red,
+  ///   ),
   /// );
   ///
   /// if (result == true) {
@@ -406,27 +413,16 @@ class ContextlessSnackbars {
   /// }
   /// ```
   static Future<T?> actionAsync<T>(
-    String message, {
+    Widget content, {
     required String actionLabel,
     required T actionValue,
     String? id,
     String? tag,
     Duration duration = const Duration(seconds: 6),
-    Color? backgroundColor,
-    Color? textColor,
     Color? actionTextColor,
+    SnackbarDecoration? decoration,
     Widget? iconLeft,
     Widget? iconRight,
-    EdgeInsetsGeometry? margin,
-    EdgeInsetsGeometry? padding,
-    double? elevation,
-    ShapeBorder? shape,
-    SnackBarBehavior behavior = SnackBarBehavior.floating,
-    double? width,
-    DismissDirection dismissDirection = DismissDirection.down,
-    bool showCloseIcon = false,
-    Color? closeIconColor,
-    RouteTransitionsBuilder? transitionsBuilder,
   }) async {
     instance._ensureInitialized();
 
@@ -445,25 +441,14 @@ class ContextlessSnackbars {
     );
 
     final handle = show(
-      message,
+      content,
       id: snackbarId,
       tag: tag,
       duration: duration,
-      backgroundColor: backgroundColor,
-      textColor: textColor,
+      action: action,
+      decoration: decoration,
       iconLeft: iconLeft,
       iconRight: iconRight,
-      action: action,
-      margin: margin,
-      padding: padding,
-      elevation: elevation,
-      shape: shape,
-      behavior: behavior,
-      width: width,
-      dismissDirection: dismissDirection,
-      showCloseIcon: showCloseIcon,
-      closeIconColor: closeIconColor,
-      transitionsBuilder: transitionsBuilder,
     );
 
     // Complete with null if snackbar is closed without action
@@ -486,9 +471,8 @@ class ContextlessSnackbars {
   }
 
   /// Builds the snackbar content widget with optional icons.
-  Widget _buildSnackbarContent({
-    required String message,
-    Color? textColor,
+  Widget _buildSnackbarContentWithIcons({
+    required Widget content,
     Widget? iconLeft,
     Widget? iconRight,
   }) {
@@ -499,22 +483,13 @@ class ContextlessSnackbars {
       children.add(const SizedBox(width: 8));
     }
 
-    children.add(Expanded(
-      child: Text(
-        message,
-        style: TextStyle(color: textColor),
-      ),
-    ));
+    children.add(Expanded(child: content));
 
     if (iconRight != null) {
       children.add(const SizedBox(width: 8));
       children.add(iconRight);
     }
 
-    // NEW: Make icons follow the same color as text
-    return IconTheme.merge(
-      data: IconThemeData(color: textColor),
-      child: Row(children: children),
-    );
+    return Row(children: children);
   }
 }

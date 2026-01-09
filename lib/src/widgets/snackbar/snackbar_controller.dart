@@ -22,7 +22,7 @@ class SnackbarController extends BaseController<SnackbarHandle> {
     double? elevation,
     ShapeBorder? shape,
     SnackBarBehavior behavior = SnackBarBehavior.floating,
-    SnackBarAction? action,
+    Widget? action,
     double? width,
     DismissDirection dismissDirection = DismissDirection.down,
     bool showCloseIcon = false,

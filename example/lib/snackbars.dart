@@ -11,9 +11,10 @@ List<DialogDemo> get snackbarDemos => [
         icon: Icons.check_circle_outline,
         color: const Color(0xFF16A34A),
         onTap: () => ContextlessSnackbars.show(
-          'Operation completed successfully!',
-          textColor: Colors.white,
-          backgroundColor: const Color(0xFF16A34A),
+          const Text('Operation completed successfully!', style: TextStyle(color: Colors.white)),
+          decoration: const SnackbarDecoration(
+            backgroundColor: Color(0xFF16A34A),
+          ),
         ),
       ),
       DialogDemo(
@@ -22,9 +23,10 @@ List<DialogDemo> get snackbarDemos => [
         icon: Icons.error_outline,
         color: const Color(0xFFDC2626),
         onTap: () => ContextlessSnackbars.show(
-          'Something went wrong!',
-          textColor: Colors.white,
-          backgroundColor: const Color(0xFFDC2626),
+          const Text('Something went wrong!', style: TextStyle(color: Colors.white)),
+          decoration: const SnackbarDecoration(
+            backgroundColor: Color(0xFFDC2626),
+          ),
         ),
       ),
       DialogDemo(
@@ -46,37 +48,39 @@ List<DialogDemo> get snackbarDemos => [
 // Methods
 void _showLoadingSnackbar() {
   final handle = ContextlessSnackbars.show(
-    'Processing your request...',
-    textColor: Colors.black,
+    const Text('Processing your request...', style: TextStyle(color: Colors.black)),
   );
   Timer(const Duration(seconds: 3), () {
     handle.close();
     ContextlessSnackbars.show(
-      'Processing completed!',
-      textColor: Colors.white,
-      backgroundColor: Colors.green,
-      iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+      const Text('Processing completed!'),
+      iconLeft: const Icon(Icons.check_circle),
+      decoration: const SnackbarDecoration(
+        backgroundColor: Colors.green,
+      ),
     );
   });
 }
 
 void _showActionSnackbar() async {
   final result = await ContextlessSnackbars.actionAsync<bool>(
-    'Delete this item?',
+    const Text('Delete this item?', style: TextStyle(color: Colors.white)),
     actionLabel: 'DELETE',
     actionValue: true,
     id: 'delete-snackbar',
-    backgroundColor: Colors.red,
-    actionTextColor: Colors.white,
-    textColor: Colors.white,
+    decoration: const SnackbarDecoration(
+      backgroundColor: Colors.red,
+    ),
     duration: const Duration(seconds: 6),
   );
 
   if (result == true) {
     ContextlessSnackbars.show(
-      'Item deleted successfully!',
-      backgroundColor: Colors.green,
-      iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+      const Text('Item deleted successfully!'),
+      iconLeft: const Icon(Icons.check_circle),
+      decoration: const SnackbarDecoration(
+        backgroundColor: Colors.green,
+      ),
     );
   }
 }

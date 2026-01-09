@@ -86,10 +86,11 @@ void _showMixedComponents() {
 
   Timer(const Duration(milliseconds: 500), () {
     ContextlessSnackbars.show(
-      'Please wait while we prepare your content',
-      backgroundColor: Colors.orange,
-      textColor: Colors.white,
-      iconLeft: const Icon(Icons.warning, color: Colors.white),
+      const Text('Please wait while we prepare your content', style: TextStyle(color: Colors.white)),
+      iconLeft: const Icon(Icons.warning),
+      decoration: const SnackbarDecoration(
+        backgroundColor: Colors.orange,
+      ),
     );
   });
 
@@ -153,10 +154,11 @@ void _showMixedComponents() {
 
 void _showSuccessMessage(String message) {
   ContextlessSnackbars.show(
-    message,
-    backgroundColor: Colors.green,
-    textColor: Colors.white,
-    iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+    Text(message, style: const TextStyle(color: Colors.white)),
+    iconLeft: const Icon(Icons.check_circle),
+    decoration: const SnackbarDecoration(
+      backgroundColor: Colors.green,
+    ),
   );
 }
 

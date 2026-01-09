@@ -41,10 +41,11 @@ void _showProcessingDialog() {
 
 void _showSuccessMessage(String message) {
   ContextlessSnackbars.show(
-    message,
-    textColor: Colors.white,
-    backgroundColor: Colors.green,
-    iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+    Text(message, style: const TextStyle(color: Colors.white)),
+    iconLeft: const Icon(Icons.check_circle),
+    decoration: const SnackbarDecoration(
+      backgroundColor: Colors.green,
+    ),
   );
 }
 

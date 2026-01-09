@@ -63,9 +63,11 @@ void _showConfirmationDialog() async {
 
 void _showSuccessMessage(String message) {
   ContextlessSnackbars.show(
-    message,
-    backgroundColor: Colors.green,
-    iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+    Text(message),
+    iconLeft: const Icon(Icons.check_circle),
+    decoration: const SnackbarDecoration(
+      backgroundColor: Colors.green,
+    ),
   );
 }
 

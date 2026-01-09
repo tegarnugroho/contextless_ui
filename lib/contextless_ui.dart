@@ -15,6 +15,9 @@ export 'src/widgets/toast/toast_handle.dart' show ToastHandle;
 export 'src/widgets/bottomsheet/bottomsheet_handle.dart' show BottomSheetHandle;
 export 'src/widgets/snackbar/snackbar_handle.dart' show SnackbarHandle;
 
+// Export models
+export 'src/widgets/snackbar/contextless_snackbar_core.dart' show SnackbarDecoration;
+
 // Export transitions
 export 'src/widgets/dialogs/dialog_transitions.dart' show DialogTransitions;
 export 'src/widgets/toast/toast_transitions.dart' show ToastTransitions;
