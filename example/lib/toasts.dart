@@ -68,7 +68,8 @@ void _showProgressToast() {
       ContextlessToasts.closeById(progressToastId);
       // Show completion toast
       ContextlessToasts.show(
-        const Text('Download completed!', style: TextStyle(color: Colors.white)),
+        const Text('Download completed!',
+            style: TextStyle(color: Colors.white)),
         iconLeft: const Icon(Icons.check_circle, color: Colors.white),
         decoration: const ToastDecoration(
           backgroundColor: Colors.green,

@@ -134,7 +134,8 @@ void _showConfirmationBottomSheet() async {
   final confirmed = await completer.future;
   if (confirmed == true) {
     ContextlessToasts.show(
-      const Text('Cache cleared successfully!', style: TextStyle(color: Colors.white)),
+      const Text('Cache cleared successfully!',
+          style: TextStyle(color: Colors.white)),
       iconLeft: const Icon(Icons.check_circle, color: Colors.white),
       decoration: const ToastDecoration(
         backgroundColor: Colors.green,

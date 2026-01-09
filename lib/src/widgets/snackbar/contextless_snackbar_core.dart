@@ -341,9 +341,8 @@ class ContextlessSnackbars {
   ///
   /// Parameters:
   /// - [content]: The widget to display as snackbar content
-  /// - [actionLabel]: The text for the action button
+  /// - [action]: A function that builds the action widget, receiving a callback to call when pressed
   /// - [actionValue]: The value to return when the action is pressed
-  /// - [actionTextColor]: Color of the action button text
   /// - Other parameters same as [show] method
   ///
   /// Returns a Future that completes with the [actionValue] when the action
@@ -353,7 +352,10 @@ class ContextlessSnackbars {
   /// ```dart
   /// final result = await ContextlessSnackbars.actionAsync<bool>(
   ///   content: Text('Delete this item?'),
-  ///   actionLabel: 'DELETE',
+  ///   action: (onPressed) => TextButton(
+  ///     onPressed: onPressed,
+  ///     child: Text('DELETE'),
+  ///   ),
   ///   actionValue: true,
   ///   decoration: SnackbarDecoration(
   ///     backgroundColor: Colors.red,
@@ -366,12 +368,11 @@ class ContextlessSnackbars {
   /// ```
   static Future<T?> actionAsync<T>(
     Widget content, {
-    required String actionLabel,
+    required Widget Function(VoidCallback onPressed) action,
     required T actionValue,
     String? id,
     String? tag,
     Duration duration = const Duration(seconds: 6),
-    Color? actionTextColor,
     SnackbarDecoration? decoration,
     Widget? iconLeft,
     Widget? iconRight,
@@ -381,23 +382,19 @@ class ContextlessSnackbars {
     final completer = Completer<T?>();
     final snackbarId = id ?? 'action-${DateTime.now().millisecondsSinceEpoch}';
 
-    final action = SnackBarAction(
-      label: actionLabel,
-      textColor: actionTextColor,
-      onPressed: () {
-        if (!completer.isCompleted) {
-          completer.complete(actionValue);
-        }
-        closeById(snackbarId);
-      },
-    );
+    final actionWidget = action(() {
+      if (!completer.isCompleted) {
+        completer.complete(actionValue);
+      }
+      closeById(snackbarId);
+    });
 
     final handle = show(
       content,
       id: snackbarId,
       tag: tag,
       duration: duration,
-      action: action,
+      action: actionWidget,
       decoration: decoration,
       iconLeft: iconLeft,
       iconRight: iconRight,
