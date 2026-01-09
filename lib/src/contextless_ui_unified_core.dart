@@ -11,23 +11,22 @@ import 'widgets/bottomsheet/bottomsheet_decoration.dart';
 
 /// Unified core that initializes all contextless UI subsystems.
 ///
-/// This class serves as the central initialization point for the contextless UI library.
-/// After initialization, use each subsystem directly via their static classes.
+/// This class provides a unified API for all UI components (dialogs, snackbars, toasts, bottom sheets).
+/// All UI operations should be performed through the static methods provided by this class.
 ///
 /// Example usage:
 /// ```dart
-/// Initialize all subsystems at once
+/// // Initialize all subsystems at once
 /// ContextlessUi.init(navigatorKey: navigatorKey);
 ///
-/// Use subsystems directly via their static classes
-/// ContextlessDialogs.show(myDialog);
-/// ContextlessToasts.show(myToast);
-/// ContextlessBottomSheets.show(myBottomSheet);
-/// ContextlessSnackbars.show(mySnackbar);
+/// // Show UI components using the unified API
+/// ContextlessUi.showDialog(myDialog);
+/// ContextlessUi.showSnackbar(Text('Hello'));
+/// ContextlessUi.showToast(Text('Toast message'));
+/// ContextlessUi.showBottomSheet(myBottomSheet);
 ///
-/// Global operations via unified core
-/// final totalActive = ContextlessUi.getTotalActiveCount();
-/// final closedCount = await ContextlessUi.closeAll();
+/// // Close all components
+/// await ContextlessUi.closeAll();
 /// ```
 class ContextlessUi {
   /// Private constructor to prevent instantiation.

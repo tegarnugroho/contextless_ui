@@ -3,12 +3,6 @@ library contextless_ui;
 // Export the unified core that handles all UI components
 export 'src/contextless_ui_unified_core.dart';
 
-// Export individual cores for direct access
-export 'src/widgets/dialogs/contextless_dialogs_core.dart';
-export 'src/widgets/toast/contextless_toast_core.dart';
-export 'src/widgets/bottomsheet/contextless_bottomsheet_core.dart';
-export 'src/widgets/snackbar/contextless_snackbar_core.dart';
-
 // Export handles
 export 'src/widgets/dialogs/dialog_handle.dart' show DialogHandle;
 export 'src/widgets/toast/toast_handle.dart' show ToastHandle;
