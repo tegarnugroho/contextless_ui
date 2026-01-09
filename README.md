@@ -295,7 +295,7 @@ ContextlessDialogs.show(
 ```dart
 void showMixedComponents() {
   // Show multiple component types together
-  final snackbar = ContextlessUi.showSnackbar(
+  final snackbar = ContextlessSnackbars.show(
     const Text('Background task running'),
     tag: 'background',
   );
@@ -305,15 +305,16 @@ void showMixedComponents() {
     tag: 'background',
   );
   
-  final toast = ContextlessUi.showToast(
+  final toast = ContextlessToasts.show(
     const Text('Starting process...'),
     tag: 'background',
   );
   
   // Close all background components later
   Timer(const Duration(seconds: 5), () {
-    ContextlessUi.closeByTag('background');
+    ContextlessSnackbars.closeByTag('background');
     ContextlessDialogs.closeByTag('background');
+    ContextlessToasts.closeByTag('background');
   });
 }
 ```
@@ -341,14 +342,15 @@ Group related components for easier management:
 
 ```dart
 // Progress components
-ContextlessUi.showSnackbar(const Text('Step 1'), tag: 'wizard');
-ContextlessUi.showToast(const Text('Step 2'), tag: 'wizard');
+ContextlessSnackbars.show(const Text('Step 1'), tag: 'wizard');
+ContextlessToasts.show(const Text('Step 2'), tag: 'wizard');
 
 // Error components  
-ContextlessUi.showSnackbar(const Text('Error'), tag: 'error');
+ContextlessSnackbars.show(const Text('Error'), tag: 'error');
 
 // Close all wizard components when done
-ContextlessUi.closeByTag('wizard');
+ContextlessSnackbars.closeByTag('wizard');
+ContextlessToasts.closeByTag('wizard');
 ```
 
 ### 3. Handle Async Results Properly
@@ -367,18 +369,27 @@ Future<void> showConfirmationDialog() async {
 }
 ```
 
-### 4. Use Builders for Common Patterns
+### 4. Use Consistent Styling Patterns
 
 ```dart
 // Instead of manually creating styled snackbars
-ContextlessUi.showSnackbar(
+ContextlessSnackbars.show(
   const Text('Success!'),
-  backgroundColor: Colors.green,
-  // ... more styling
+  decoration: const SnackbarDecoration(
+    backgroundColor: Colors.green,
+  ),
 );
 
-// Use builders for cleaner code
-SnackbarBuilder.success('Success!');
+// For common patterns, create helper functions
+void showSuccessMessage(String message) {
+  ContextlessSnackbars.show(
+    Text(message),
+    iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+    decoration: const SnackbarDecoration(
+      backgroundColor: Colors.green,
+    ),
+  );
+}
 ```
 
 ### 5. Listen to Events for Analytics
@@ -423,11 +434,11 @@ class _MyAppState extends State<MyApp> {
 Make sure you call `init()` before `runApp()` and pass the navigator key:
 
 ```dart
-// ❌ Wrong
+// Wrong
 runApp(const MyApp());
 ContextlessUi.init(navigatorKey: key); // Too late!
 
-// ✅ Correct  
+// Correct  
 ContextlessUi.init(navigatorKey: key);
 runApp(MyApp(navigatorKey: key));
 ```
