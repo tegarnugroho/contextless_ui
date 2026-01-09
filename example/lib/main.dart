@@ -8,6 +8,7 @@ import 'interactive_dialogs.dart';
 import 'snackbars.dart';
 import 'bottom_sheets.dart';
 import 'toasts.dart';
+import 'unified_api_demo.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,6 +81,8 @@ class _MyHomeState extends State<MyHome> {
               _buildSection('Bottom Sheets', bottomSheetDemos),
               const SizedBox(height: 24),
               _buildSection('Toasts', toastDemos),
+              const SizedBox(height: 24),
+              _buildSection('Unified API', unifiedApiDemos),
             ],
           ),
         ),
