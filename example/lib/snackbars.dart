@@ -10,7 +10,7 @@ List<DialogDemo> get snackbarDemos => [
         description: 'Show success notification',
         icon: Icons.check_circle_outline,
         color: const Color(0xFF16A34A),
-        onTap: () => ContextlessSnackbars.show(
+        onTap: () => ContextlessUi.showSnackbar(
           const Text('Operation completed successfully!',
               style: TextStyle(color: Colors.white)),
           decoration: const SnackbarDecoration(
@@ -23,7 +23,7 @@ List<DialogDemo> get snackbarDemos => [
         description: 'Display error message',
         icon: Icons.error_outline,
         color: const Color(0xFFDC2626),
-        onTap: () => ContextlessSnackbars.show(
+        onTap: () => ContextlessUi.showSnackbar(
           const Text('Something went wrong!',
               style: TextStyle(color: Colors.white)),
           decoration: const SnackbarDecoration(
@@ -49,13 +49,13 @@ List<DialogDemo> get snackbarDemos => [
 
 // Methods
 void _showLoadingSnackbar() {
-  final handle = ContextlessSnackbars.show(
+  final handle = ContextlessUi.showSnackbar(
     const Text('Processing your request...',
         style: TextStyle(color: Colors.black)),
   );
   Timer(const Duration(seconds: 3), () {
     handle.close();
-    ContextlessSnackbars.show(
+    ContextlessUi.showSnackbar(
       const Text('Processing completed!'),
       iconLeft: const Icon(Icons.check_circle),
       decoration: const SnackbarDecoration(
@@ -66,7 +66,7 @@ void _showLoadingSnackbar() {
 }
 
 void _showActionSnackbar() async {
-  final result = await ContextlessSnackbars.actionAsync<bool>(
+  final result = await ContextlessUi.showSnackbarWithAction<bool>(
     const Text('Delete this item?', style: TextStyle(color: Colors.white)),
     action: (onPressed) => SnackBarAction(
       label: 'DELETE',
@@ -82,7 +82,7 @@ void _showActionSnackbar() async {
   );
 
   if (result == true) {
-    ContextlessSnackbars.show(
+    ContextlessUi.showSnackbar(
       const Text('Item deleted successfully!'),
       iconLeft: const Icon(Icons.check_circle),
       decoration: const SnackbarDecoration(

@@ -10,7 +10,7 @@ List<DialogDemo> get toastDemos => [
         description: 'Basic toast notification',
         icon: Icons.message_outlined,
         color: const Color(0xFF6B7280),
-        onTap: () => ContextlessToasts.show(const Text('Hello World!')),
+        onTap: () => ContextlessUi.showToast(const Text('Hello World!')),
       ),
       DialogDemo(
         title: 'Success Toast',
@@ -18,14 +18,14 @@ List<DialogDemo> get toastDemos => [
         icon: Icons.check_circle_outline,
         color: const Color(0xFF16A34A),
         onTap: () =>
-            ContextlessToasts.show(const Text('Task completed successfully!')),
+            ContextlessUi.showToast(const Text('Task completed successfully!')),
       ),
       DialogDemo(
         title: 'Custom Toast',
         description: 'Toast with custom icon',
         icon: Icons.favorite_outline,
         color: const Color(0xFFEC4899),
-        onTap: () => ContextlessToasts.show(
+        onTap: () => ContextlessUi.showToast(
           const Text('Added to favorites'),
           iconLeft: const Icon(Icons.favorite, color: Colors.white, size: 20),
           decoration: const ToastDecoration(
@@ -49,7 +49,7 @@ void _showProgressToast() {
 
   void updateProgress() {
     // Update toast with current progress
-    ContextlessToasts.show(
+    ContextlessUi.showToast(
       _ProgressToastContent(
         message: 'Downloading...',
         progress: progress,
@@ -65,9 +65,9 @@ void _showProgressToast() {
     if (progress >= 1.0) {
       timer.cancel();
       // Close the progress toast
-      ContextlessToasts.closeById(progressToastId);
+      ContextlessUi.closeToastById(progressToastId);
       // Show completion toast
-      ContextlessToasts.show(
+      ContextlessUi.showToast(
         const Text('Download completed!',
             style: TextStyle(color: Colors.white)),
         iconLeft: const Icon(Icons.check_circle, color: Colors.white),

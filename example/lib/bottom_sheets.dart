@@ -47,7 +47,7 @@ void _showOptionsBottomSheet() async {
   final completer = Completer<String?>();
   BottomSheetHandle? handle;
 
-  handle = ContextlessBottomSheets.show(
+  handle = ContextlessUi.showBottomSheet(
     Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -76,13 +76,13 @@ void _showOptionsBottomSheet() async {
 
   final result = await completer.future;
   if (result != null) {
-    ContextlessToasts.show(Text('Selected: $result'));
+    ContextlessUi.showToast(Text('Selected: $result'));
   }
 }
 
 void _showConfirmationBottomSheet() async {
   final completer = Completer<bool?>();
-  ContextlessBottomSheets.show(
+  ContextlessUi.showBottomSheet(
     Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -100,7 +100,7 @@ void _showConfirmationBottomSheet() async {
                 child: TextButton(
                   onPressed: () {
                     completer.complete(false);
-                    ContextlessBottomSheets.closeByTag('confirm-clear-cache');
+                    ContextlessUi.closeBottomSheetsByTag('confirm-clear-cache');
                   },
                   child: const Text('Cancel'),
                 ),
@@ -112,7 +112,7 @@ void _showConfirmationBottomSheet() async {
                       ElevatedButton.styleFrom(backgroundColor: Colors.orange),
                   onPressed: () {
                     completer.complete(true);
-                    ContextlessBottomSheets.closeByTag('confirm-clear-cache');
+                    ContextlessUi.closeBottomSheetsByTag('confirm-clear-cache');
                   },
                   child: const Text('Clear',
                       style: TextStyle(color: Colors.white)),
@@ -133,7 +133,7 @@ void _showConfirmationBottomSheet() async {
 
   final confirmed = await completer.future;
   if (confirmed == true) {
-    ContextlessToasts.show(
+    ContextlessUi.showToast(
       const Text('Cache cleared successfully!',
           style: TextStyle(color: Colors.white)),
       iconLeft: const Icon(Icons.check_circle, color: Colors.white),
@@ -149,7 +149,7 @@ void _showInputBottomSheet() async {
   final textController = TextEditingController();
   BottomSheetHandle? handle;
 
-  handle = ContextlessBottomSheets.show(
+  handle = ContextlessUi.showBottomSheet(
     Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -203,7 +203,7 @@ void _showInputBottomSheet() async {
 
   final result = await completer.future;
   if (result != null && result.isNotEmpty) {
-    ContextlessToasts.show(
+    ContextlessUi.showToast(
       Text('Note saved: $result'),
       iconLeft: const Icon(Icons.check_circle, color: Colors.white),
       decoration: const ToastDecoration(

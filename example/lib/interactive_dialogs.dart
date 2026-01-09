@@ -29,7 +29,7 @@ List<DialogDemo> get interactiveDialogs => [
 
 // Methods
 void _showColorPicker() async {
-  final color = await ContextlessUi.dialog.showAsync<Color>(
+  final color = await ContextlessUi.showDialogAsync<Color>(
     const ColorPickerDialog(),
     tag: 'picker',
   );
@@ -40,7 +40,7 @@ void _showColorPicker() async {
 }
 
 void _showUserInputDialog() async {
-  final result = await ContextlessUi.dialog.showAsync<Map<String, String>>(
+  final result = await ContextlessUi.showDialogAsync<Map<String, String>>(
     const UserInputDialog(),
     tag: 'user-input',
   );
@@ -51,7 +51,7 @@ void _showUserInputDialog() async {
 }
 
 void _showConfirmationDialog() async {
-  final confirmed = await ContextlessUi.dialog.showAsync<bool>(
+  final confirmed = await ContextlessUi.showDialogAsync<bool>(
     const DeleteConfirmationDialog(),
     tag: 'confirm-delete',
   );
@@ -62,7 +62,7 @@ void _showConfirmationDialog() async {
 }
 
 void _showSuccessMessage(String message) {
-  ContextlessSnackbars.show(
+  ContextlessUi.showSnackbar(
     Text(message),
     iconLeft: const Icon(Icons.check_circle),
     decoration: const SnackbarDecoration(
@@ -133,7 +133,7 @@ class ColorPickerDialog extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () => ContextlessUi.dialog.closeAll(),
+                onPressed: () => ContextlessUi.closeAllDialogs(),
                 child: const Text('Cancel'),
               ),
             ),
@@ -153,7 +153,7 @@ class ColorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => ContextlessUi.dialog.closeAll(color),
+      onTap: () => ContextlessUi.closeAllDialogs(color),
       borderRadius: BorderRadius.circular(12),
       child: Container(
         decoration: BoxDecoration(
@@ -274,7 +274,7 @@ class _UserInputDialogState extends State<UserInputDialog> {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () => ContextlessUi.dialog.closeAll(),
+                      onPressed: () => ContextlessUi.closeAllDialogs(),
                       child: const Text('Cancel'),
                     ),
                   ),
@@ -296,7 +296,7 @@ class _UserInputDialogState extends State<UserInputDialog> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      ContextlessUi.dialog.closeAll({
+      ContextlessUi.closeAllDialogs({
         'name': _nameController.text.trim(),
         'email': _emailController.text.trim(),
       });
@@ -375,14 +375,14 @@ class DeleteConfirmationDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () => ContextlessUi.dialog.closeAll(false),
+                    onPressed: () => ContextlessUi.closeAllDialogs(false),
                     child: const Text('Cancel'),
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: FilledButton(
-                    onPressed: () => ContextlessUi.dialog.closeAll(true),
+                    onPressed: () => ContextlessUi.closeAllDialogs(true),
                     style: FilledButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.error,
                       foregroundColor: Theme.of(context).colorScheme.onError,

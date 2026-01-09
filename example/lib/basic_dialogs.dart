@@ -22,11 +22,11 @@ List<DialogDemo> get basicDialogs => [
 
 // Methods
 void _showWelcomeDialog() {
-  ContextlessUi.dialog.show(const WelcomeDialog(), tag: 'welcome');
+  ContextlessUi.showDialog(const WelcomeDialog(), tag: 'welcome');
 }
 
 void _showProcessingDialog() {
-  final handle = ContextlessUi.dialog.show(
+  final handle = ContextlessUi.showDialog(
     const ProcessingDialog(),
     tag: 'processing',
     barrierDismissible: false,
@@ -40,7 +40,7 @@ void _showProcessingDialog() {
 }
 
 void _showSuccessMessage(String message) {
-  ContextlessSnackbars.show(
+  ContextlessUi.showSnackbar(
     Text(message, style: const TextStyle(color: Colors.white)),
     iconLeft: const Icon(Icons.check_circle),
     decoration: const SnackbarDecoration(
@@ -96,7 +96,7 @@ class WelcomeDialog extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: () => ContextlessUi.dialog.closeAll('understood'),
+                onPressed: () => ContextlessUi.closeAllDialogs('understood'),
                 child: const Text('Got it'),
               ),
             ),

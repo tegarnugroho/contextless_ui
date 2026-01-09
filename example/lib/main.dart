@@ -8,7 +8,6 @@ import 'interactive_dialogs.dart';
 import 'snackbars.dart';
 import 'bottom_sheets.dart';
 import 'toasts.dart';
-import 'unified_api_demo.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -81,8 +80,6 @@ class _MyHomeState extends State<MyHome> {
               _buildSection('Bottom Sheets', bottomSheetDemos),
               const SizedBox(height: 24),
               _buildSection('Toasts', toastDemos),
-              const SizedBox(height: 24),
-              _buildSection('Unified API', unifiedApiDemos),
             ],
           ),
         ),
@@ -133,7 +130,7 @@ class _MyHomeState extends State<MyHome> {
           ),
           if (_openDialogCount > 0)
             FilledButton(
-              onPressed: () => ContextlessUi.dialog.closeAll(),
+              onPressed: () => ContextlessUi.closeAllDialogs(),
               style: FilledButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.error,
                 foregroundColor: Theme.of(context).colorScheme.onError,

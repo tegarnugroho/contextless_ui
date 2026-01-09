@@ -33,15 +33,6 @@ class ContextlessUi {
   /// Private constructor to prevent instantiation.
   ContextlessUi._();
 
-  static ContextlessDialogs get dialog => ContextlessDialogs.instance;
-
-  static ContextlessSnackbars get snackbar => ContextlessSnackbars.instance;
-
-  static ContextlessToasts get toast => ContextlessToasts.instance;
-
-  static ContextlessBottomSheets get bottomSheet =>
-      ContextlessBottomSheets.instance;
-
   /// Initializes all contextless UI subsystems.
   ///
   /// Either [navigatorKey] or [overlayKey] must be provided.
@@ -263,8 +254,6 @@ class ContextlessUi {
       iconRight: iconRight,
     );
   }
-
-
 
   /// Closes a specific toast by its handle.
   static Future<bool> closeToast(ToastHandle handle) {

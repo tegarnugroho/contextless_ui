@@ -52,13 +52,31 @@ class MyApp extends StatelessWidget {
 }
 ```
 
+### Unified API
+
+All UI components can be accessed through the unified `ContextlessUi` class:
+
+```dart
+// Instead of using separate classes:
+ContextlessDialogs.show(...)
+ContextlessSnackbars.show(...)
+ContextlessToasts.show(...)
+ContextlessBottomSheets.show(...)
+
+// Use the unified API:
+ContextlessUi.showDialog(...)
+ContextlessUi.showSnackbar(...)
+ContextlessUi.showToast(...)
+ContextlessUi.showBottomSheet(...)
+```
+
 ### Usage Examples
 
 #### Dialogs
 
 ```dart
 void showLoadingDialog() {
-  final handle = ContextlessDialogs.show(
+  final handle = ContextlessUi.showDialog(
     const Dialog(
       child: Padding(
         padding: EdgeInsets.all(24),
@@ -75,7 +93,7 @@ void showLoadingDialog() {
   );
   
   Future.delayed(const Duration(seconds: 3), () {
-    ContextlessDialogs.close(handle);
+    ContextlessUi.closeDialog(handle);
   });
 }
 ```
@@ -84,7 +102,7 @@ void showLoadingDialog() {
 
 ```dart
 void showNotification() {
-  ContextlessSnackbars.show(
+  ContextlessUi.showSnackbar(
     const Text('File uploaded successfully!'),
     action: TextButton(
       onPressed: () => openFile(),
@@ -101,7 +119,7 @@ void showNotification() {
 
 ```dart
 void showToast() {
-  ContextlessToasts.show(
+  ContextlessUi.showToast(
     const Text('Operation completed'),
     iconLeft: const Icon(Icons.check_circle, color: Colors.white),
     decoration: const ToastDecoration(
@@ -116,7 +134,7 @@ void showToast() {
 
 ```dart
 void showSettings() {
-  ContextlessBottomSheets.show(
+  ContextlessUi.showBottomSheet(
     Container(
       padding: const EdgeInsets.all(16),
       child: const Text('Settings'),
@@ -134,17 +152,17 @@ void showSettings() {
 
 ```dart
 Future<String?> pickColor() async {
-  return await ContextlessDialogs.showAsync<String>(
+  return await ContextlessUi.showDialogAsync<String>(
     Dialog(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           ElevatedButton(
-            onPressed: () => ContextlessDialogs.closeAll('red'),
+            onPressed: () => ContextlessUi.closeAllDialogs('red'),
             child: const Text('Red'),
           ),
           ElevatedButton(
-            onPressed: () => ContextlessDialogs.closeAll('blue'),
+            onPressed: () => ContextlessUi.closeAllDialogs('blue'),
             child: const Text('Blue'),
           ),
         ],
@@ -257,11 +275,11 @@ BottomSheetDecoration({
 
 ```dart
 // Group components with tags
-ContextlessDialogs.show(dialog, tag: 'loading');
-ContextlessToasts.show(toast, tag: 'loading');
+ContextlessUi.showDialog(dialog, tag: 'loading');
+ContextlessUi.showToast(toast, tag: 'loading');
 
 // Close all components with the same tag
-ContextlessDialogs.closeByTag('loading');
+ContextlessUi.closeDialogsByTag('loading');
 ```
 
 ### Event Streams
@@ -282,7 +300,7 @@ DialogTransitions.slideFromBottom
 DialogTransitions.scale
 
 // Use in decoration
-ContextlessDialogs.show(
+ContextlessUi.showDialog(
   dialog,
   decoration: DialogDecoration(
     transitionsBuilder: DialogTransitions.fade,
@@ -295,26 +313,26 @@ ContextlessDialogs.show(
 ```dart
 void showMixedComponents() {
   // Show multiple component types together
-  final snackbar = ContextlessSnackbars.show(
+  final snackbar = ContextlessUi.showSnackbar(
     const Text('Background task running'),
     tag: 'background',
   );
   
-  final dialog = ContextlessDialogs.show(
+  final dialog = ContextlessUi.showDialog(
     const ProcessingDialog(),
     tag: 'background',
   );
   
-  final toast = ContextlessToasts.show(
+  final toast = ContextlessUi.showToast(
     const Text('Starting process...'),
     tag: 'background',
   );
   
   // Close all background components later
   Timer(const Duration(seconds: 5), () {
-    ContextlessSnackbars.closeByTag('background');
-    ContextlessDialogs.closeByTag('background');
-    ContextlessToasts.closeByTag('background');
+    ContextlessUi.closeSnackbarsByTag('background');
+    ContextlessUi.closeDialogsByTag('background');
+    ContextlessUi.closeToastsByTag('background');
   });
 }
 ```
@@ -342,22 +360,22 @@ Group related components for easier management:
 
 ```dart
 // Progress components
-ContextlessSnackbars.show(const Text('Step 1'), tag: 'wizard');
-ContextlessToasts.show(const Text('Step 2'), tag: 'wizard');
+ContextlessUi.showSnackbar(const Text('Step 1'), tag: 'wizard');
+ContextlessUi.showToast(const Text('Step 2'), tag: 'wizard');
 
 // Error components  
-ContextlessSnackbars.show(const Text('Error'), tag: 'error');
+ContextlessUi.showSnackbar(const Text('Error'), tag: 'error');
 
 // Close all wizard components when done
-ContextlessSnackbars.closeByTag('wizard');
-ContextlessToasts.closeByTag('wizard');
+ContextlessUi.closeSnackbarsByTag('wizard');
+ContextlessUi.closeToastsByTag('wizard');
 ```
 
 ### 3. Handle Async Results Properly
 
 ```dart
 Future<void> showConfirmationDialog() async {
-  final confirmed = await ContextlessDialogs.showAsync<bool>(
+  final confirmed = await ContextlessUi.showDialogAsync<bool>(
     const ConfirmationDialog(),
   );
   
@@ -373,7 +391,7 @@ Future<void> showConfirmationDialog() async {
 
 ```dart
 // Instead of manually creating styled snackbars
-ContextlessSnackbars.show(
+ContextlessUi.showSnackbar(
   const Text('Success!'),
   decoration: const SnackbarDecoration(
     backgroundColor: Colors.green,
@@ -382,7 +400,7 @@ ContextlessSnackbars.show(
 
 // For common patterns, create helper functions
 void showSuccessMessage(String message) {
-  ContextlessSnackbars.show(
+  ContextlessUi.showSnackbar(
     Text(message),
     iconLeft: const Icon(Icons.check_circle, color: Colors.white),
     decoration: const SnackbarDecoration(
@@ -419,19 +437,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     ContextlessUi.dispose();
-    ContextlessDialogs.dispose();
-    super.dispose();
-  }
-  
-  // ... rest of widget
-}
-```
 
-## Common Issues & Solutions
-
-### "ContextlessUi not initialized" Error
-
-Make sure you call `init()` before `runApp()` and pass the navigator key:
 
 ```dart
 // Wrong
@@ -470,7 +476,6 @@ Always dispose the system when your app shuts down:
 @override
 void dispose() {
   ContextlessUi.dispose(); // This closes all components and cleans up
-  ContextlessDialogs.dispose();
   super.dispose();
 }
 ```
