@@ -64,7 +64,9 @@ void _showCustomTransitions() {
       ContextlessUi.dialog.show(
         TransitionDemo(name: name),
         tag: 'transitions',
-        transitionsBuilder: transition,
+        decoration: DialogDecoration(
+          transitionsBuilder: transition,
+        ),
       );
     });
   }
@@ -79,9 +81,11 @@ void _simulateServiceCall() {
 
 void _showMixedComponents() {
   ContextlessToasts.show(
-    'Starting multi-component demo...',
-    backgroundColor: Colors.blue,
+    const Text('Starting multi-component demo...'),
     iconLeft: const Icon(Icons.info, color: Colors.white),
+    decoration: const ToastDecoration(
+      backgroundColor: Colors.blue,
+    ),
   );
 
   Timer(const Duration(milliseconds: 500), () {
@@ -136,8 +140,10 @@ void _showMixedComponents() {
           ],
         ),
       ),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      decoration: const BottomSheetDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
       ),
     );
 

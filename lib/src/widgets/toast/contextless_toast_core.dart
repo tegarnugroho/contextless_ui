@@ -4,6 +4,32 @@ import 'package:flutter/material.dart';
 import 'toast_controller.dart';
 import 'toast_handle.dart';
 
+/// Model for toast visual decoration properties.
+class ToastDecoration {
+  /// Background color of the toast
+  final Color? backgroundColor;
+
+  /// Padding inside the toast
+  final EdgeInsetsGeometry? padding;
+
+  /// Border radius for the toast
+  final BorderRadius? borderRadius;
+
+  /// Elevation of the toast
+  final double? elevation;
+
+  /// Custom transition animation builder
+  final RouteTransitionsBuilder? transitionsBuilder;
+
+  const ToastDecoration({
+    this.backgroundColor,
+    this.padding,
+    this.borderRadius,
+    this.elevation,
+    this.transitionsBuilder,
+  });
+}
+
 /// Main  API for contextless toasts.
 class ContextlessToasts {
   ToastController? _controller;
@@ -67,136 +93,67 @@ class ContextlessToasts {
   ///   alignment: Alignment.bottomCenter,
   /// );
   /// ```
-  /// Shows a toast with customizable styling.
+  /// Shows a toast without requiring a BuildContext.
   ///
   /// Returns a [ToastHandle] that can be used to close the toast later.
   ///
   /// Parameters:
-  /// - [message]: The text message to display
-  /// - [backgroundColor]: Background color of the toast
-  /// - [textColor]: Text color of the message
-  /// - [iconLeft]: Optional icon to display on the left side
-  /// - [iconRight]: Optional icon to display on the right side
+  /// - [content]: The widget to display as toast content
+  /// - [id]: Optional custom ID for the toast (UUID generated if not provided)
+  /// - [tag]: Optional tag for grouping toasts
   /// - [duration]: How long the toast should be displayed
   /// - [alignment]: Where to position the toast on the screen
-  /// - [padding]: Internal padding of the toast
-  /// - [borderRadius]: Border radius for the toast
-  /// - [elevation]: Shadow elevation
-  /// - [id]: Optional custom ID for the toast
-  /// - [tag]: Optional tag for grouping toasts
+  /// - [decoration]: Visual decoration properties for the toast
+  /// - [iconLeft]: Optional icon to display on the left side (shortcut for simple use cases)
+  /// - [iconRight]: Optional icon to display on the right side (shortcut for simple use cases)
   ///
   /// Example:
   /// ```dart
   /// final handle = ContextlessToasts.show(
-  ///   'Operation completed successfully!',
-  ///   backgroundColor: Colors.green,
-  ///   iconLeft: Icon(Icons.check_circle, color: Colors.white),
+  ///   Text('Operation completed successfully!', style: TextStyle(color: Colors.white)),
   ///   duration: Duration(seconds: 3),
   ///   alignment: Alignment.bottomCenter,
+  ///   decoration: ToastDecoration(
+  ///     backgroundColor: Colors.green,
+  ///     borderRadius: BorderRadius.circular(8),
+  ///   ),
   /// );
   /// ```
   static ToastHandle show(
-    String message, {
+    Widget content, {
     String? id,
     String? tag,
     Duration duration = const Duration(seconds: 3),
     Alignment alignment = Alignment.bottomCenter,
-    Color? backgroundColor,
-    Color? textColor,
+    ToastDecoration? decoration,
     Widget? iconLeft,
     Widget? iconRight,
-    EdgeInsetsGeometry? padding,
-    BorderRadius? borderRadius,
-    double? elevation,
-    RouteTransitionsBuilder? transitionsBuilder,
   }) {
     instance._ensureInitialized();
 
-    // Build content widget with styling and icons
-    Widget content = instance._buildToastContent(
-      message: message,
-      backgroundColor: backgroundColor,
-      textColor: textColor,
-      iconLeft: iconLeft,
-      iconRight: iconRight,
-      padding: padding,
-      borderRadius: borderRadius,
-      elevation: elevation,
+    // Apply icon shortcuts if provided
+    Widget finalContent = content;
+    if (iconLeft != null || iconRight != null) {
+      finalContent = instance._buildToastContentWithIcons(
+        content: content,
+        iconLeft: iconLeft,
+        iconRight: iconRight,
+      );
+    }
+
+    // Wrap content with decoration
+    Widget wrappedContent = instance._wrapWithDecoration(
+      finalContent,
+      decoration: decoration,
     );
 
     return instance._controller!.showToast(
-      content,
+      wrappedContent,
       id: id,
       tag: tag,
       duration: duration,
       alignment: alignment,
-      transitionsBuilder: transitionsBuilder,
-    );
-  }
-
-  /// Shows a progress toast with a loading indicator and optional progress bar.
-  ///
-  /// Returns a [ToastHandle] that can be used to close the toast later.
-  ///
-  /// Parameters:
-  /// - [message]: The text message to display
-  /// - [progress]: Optional progress value between 0.0 and 1.0 for a progress bar
-  /// - [backgroundColor]: Background color of the toast
-  /// - [textColor]: Text color of the message
-  /// - [progressColor]: Color of the progress bar/indicator
-  /// - [duration]: How long the toast should be displayed (typically persistent for progress)
-  /// - [alignment]: Where to position the toast on the screen
-  /// - [padding]: Internal padding of the toast
-  /// - [borderRadius]: Border radius for the toast
-  /// - [elevation]: Shadow elevation
-  /// - [id]: Optional custom ID for the toast
-  /// - [tag]: Optional tag for grouping toasts
-  ///
-  /// Example:
-  /// ```dart
-  /// final handle = ContextlessToasts.progress(
-  ///   'Downloading...',
-  ///   progress: 0.5, // 50% progress
-  ///   backgroundColor: Colors.blue,
-  ///   duration: Duration.zero, // Persistent until manually closed
-  /// );
-  /// ```
-  static ToastHandle progress(
-    String message, {
-    String? id,
-    String? tag,
-    double? progress,
-    Duration duration = Duration.zero,
-    Alignment alignment = Alignment.bottomCenter,
-    Color? backgroundColor,
-    Color? textColor,
-    Color? progressColor,
-    EdgeInsetsGeometry? padding,
-    BorderRadius? borderRadius,
-    double? elevation,
-    RouteTransitionsBuilder? transitionsBuilder,
-  }) {
-    instance._ensureInitialized();
-
-    // Build content widget with progress indicator
-    Widget content = instance._buildProgressToastContent(
-      message: message,
-      progress: progress,
-      backgroundColor: backgroundColor,
-      textColor: textColor,
-      progressColor: progressColor,
-      padding: padding,
-      borderRadius: borderRadius,
-      elevation: elevation,
-    );
-
-    return instance._controller!.showToast(
-      content,
-      id: id,
-      tag: tag,
-      duration: duration,
-      alignment: alignment,
-      transitionsBuilder: transitionsBuilder,
+      transitionsBuilder: decoration?.transitionsBuilder,
     );
   }
 
@@ -350,16 +307,11 @@ class ContextlessToasts {
     }
   }
 
-  /// Builds the toast content widget with styling and icons.
-  Widget _buildToastContent({
-    required String message,
-    Color? backgroundColor,
-    Color? textColor,
+  /// Builds the toast content widget with optional icons.
+  Widget _buildToastContentWithIcons({
+    required Widget content,
     Widget? iconLeft,
     Widget? iconRight,
-    EdgeInsetsGeometry? padding,
-    BorderRadius? borderRadius,
-    double? elevation,
   }) {
     List<Widget> children = [];
 
@@ -368,110 +320,33 @@ class ContextlessToasts {
       children.add(const SizedBox(width: 8));
     }
 
-    children.add(Expanded(
-      child: Text(
-        message,
-        style: TextStyle(color: textColor ?? Colors.white),
-      ),
-    ));
+    children.add(Expanded(child: content));
 
     if (iconRight != null) {
       children.add(const SizedBox(width: 8));
       children.add(iconRight);
     }
 
-    Widget content = Row(children: children);
-
-    return Container(
-      padding:
-          padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.black87,
-        borderRadius: borderRadius ?? BorderRadius.circular(8),
-        boxShadow: elevation != null
-            ? [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: elevation,
-                  offset: Offset(0, elevation / 2),
-                ),
-              ]
-            : null,
-      ),
-      child: content,
-    );
+    return Row(children: children);
   }
 
-  /// Builds the progress toast content widget.
-  Widget _buildProgressToastContent({
-    required String message,
-    double? progress,
-    Color? backgroundColor,
-    Color? textColor,
-    Color? progressColor,
-    EdgeInsetsGeometry? padding,
-    BorderRadius? borderRadius,
-    double? elevation,
+  /// Wraps content with decoration properties.
+  Widget _wrapWithDecoration(
+    Widget content, {
+    ToastDecoration? decoration,
   }) {
-    List<Widget> children = [];
-
-    // Add loading indicator
-    children.add(SizedBox(
-      width: 16,
-      height: 16,
-      child: CircularProgressIndicator(
-        strokeWidth: 2,
-        valueColor: AlwaysStoppedAnimation<Color>(
-          progressColor ?? Colors.white,
-        ),
-        value: progress, // null for indeterminate, value for determinate
-      ),
-    ));
-
-    children.add(const SizedBox(width: 12));
-
-    // Add message
-    children.add(Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            message,
-            style: TextStyle(color: textColor ?? Colors.white),
-          ),
-          if (progress != null) ...[
-            const SizedBox(height: 4),
-            LinearProgressIndicator(
-              value: progress,
-              backgroundColor:
-                  (progressColor ?? Colors.white).withValues(alpha: 0.3),
-              valueColor: AlwaysStoppedAnimation<Color>(
-                progressColor ?? Colors.white,
-              ),
-            ),
-          ],
-        ],
-      ),
-    ));
-
-    Widget content = Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: children,
-    );
-
     return Container(
-      padding:
-          padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: decoration?.padding ?? 
+          const EdgeInsetsGeometry.symmetric(horizontal: 24, vertical: 12),
       decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.black87,
-        borderRadius: borderRadius ?? BorderRadius.circular(8),
-        boxShadow: elevation != null
+        color: decoration?.backgroundColor ?? Colors.black87,
+        borderRadius: decoration?.borderRadius ?? BorderRadius.circular(8),
+        boxShadow: decoration?.elevation != null
             ? [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: elevation,
-                  offset: Offset(0, elevation / 2),
+                  blurRadius: decoration!.elevation!,
+                  offset: Offset(0, decoration.elevation! / 2),
                 ),
               ]
             : null,

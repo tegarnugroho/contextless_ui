@@ -4,6 +4,24 @@ import 'package:flutter/material.dart';
 import 'dialog_controller.dart';
 import 'dialog_handle.dart';
 
+/// Model for dialog visual decoration properties.
+class DialogDecoration {
+  /// Color of the barrier behind the dialog
+  final Color? barrierColor;
+
+  /// Duration of the show/hide animation
+  final Duration? transitionDuration;
+
+  /// Custom transition animation builder
+  final RouteTransitionsBuilder? transitionsBuilder;
+
+  const DialogDecoration({
+    this.barrierColor,
+    this.transitionDuration,
+    this.transitionsBuilder,
+  });
+}
+
 /// Main  API for contextless dialogs.
 class ContextlessDialogs {
   DialogController? _controller;
@@ -49,9 +67,7 @@ class ContextlessDialogs {
   /// - [id]: Optional custom ID for the dialog (UUID generated if not provided)
   /// - [tag]: Optional tag for grouping dialogs
   /// - [barrierDismissible]: Whether tapping outside closes the dialog
-  /// - [barrierColor]: Color of the barrier behind the dialog
-  /// - [transitionDuration]: Duration of the show/hide animation
-  /// - [transitionsBuilder]: Custom transition animation builder
+  /// - [decoration]: Visual decoration properties for the dialog
   ///
   /// Example:
   /// ```dart
@@ -60,6 +76,9 @@ class ContextlessDialogs {
   ///     child: Text('Hello World!'),
   ///   ),
   ///   tag: 'info',
+  ///   decoration: DialogDecoration(
+  ///     barrierColor: Colors.black54,
+  ///   ),
   /// );
   /// ```
   DialogHandle show(
@@ -67,9 +86,7 @@ class ContextlessDialogs {
     String? id,
     String? tag,
     bool barrierDismissible = true,
-    Color? barrierColor,
-    Duration? transitionDuration,
-    RouteTransitionsBuilder? transitionsBuilder,
+    DialogDecoration? decoration,
   }) {
     _ensureInitialized();
     return _controller!.showDialog(
@@ -77,9 +94,9 @@ class ContextlessDialogs {
       id: id,
       tag: tag,
       barrierDismissible: barrierDismissible,
-      barrierColor: barrierColor,
-      transitionDuration: transitionDuration,
-      transitionsBuilder: transitionsBuilder,
+      barrierColor: decoration?.barrierColor,
+      transitionDuration: decoration?.transitionDuration,
+      transitionsBuilder: decoration?.transitionsBuilder,
     );
   }
 
@@ -93,6 +110,9 @@ class ContextlessDialogs {
   /// final result = await ContextlessDialogs.showAsync<String>(
   ///   _ColorPickerDialog(),
   ///   tag: 'picker',
+  ///   decoration: DialogDecoration(
+  ///     barrierColor: Colors.black87,
+  ///   ),
   /// );
   /// if (result != null) {
   ///   // Use the selected color
@@ -103,9 +123,7 @@ class ContextlessDialogs {
     String? id,
     String? tag,
     bool barrierDismissible = true,
-    Color? barrierColor,
-    Duration? transitionDuration,
-    RouteTransitionsBuilder? transitionsBuilder,
+    DialogDecoration? decoration,
   }) {
     _ensureInitialized();
     return _controller!.showDialogAsync<T>(
@@ -113,9 +131,9 @@ class ContextlessDialogs {
       id: id,
       tag: tag,
       barrierDismissible: barrierDismissible,
-      barrierColor: barrierColor,
-      transitionDuration: transitionDuration,
-      transitionsBuilder: transitionsBuilder,
+      barrierColor: decoration?.barrierColor,
+      transitionDuration: decoration?.transitionDuration,
+      transitionsBuilder: decoration?.transitionsBuilder,
     );
   }
 

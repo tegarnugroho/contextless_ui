@@ -4,6 +4,32 @@ import 'package:flutter/material.dart';
 import 'bottomsheet_controller.dart';
 import 'bottomsheet_handle.dart';
 
+/// Model for bottom sheet visual decoration properties.
+class BottomSheetDecoration {
+  /// Background color of the bottom sheet
+  final Color? backgroundColor;
+
+  /// Elevation of the bottom sheet
+  final double? elevation;
+
+  /// Shape border for the bottom sheet
+  final ShapeBorder? shape;
+
+  /// Size constraints for the bottom sheet
+  final BoxConstraints? constraints;
+
+  /// Custom transition animation builder
+  final RouteTransitionsBuilder? transitionsBuilder;
+
+  const BottomSheetDecoration({
+    this.backgroundColor,
+    this.elevation,
+    this.shape,
+    this.constraints,
+    this.transitionsBuilder,
+  });
+}
+
 /// Main  API for contextless bottom sheets.
 class ContextlessBottomSheets {
   BottomSheetController? _controller;
@@ -50,11 +76,7 @@ class ContextlessBottomSheets {
   /// - [tag]: Optional tag for grouping bottom sheets
   /// - [isDismissible]: Whether tapping outside closes the bottom sheet
   /// - [enableDrag]: Whether the bottom sheet can be dragged to close
-  /// - [backgroundColor]: Background color of the bottom sheet
-  /// - [elevation]: Elevation of the bottom sheet
-  /// - [shape]: Shape border for the bottom sheet
-  /// - [constraints]: Size constraints for the bottom sheet
-  /// - [transitionsBuilder]: Custom transition animation builder
+  /// - [decoration]: Visual decoration properties for the bottom sheet
   ///
   /// Example:
   /// ```dart
@@ -72,9 +94,10 @@ class ContextlessBottomSheets {
   ///       ],
   ///     ),
   ///   ),
-  ///   isDismissible: true,
-  ///   shape: RoundedRectangleBorder(
-  ///     borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+  ///   decoration: BottomSheetDecoration(
+  ///     shape: RoundedRectangleBorder(
+  ///       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+  ///     ),
   ///   ),
   /// );
   /// ```
@@ -84,11 +107,7 @@ class ContextlessBottomSheets {
     String? tag,
     bool isDismissible = true,
     bool enableDrag = true,
-    Color? backgroundColor,
-    double? elevation,
-    ShapeBorder? shape,
-    BoxConstraints? constraints,
-    RouteTransitionsBuilder? transitionsBuilder,
+    BottomSheetDecoration? decoration,
   }) {
     instance._ensureInitialized();
     return instance._controller!.showBottomSheet(
@@ -97,11 +116,11 @@ class ContextlessBottomSheets {
       tag: tag,
       isDismissible: isDismissible,
       enableDrag: enableDrag,
-      backgroundColor: backgroundColor,
-      elevation: elevation,
-      shape: shape,
-      constraints: constraints,
-      transitionsBuilder: transitionsBuilder,
+      backgroundColor: decoration?.backgroundColor,
+      elevation: decoration?.elevation,
+      shape: decoration?.shape,
+      constraints: decoration?.constraints,
+      transitionsBuilder: decoration?.transitionsBuilder,
     );
   }
 
@@ -116,6 +135,9 @@ class ContextlessBottomSheets {
   ///   MyBottomSheetWidget(
   ///     onResult: (result) => handle.complete(result),
   ///   ),
+  ///   decoration: BottomSheetDecoration(
+  ///     backgroundColor: Colors.white,
+  ///   ),
   /// );
   ///
   /// final result = await handle.result<String>();
@@ -127,11 +149,7 @@ class ContextlessBottomSheets {
     String? tag,
     bool isDismissible = true,
     bool enableDrag = true,
-    Color? backgroundColor,
-    double? elevation,
-    ShapeBorder? shape,
-    BoxConstraints? constraints,
-    RouteTransitionsBuilder? transitionsBuilder,
+    BottomSheetDecoration? decoration,
   }) {
     instance._ensureInitialized();
 
@@ -144,11 +162,11 @@ class ContextlessBottomSheets {
       options: {
         'isDismissible': isDismissible,
         'enableDrag': enableDrag,
-        'backgroundColor': backgroundColor,
-        'elevation': elevation,
-        'shape': shape,
-        'constraints': constraints,
-        'transitionsBuilder': transitionsBuilder,
+        'backgroundColor': decoration?.backgroundColor,
+        'elevation': decoration?.elevation,
+        'shape': decoration?.shape,
+        'constraints': decoration?.constraints,
+        'transitionsBuilder': decoration?.transitionsBuilder,
       },
     );
 

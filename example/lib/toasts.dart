@@ -10,14 +10,14 @@ List<DialogDemo> get toastDemos => [
     description: 'Basic toast notification',
     icon: Icons.message_outlined,
     color: const Color(0xFF6B7280),
-    onTap: () => ContextlessToasts.show('Hello World!'),
+    onTap: () => ContextlessToasts.show(const Text('Hello World!')),
   ),
   DialogDemo(
     title: 'Success Toast',
     description: 'Success notification toast',
     icon: Icons.check_circle_outline,
     color: const Color(0xFF16A34A),
-    onTap: () => ContextlessToasts.show('Task completed successfully!'),
+    onTap: () => ContextlessToasts.show(const Text('Task completed successfully!')),
   ),
   DialogDemo(
     title: 'Custom Toast',
@@ -25,9 +25,11 @@ List<DialogDemo> get toastDemos => [
     icon: Icons.favorite_outline,
     color: const Color(0xFFEC4899),
     onTap: () => ContextlessToasts.show(
-      'Added to favorites',
+      const Text('Added to favorites'),
       iconLeft: const Icon(Icons.favorite, color: Colors.white, size: 20),
-      backgroundColor: Colors.pink,
+      decoration: const ToastDecoration(
+        backgroundColor: Colors.pink,
+      ),
     ),
   ),
   DialogDemo(
@@ -41,34 +43,35 @@ List<DialogDemo> get toastDemos => [
 
 // Methods
 void _showProgressToast() {
-  double progress = 0.0;
-  const String progressToastId = 'progress-toast';
+  // Show loading toast
+  ContextlessToasts.show(
+    const Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 16,
+          height: 16,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        ),
+        SizedBox(width: 12),
+        Text('Downloading...'),
+      ],
+    ),
+    id: 'download-toast',
+  );
 
-  void updateProgress() {
-    // Update existing toast with same ID - now properly handled by overlay manager
-    ContextlessToasts.progress(
-      'Downloading...',
-      progress: progress,
-      id: progressToastId,
-    );
-  }
-
-  updateProgress();
-
-  Timer.periodic(const Duration(milliseconds: 300), (timer) {
-    progress += 0.1;
-    if (progress >= 1.0) {
-      timer.cancel();
-      // Close the progress toast
-      ContextlessToasts.closeById(progressToastId);
-      // Show completion toast
-      ContextlessToasts.show(
-        'Download completed!',
+  // Simulate download
+  Future.delayed(const Duration(seconds: 2), () {
+    ContextlessToasts.closeById('download-toast');
+    ContextlessToasts.show(
+      const Text('Download completed!'),
+      iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+      decoration: const ToastDecoration(
         backgroundColor: Colors.green,
-        iconLeft: const Icon(Icons.check_circle, color: Colors.white),
-      );
-    } else {
-      updateProgress();
-    }
+      ),
+    );
   });
 }

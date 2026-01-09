@@ -67,14 +67,16 @@ void _showOptionsBottomSheet() async {
         ],
       ),
     ),
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    decoration: const BottomSheetDecoration(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
     ),
   );
 
   final result = await completer.future;
   if (result != null) {
-    ContextlessToasts.show('Selected: $result');
+    ContextlessToasts.show(Text('Selected: $result'));
   }
 }
 
@@ -121,8 +123,10 @@ void _showConfirmationBottomSheet() async {
         ],
       ),
     ),
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    decoration: const BottomSheetDecoration(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
     ),
     tag: 'confirm-clear-cache',
   );
@@ -130,9 +134,11 @@ void _showConfirmationBottomSheet() async {
   final confirmed = await completer.future;
   if (confirmed == true) {
     ContextlessToasts.show(
-      'Cache cleared successfully!',
-      backgroundColor: Colors.green,
+      const Text('Cache cleared successfully!'),
       iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+      decoration: const ToastDecoration(
+        backgroundColor: Colors.green,
+      ),
     );
   }
 }
@@ -187,17 +193,21 @@ void _showInputBottomSheet() async {
         ],
       ),
     ),
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    decoration: const BottomSheetDecoration(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
     ),
   );
 
   final result = await completer.future;
   if (result != null && result.isNotEmpty) {
     ContextlessToasts.show(
-      'Note saved: $result',
-      backgroundColor: Colors.green,
+      Text('Note saved: $result'),
       iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+      decoration: const ToastDecoration(
+        backgroundColor: Colors.green,
+      ),
     );
   }
 }
