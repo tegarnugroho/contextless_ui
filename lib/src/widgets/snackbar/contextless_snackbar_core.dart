@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:contextless_ui/src/core/extensions/color_extension.dart';
 import 'package:flutter/material.dart';
 
 import 'snackbar_controller.dart';
@@ -33,7 +32,7 @@ class ContextlessSnackbars {
       navigatorKey: navigatorKey,
       overlayKey: overlayKey,
     );
-    
+
     // Set the close callback for handles
     SnackbarHandle.setCloseCallback((handle) => instance.close(handle));
   }
@@ -133,7 +132,7 @@ class ContextlessSnackbars {
     // Build content widget with icons
     Widget content = instance._buildSnackbarContent(
       message: message,
-      textColor: textColor.autoTextOn,
+      textColor: textColor,
       iconLeft: iconLeft,
       iconRight: iconRight,
     );
@@ -203,7 +202,7 @@ class ContextlessSnackbars {
     // Build content widget with icons
     Widget content = instance._buildSnackbarContent(
       message: message,
-      textColor: textColor.autoTextOn,
+      textColor: textColor,
       iconLeft: iconLeft,
       iconRight: iconRight,
     );
@@ -438,7 +437,9 @@ class ContextlessSnackbars {
       label: actionLabel,
       textColor: actionTextColor,
       onPressed: () {
-        completer.complete(actionValue);
+        if (!completer.isCompleted) {
+          completer.complete(actionValue);
+        }
         closeById(snackbarId);
       },
     );

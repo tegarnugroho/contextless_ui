@@ -101,7 +101,8 @@ class _MyHomeState extends State<MyHome> {
                   : Theme.of(context).colorScheme.outline,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.layers_outlined, color: Colors.white, size: 24),
+            child: const Icon(Icons.layers_outlined,
+                color: Colors.white, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -188,7 +189,8 @@ class _MyHomeState extends State<MyHome> {
                     Text(
                       demo.description,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                     ),
                   ],
@@ -465,7 +467,10 @@ class _MyHomeState extends State<MyHome> {
 
   // Snackbars
   void _showLoadingSnackbar() {
-    final handle = ContextlessSnackbars.show('Processing your request...');
+    final handle = ContextlessSnackbars.show(
+      'Processing your request...',
+      textColor: Colors.black,
+    );
     Timer(const Duration(seconds: 3), () {
       handle.close();
       ContextlessSnackbars.show(
@@ -484,6 +489,7 @@ class _MyHomeState extends State<MyHome> {
       id: 'delete-snackbar',
       backgroundColor: Colors.red,
       actionTextColor: Colors.white,
+      textColor: Colors.white,
       duration: const Duration(seconds: 6),
     );
 
@@ -499,8 +505,16 @@ class _MyHomeState extends State<MyHome> {
   // Bottom sheets
   void _showOptionsBottomSheet() async {
     final options = [
-      {'title': 'Camera', 'value': 'camera', 'icon': const Icon(Icons.camera_alt)},
-      {'title': 'Gallery', 'value': 'gallery', 'icon': const Icon(Icons.photo_library)},
+      {
+        'title': 'Camera',
+        'value': 'camera',
+        'icon': const Icon(Icons.camera_alt)
+      },
+      {
+        'title': 'Gallery',
+        'value': 'gallery',
+        'icon': const Icon(Icons.photo_library)
+      },
       {'title': 'Files', 'value': 'files', 'icon': const Icon(Icons.folder)},
     ];
 
@@ -566,13 +580,14 @@ class _MyHomeState extends State<MyHome> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange),
                     onPressed: () {
                       completer.complete(true);
                       ContextlessBottomSheets.closeByTag('confirm-clear-cache');
                     },
-                    child:
-                        const Text('Clear', style: TextStyle(color: Colors.white)),
+                    child: const Text('Clear',
+                        style: TextStyle(color: Colors.white)),
                   ),
                 ),
               ],
@@ -725,7 +740,8 @@ class _MyHomeState extends State<MyHome> {
               const Text('Ready!',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              const Text('Your content is ready. Would you like to view it now?'),
+              const Text(
+                  'Your content is ready. Would you like to view it now?'),
               const SizedBox(height: 24),
               Row(
                 children: [
@@ -884,6 +900,7 @@ class ProcessingDialog extends StatelessWidget {
               'Processing your request',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w500,
+                    color: Colors.black,
                   ),
             ),
             const SizedBox(height: 8),
@@ -1081,7 +1098,8 @@ class _UserInputDialogState extends State<UserInputDialog> {
                   if (value == null || value.trim().isEmpty) {
                     return 'Please enter your email';
                   }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                      .hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
                   return null;
@@ -1146,7 +1164,8 @@ class DeleteConfirmationDialog extends StatelessWidget {
                     color: Colors.orange,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(Icons.restaurant, color: Colors.white, size: 16),
+                  child: const Icon(Icons.restaurant,
+                      color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 8),
                 Container(
@@ -1155,7 +1174,8 @@ class DeleteConfirmationDialog extends StatelessWidget {
                     color: Colors.purple,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(Icons.shopping_bag, color: Colors.white, size: 16),
+                  child: const Icon(Icons.shopping_bag,
+                      color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 8),
                 Container(
@@ -1164,7 +1184,8 @@ class DeleteConfirmationDialog extends StatelessWidget {
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(Icons.local_taxi, color: Colors.white, size: 16),
+                  child: const Icon(Icons.local_taxi,
+                      color: Colors.white, size: 16),
                 ),
               ],
             ),
@@ -1219,7 +1240,8 @@ class TaskDialog extends StatelessWidget {
   final int taskNumber;
   final VoidCallback onClose;
 
-  const TaskDialog({super.key, required this.taskNumber, required this.onClose});
+  const TaskDialog(
+      {super.key, required this.taskNumber, required this.onClose});
 
   @override
   Widget build(BuildContext context) {
@@ -1282,7 +1304,8 @@ class TransitionDemo extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.animation, size: 48, color: Theme.of(context).colorScheme.primary),
+            Icon(Icons.animation,
+                size: 48, color: Theme.of(context).colorScheme.primary),
             const SizedBox(height: 16),
             Text(
               name,
@@ -1315,7 +1338,8 @@ class TransitionDemo extends StatelessWidget {
 class BackgroundService {
   static void processData() {
     Timer(const Duration(seconds: 2), () {
-      ContextlessUi.dialog.show(const ServiceNotificationDialog(), tag: 'service');
+      ContextlessUi.dialog
+          .show(const ServiceNotificationDialog(), tag: 'service');
     });
   }
 }
@@ -1339,7 +1363,8 @@ class ServiceNotificationDialog extends StatelessWidget {
                 color: Colors.green.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(50),
               ),
-              child: const Icon(Icons.cloud_done, size: 48, color: Colors.green),
+              child:
+                  const Icon(Icons.cloud_done, size: 48, color: Colors.green),
             ),
             const SizedBox(height: 24),
             Text(
