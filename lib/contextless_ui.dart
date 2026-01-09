@@ -16,10 +16,10 @@ export 'src/widgets/bottomsheet/bottomsheet_handle.dart' show BottomSheetHandle;
 export 'src/widgets/snackbar/snackbar_handle.dart' show SnackbarHandle;
 
 // Export models
-export 'src/widgets/snackbar/contextless_snackbar_core.dart' show SnackbarDecoration;
-export 'src/widgets/toast/contextless_toast_core.dart' show ToastDecoration;
-export 'src/widgets/dialogs/contextless_dialogs_core.dart' show DialogDecoration;
-export 'src/widgets/bottomsheet/contextless_bottomsheet_core.dart' show BottomSheetDecoration;
+export 'src/widgets/snackbar/snackbar_decoration.dart';
+export 'src/widgets/toast/toast_decoration.dart';
+export 'src/widgets/dialogs/dialog_decoration.dart';
+export 'src/widgets/bottomsheet/bottomsheet_decoration.dart';
 
 // Export transitions
 export 'src/widgets/dialogs/dialog_transitions.dart' show DialogTransitions;

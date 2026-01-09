@@ -122,35 +122,37 @@ void showLoadingDialog() {
   });
 }
 
-// Snackbars - Material Design snackbars
+// 📢 Snackbars - Material Design snackbars with flexible content
 void showNotification() {
-  ContextlessUi.showSnackbar(
-    const Text('File uploaded successfully!'),
-    action: SnackBarAction(
-      label: 'View',
+  ContextlessSnackbars.show(
+    const Text('File uploaded successfully!', style: TextStyle(color: Colors.white)),
+    action: TextButton(
       onPressed: () => openFile(),
+      child: const Text('View', style: TextStyle(color: Colors.yellow)),
     ),
-    backgroundColor: Colors.green,
+    decoration: const SnackbarDecoration(
+      backgroundColor: Colors.green,
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+    ),
   );
 }
 
-// Toasts - Simple toast notifications
+// 🍞 Toasts - Simple toast notifications with custom widgets
 void showToast() {
-  ContextlessUi.showToast(
-    Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.black87,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: const Text('Toast message', style: TextStyle(color: Colors.white)),
+  ContextlessToasts.show(
+    const Text('Toast message', style: TextStyle(color: Colors.white)),
+    iconLeft: const Icon(Icons.check_circle, color: Colors.white, size: 20),
+    decoration: const ToastDecoration(
+      backgroundColor: Colors.black87,
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     ),
   );
 }
 
-// Bottom Sheets - Material bottom sheets
+// 📋 Bottom Sheets - Material bottom sheets with custom content
 void showSettings() {
-  ContextlessUi.showBottomSheet(
+  ContextlessBottomSheets.show(
     Container(
       height: 300,
       padding: const EdgeInsets.all(16),
@@ -161,26 +163,35 @@ void showSettings() {
         ],
       ),
     ),
+    decoration: const BottomSheetDecoration(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+    ),
   );
 }
 
-// Async dialogs - Get results from user interactions
+// 🎯 Async dialogs - Get results from user interactions
 Future<String?> pickColor() async {
   final result = await ContextlessDialogs.showAsync<String>(
     Dialog(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text('Pick a color'),
-          ElevatedButton(
-            onPressed: () => ContextlessDialogs.closeAll('red'),
-            child: const Text('Red'),
-          ),
-          ElevatedButton(
-            onPressed: () => ContextlessDialogs.closeAll('blue'),
-            child: const Text('Blue'),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Pick a color'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => ContextlessDialogs.closeAll('red'),
+              child: const Text('Red'),
+            ),
+            ElevatedButton(
+              onPressed: () => ContextlessDialogs.closeAll('blue'),
+              child: const Text('Blue'),
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -205,11 +216,17 @@ ContextlessUi.init(overlayKey: yourOverlayKey);
 
 ```dart
 // Show a dialog
-DialogHandle show(Widget dialog, {
+DialogHandle show(
+  Widget dialog, {                      // Dialog widget content
   String? id,                           // Custom ID (UUID generated if null)
   String? tag,                          // Tag for grouping
   bool barrierDismissible = true,       // Tap outside to close
-  Color? barrierColor,                  // Barrier color
+  DialogDecoration? decoration,         // Visual styling
+});
+
+// DialogDecoration properties
+DialogDecoration({
+  Color? barrierColor,                  // Barrier color behind dialog
   Duration? transitionDuration,         // Animation duration
   RouteTransitionsBuilder? transitionsBuilder, // Custom transitions
 });
@@ -231,70 +248,118 @@ int get openDialogCount;
 
 ```dart
 // Show a snackbar
-UiHandle showSnackbar(Widget content, {
-  String? id,
-  String? tag,
+SnackbarHandle show(
+  Widget content, {                     // Snackbar content (positional)
+  Widget? action,                       // Action widget (any Widget)
+  Widget? iconLeft,                     // Icon on the left side
+  Widget? iconRight,                    // Icon on the right side
+  String? id,                           // Custom ID
+  String? tag,                          // Tag for grouping
   Duration duration = const Duration(seconds: 4),
+  SnackbarDecoration? decoration,       // Visual styling
+});
+
+// SnackbarDecoration properties
+SnackbarDecoration({
   Color? backgroundColor,
   EdgeInsetsGeometry? margin,
   EdgeInsetsGeometry? padding,
   double? elevation,
   ShapeBorder? shape,
-  SnackBarBehavior behavior = SnackBarBehavior.floating,
-  SnackBarAction? action,
   double? width,
+  SnackBarBehavior behavior = SnackBarBehavior.floating,
   DismissDirection dismissDirection = DismissDirection.down,
   bool showCloseIcon = false,
   Color? closeIconColor,
   RouteTransitionsBuilder? transitionsBuilder,
 });
 
-// Show async snackbar
-Future<T?> showSnackbarAsync<T>(Widget content, { /* same parameters */ });
+// Example
+ContextlessSnackbars.show(
+  const Text('Success!', style: TextStyle(color: Colors.white)),
+  action: TextButton(
+    onPressed: () {},
+    child: const Text('Undo'),
+  ),
+  iconLeft: const Icon(Icons.check, color: Colors.white),
+  decoration: const SnackbarDecoration(
+    backgroundColor: Colors.green,
+    borderRadius: BorderRadius.all(Radius.circular(8)),
+  ),
+);
 ```
 
 ### Toasts
 
 ```dart
 // Show a toast
-UiHandle showToast(Widget content, {
-  String? id,
-  String? tag,
+ToastHandle show(
+  Widget content, {                     // Toast content (positional)
+  Widget? iconLeft,                     // Icon on the left side
+  Widget? iconRight,                    // Icon on the right side
+  String? id,                           // Custom ID
+  String? tag,                          // Tag for grouping
   Duration duration = const Duration(seconds: 3),
   Alignment alignment = Alignment.bottomCenter,
-  EdgeInsetsGeometry? margin,
+  ToastDecoration? decoration,          // Visual styling
+});
+
+// ToastDecoration properties
+ToastDecoration({
+  Color? backgroundColor,
+  EdgeInsetsGeometry? padding,
+  BorderRadius? borderRadius,
+  double? elevation,
   RouteTransitionsBuilder? transitionsBuilder,
 });
 
-// Show async toast
-Future<T?> showToastAsync<T>(Widget content, { /* same parameters */ });
+// Example
+ContextlessToasts.show(
+  const Text('Saved!', style: TextStyle(color: Colors.white)),
+  iconLeft: const Icon(Icons.check_circle, color: Colors.white),
+  decoration: const ToastDecoration(
+    backgroundColor: Colors.black87,
+    borderRadius: BorderRadius.all(Radius.circular(8)),
+    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+  ),
+);
 ```
 
 ### Bottom Sheets
 
 ```dart
 // Show a bottom sheet
-UiHandle showBottomSheet(Widget content, {
-  String? id,
-  String? tag,
-  bool isDismissible = true,
-  bool enableDrag = true,
+BottomSheetHandle show(
+  Widget content, {                     // Bottom sheet content
+  String? id,                           // Custom ID
+  String? tag,                          // Tag for grouping
+  bool isDismissible = true,            // Tap outside to close
+  bool enableDrag = true,               // Enable drag to dismiss
+  BottomSheetDecoration? decoration,    // Visual styling
+});
+
+// BottomSheetDecoration properties
+BottomSheetDecoration({
   Color? backgroundColor,
   double? elevation,
   ShapeBorder? shape,
-  Clip? clipBehavior,
   BoxConstraints? constraints,
-  Color? barrierColor,
-  bool isScrollControlled = false,
-  bool useRootNavigator = false,
-  RouteSettings? routeSettings,
-  AnimationController? transitionAnimationController,
-  Offset? anchorPoint,
   RouteTransitionsBuilder? transitionsBuilder,
 });
 
-// Show async bottom sheet
-Future<T?> showBottomSheetAsync<T>(Widget content, { /* same parameters */ });
+// Example
+ContextlessBottomSheets.show(
+  Container(
+    padding: const EdgeInsets.all(16),
+    child: const Text('Bottom Sheet Content'),
+  ),
+  decoration: const BottomSheetDecoration(
+    backgroundColor: Colors.white,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    ),
+  ),
+);
 ```
 
 ### Universal Controls

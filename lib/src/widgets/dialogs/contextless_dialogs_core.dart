@@ -3,24 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'dialog_controller.dart';
 import 'dialog_handle.dart';
-
-/// Model for dialog visual decoration properties.
-class DialogDecoration {
-  /// Color of the barrier behind the dialog
-  final Color? barrierColor;
-
-  /// Duration of the show/hide animation
-  final Duration? transitionDuration;
-
-  /// Custom transition animation builder
-  final RouteTransitionsBuilder? transitionsBuilder;
-
-  const DialogDecoration({
-    this.barrierColor,
-    this.transitionDuration,
-    this.transitionsBuilder,
-  });
-}
+import 'dialog_decoration.dart';
 
 /// Main  API for contextless dialogs.
 class ContextlessDialogs {
