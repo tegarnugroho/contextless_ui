@@ -10,14 +10,21 @@ class _ToastEntry {
   final String? tag;
   final AnimationController animationController;
   final Alignment alignment;
+  final ValueNotifier<Widget> contentNotifier;
 
   _ToastEntry({
     required this.overlayEntry,
     required this.handle,
     required this.animationController,
     required this.alignment,
+    required this.contentNotifier,
     this.tag,
   });
+
+  void dispose() {
+    contentNotifier.dispose();
+    animationController.dispose();
+  }
 }
 
 /// Manages toast display using Flutter's Overlay system.
@@ -48,6 +55,17 @@ class ToastOverlayManager extends BaseOverlayManager<ToastHandle> {
     final transitionsBuilder =
         options?['transitionsBuilder'] as RouteTransitionsBuilder?;
 
+    // If toast with same ID exists, update its content instead of recreating
+    final existingEntry = _activeToasts[handle.id];
+    if (existingEntry != null) {
+      // Update the content without recreating the overlay entry
+      existingEntry.contentNotifier.value = content;
+      return existingEntry.handle;
+    }
+
+    // Create content notifier for dynamic updates
+    final contentNotifier = ValueNotifier<Widget>(content);
+
     // Create animation controller
     final animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -55,20 +73,25 @@ class ToastOverlayManager extends BaseOverlayManager<ToastHandle> {
       vsync: overlay!,
     );
 
-    // Create overlay entry
+    // Create overlay entry with ValueListenableBuilder for dynamic content
     final overlayEntry = OverlayEntry(
       builder: (context) {
-        return ToastTransitions.buildTransition(
-          context: context,
-          animation: animationController,
-          child: Align(
-            alignment: alignment,
-            child: Material(
-              type: MaterialType.transparency,
-              child: content,
-            ),
-          ),
-          transitionsBuilder: transitionsBuilder,
+        return ValueListenableBuilder<Widget>(
+          valueListenable: contentNotifier,
+          builder: (context, currentContent, child) {
+            return ToastTransitions.buildTransition(
+              context: context,
+              animation: animationController,
+              child: Align(
+                alignment: alignment,
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: currentContent,
+                ),
+              ),
+              transitionsBuilder: transitionsBuilder,
+            );
+          },
         );
       },
     );
@@ -79,6 +102,7 @@ class ToastOverlayManager extends BaseOverlayManager<ToastHandle> {
       handle: handle,
       animationController: animationController,
       alignment: alignment,
+      contentNotifier: contentNotifier,
       tag: tag,
     );
 
@@ -106,8 +130,8 @@ class ToastOverlayManager extends BaseOverlayManager<ToastHandle> {
       // Remove from overlay
       entry.overlayEntry.remove();
 
-      // Dispose animation controller
-      entry.animationController.dispose();
+      // Dispose resources
+      entry.dispose();
 
       // Remove from tracking
       _activeToasts.remove(handle.id);
@@ -120,7 +144,7 @@ class ToastOverlayManager extends BaseOverlayManager<ToastHandle> {
       // Clean up even if animation fails
       try {
         entry.overlayEntry.remove();
-        entry.animationController.dispose();
+        entry.dispose();
         _activeToasts.remove(handle.id);
         handle.completeError(e);
       } catch (_) {}
@@ -186,7 +210,7 @@ class ToastOverlayManager extends BaseOverlayManager<ToastHandle> {
     for (final entry in entries) {
       try {
         entry.overlayEntry.remove();
-        entry.animationController.dispose();
+        entry.dispose();
       } catch (_) {}
     }
     _activeToasts.clear();

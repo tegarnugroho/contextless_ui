@@ -42,17 +42,14 @@ List<DialogDemo> get toastDemos => [
 // Methods
 void _showProgressToast() {
   double progress = 0.0;
-  ToastHandle? currentHandle;
+  const String progressToastId = 'progress-toast';
 
   void updateProgress() {
-    // Replace previous toast if present
-    currentHandle?.close();
-
-    // Show a new progress toast
-    currentHandle = ContextlessToasts.progress(
+    // Update existing toast with same ID - now properly handled by overlay manager
+    ContextlessToasts.progress(
       'Downloading...',
       progress: progress,
-      id: 'download-${DateTime.now().millisecondsSinceEpoch}', // unique id
+      id: progressToastId,
     );
   }
 
@@ -62,7 +59,9 @@ void _showProgressToast() {
     progress += 0.1;
     if (progress >= 1.0) {
       timer.cancel();
-      currentHandle?.close();
+      // Close the progress toast
+      ContextlessToasts.closeById(progressToastId);
+      // Show completion toast
       ContextlessToasts.show(
         'Download completed!',
         backgroundColor: Colors.green,
