@@ -75,43 +75,79 @@ void _showSuccessMessage(String message) {
 }
 
 String _colorName(Color color) {
-  if (color == Colors.red) return 'Red';
-  if (color == Colors.green) return 'Green';
-  if (color == Colors.blue) return 'Blue';
-  if (color == Colors.purple) return 'Purple';
-  if (color == Colors.orange) return 'Orange';
+  if (color == const Color(0xFFEF4444) || color == Colors.red) return 'Crimson';
+  if (color == const Color(0xFF10B981) || color == Colors.green) return 'Emerald';
+  if (color == const Color(0xFF3B82F6) || color == Colors.blue) return 'Azure';
+  if (color == const Color(0xFF8B5CF6) || color == Colors.purple) return 'Violet';
+  if (color == const Color(0xFFF59E0B) || color == Colors.orange) return 'Amber';
+  if (color == const Color(0xFFEC4899)) return 'Rose';
+  if (color == const Color(0xFF06B6D4)) return 'Cyan';
+  if (color == const Color(0xFF64748B)) return 'Slate';
+  if (color == const Color(0xFF14B8A6)) return 'Teal';
   if (color == Colors.yellow) return 'Yellow';
-  return 'Unknown Color';
+  return 'Selected Color';
 }
 
 // Color Picker Dialog
 class ColorPickerDialog extends StatelessWidget {
   const ColorPickerDialog({super.key});
 
-  final List<({Color color, String name})> colors = const [
-    (color: Colors.red, name: 'Red'),
-    (color: Colors.green, name: 'Green'),
-    (color: Colors.blue, name: 'Blue'),
-    (color: Colors.purple, name: 'Purple'),
-    (color: Colors.orange, name: 'Orange'),
-    (color: Colors.yellow, name: 'Yellow'),
+  static const List<({Color color, String name})> _palette = [
+    (color: Color(0xFFEF4444), name: 'Crimson'),
+    (color: Color(0xFF10B981), name: 'Emerald'),
+    (color: Color(0xFF3B82F6), name: 'Azure'),
+    (color: Color(0xFF8B5CF6), name: 'Violet'),
+    (color: Color(0xFFF59E0B), name: 'Amber'),
+    (color: Color(0xFFEC4899), name: 'Rose'),
+    (color: Color(0xFF06B6D4), name: 'Cyan'),
+    (color: Color(0xFF64748B), name: 'Slate'),
+    (color: Color(0xFF14B8A6), name: 'Teal'),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      backgroundColor: cs.surface,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 320),
-        padding: const EdgeInsets.all(24),
+        constraints: const BoxConstraints(maxWidth: 360),
+        padding: const EdgeInsets.all(28),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: cs.primaryContainer.withValues(alpha: 0.7),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.palette_rounded,
+                size: 28,
+                color: cs.primary,
+              ),
+            ),
+            const SizedBox(height: 18),
             Text(
-              'Choose a Color',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              'Select Theme Color',
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.2,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Choose an accent color for your interface',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: cs.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
             GridView.builder(
@@ -121,23 +157,36 @@ class ColorPickerDialog extends StatelessWidget {
                 crossAxisCount: 3,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                childAspectRatio: 1,
+                childAspectRatio: 1.15,
               ),
-              itemCount: colors.length,
+              itemCount: _palette.length,
               itemBuilder: (context, index) {
-                final colorInfo = colors[index];
-                return ColorButton(
-                  color: colorInfo.color,
-                  name: colorInfo.name,
+                final item = _palette[index];
+                return _ModernColorTile(
+                  color: item.color,
+                  name: item.name,
                 );
               },
             ),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
-              child: OutlinedButton(
+              height: 46,
+              child: TextButton(
                 onPressed: () => ContextlessUi.closeAllDialogs(),
-                child: const Text('Cancel'),
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: cs.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
+                ),
               ),
             ),
           ],
@@ -147,48 +196,67 @@ class ColorPickerDialog extends StatelessWidget {
   }
 }
 
-class ColorButton extends StatelessWidget {
+class _ModernColorTile extends StatelessWidget {
   final Color color;
   final String name;
 
-  const ColorButton({super.key, required this.color, required this.name});
+  const _ModernColorTile({
+    required this.color,
+    required this.name,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => ContextlessUi.closeAllDialogs(color),
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white, width: 2),
-          boxShadow: [
-            BoxShadow(
-              color: color.withValues(alpha: 0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => ContextlessUi.closeAllDialogs(color),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                color,
+                color.withValues(alpha: 0.85),
+              ],
             ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            name,
-            style: TextStyle(
-              color: _getTextColor(color),
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+            boxShadow: [
+              BoxShadow(
+                color: color.withValues(alpha: 0.35),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 12,
+                height: 12,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: -0.1,
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
-  }
-
-  Color _getTextColor(Color backgroundColor) {
-    return backgroundColor.computeLuminance() > 0.5
-        ? Colors.black
-        : Colors.white;
   }
 }
 
@@ -214,37 +282,95 @@ class _UserInputDialogState extends State<UserInputDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      backgroundColor: cs.surface,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       child: Container(
         constraints: const BoxConstraints(maxWidth: 400),
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(28),
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Create Account',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: cs.primaryContainer.withValues(alpha: 0.8),
+                      borderRadius: BorderRadius.circular(16),
                     ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Please fill in your information',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    child: Icon(
+                      Icons.person_add_alt_1_rounded,
+                      color: cs.primary,
+                      size: 26,
                     ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Create Account',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Please fill in your information',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: cs.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
+              Text(
+                'Full Name',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: cs.onSurface,
+                ),
+              ),
+              const SizedBox(height: 6),
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Full Name',
-                  prefixIcon: Icon(Icons.person_outline),
-                  border: OutlineInputBorder(),
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  hintText: 'e.g. Alex Morgan',
+                  prefixIcon: Icon(Icons.person_outline_rounded, color: cs.primary),
+                  filled: true,
+                  fillColor: cs.surfaceContainerHighest.withValues(alpha: 0.35),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(color: cs.outlineVariant),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(
+                      color: cs.outlineVariant.withValues(alpha: 0.5),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(color: cs.primary, width: 1.8),
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -254,12 +380,39 @@ class _UserInputDialogState extends State<UserInputDialog> {
                 },
               ),
               const SizedBox(height: 16),
+              Text(
+                'Email Address',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: cs.onSurface,
+                ),
+              ),
+              const SizedBox(height: 6),
               TextFormField(
                 controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email Address',
-                  prefixIcon: Icon(Icons.email_outlined),
-                  border: OutlineInputBorder(),
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.done,
+                decoration: InputDecoration(
+                  hintText: 'e.g. alex@example.com',
+                  prefixIcon: Icon(Icons.mail_outline_rounded, color: cs.primary),
+                  filled: true,
+                  fillColor: cs.surfaceContainerHighest.withValues(alpha: 0.35),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(color: cs.outlineVariant),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(
+                      color: cs.outlineVariant.withValues(alpha: 0.5),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(color: cs.primary, width: 1.8),
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -272,20 +425,47 @@ class _UserInputDialogState extends State<UserInputDialog> {
                   return null;
                 },
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => ContextlessUi.closeAllDialogs(),
-                      child: const Text('Cancel'),
+                    child: SizedBox(
+                      height: 48,
+                      child: OutlinedButton(
+                        onPressed: () => ContextlessUi.closeAllDialogs(),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: cs.outlineVariant),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: cs.onSurface,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 14),
                   Expanded(
-                    child: FilledButton(
-                      onPressed: _submit,
-                      child: const Text('Create'),
+                    child: SizedBox(
+                      height: 48,
+                      child: FilledButton.icon(
+                        onPressed: _submit,
+                        icon: const Icon(Icons.arrow_forward_rounded, size: 18),
+                        label: const Text(
+                          'Create',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        style: FilledButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -313,84 +493,143 @@ class DeleteConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      backgroundColor: cs.surface,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       child: Container(
         constraints: const BoxConstraints(maxWidth: 400),
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(28),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // App icons row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: cs.errorContainer.withValues(alpha: 0.6),
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Container(
+                  width: 44,
+                  height: 44,
                   decoration: BoxDecoration(
-                    color: Colors.orange,
-                    borderRadius: BorderRadius.circular(8),
+                    color: cs.error.withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.restaurant,
-                      color: Colors.white, size: 16),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.purple,
-                    borderRadius: BorderRadius.circular(8),
+                  child: Icon(
+                    Icons.delete_forever_rounded,
+                    color: cs.error,
+                    size: 26,
                   ),
-                  child: const Icon(Icons.shopping_bag,
-                      color: Colors.white, size: 16),
                 ),
-                const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(Icons.local_taxi,
-                      color: Colors.white, size: 16),
-                ),
-              ],
+              ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             Text(
               'Delete account across apps?',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.2,
+              ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             Text(
-              'Once deleted, you\'ll lose access to the account and saved details across all connected apps.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    height: 1.5,
-                  ),
+              'Once deleted, you will lose access to the account and saved details across all connected apps.',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: cs.onSurfaceVariant,
+                height: 1.45,
+              ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: cs.surfaceContainerHighest.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(16),
+                border:
+                    Border.all(color: cs.outlineVariant.withValues(alpha: 0.5)),
+              ),
+              child: Row(
+                children: [
+                  _appBadge(Icons.restaurant_rounded, const Color(0xFFF59E0B)),
+                  const SizedBox(width: 8),
+                  _appBadge(Icons.shopping_bag_rounded, const Color(0xFF8B5CF6)),
+                  const SizedBox(width: 8),
+                  _appBadge(Icons.directions_car_rounded, const Color(0xFF0EA5E9)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '3 Connected Apps',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: cs.onSurface,
+                          ),
+                        ),
+                        Text(
+                          'Will be unlinked immediately',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: cs.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 28),
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => ContextlessUi.closeAllDialogs(false),
-                    child: const Text('Cancel'),
+                  child: SizedBox(
+                    height: 48,
+                    child: OutlinedButton(
+                      onPressed: () => ContextlessUi.closeAllDialogs(false),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: cs.outlineVariant),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: cs.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 14),
                 Expanded(
-                  child: FilledButton(
-                    onPressed: () => ContextlessUi.closeAllDialogs(true),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                      foregroundColor: Theme.of(context).colorScheme.onError,
+                  child: SizedBox(
+                    height: 48,
+                    child: FilledButton.icon(
+                      onPressed: () => ContextlessUi.closeAllDialogs(true),
+                      icon: const Icon(Icons.delete_outline_rounded, size: 18),
+                      label: const Text(
+                        'Delete',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: cs.error,
+                        foregroundColor: cs.onError,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
                     ),
-                    child: const Text('Proceed'),
                   ),
                 ),
               ],
@@ -398,6 +637,25 @@ class DeleteConfirmationDialog extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _appBadge(IconData icon, Color color) {
+    return Container(
+      width: 34,
+      height: 34,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.3),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Icon(icon, color: Colors.white, size: 18),
     );
   }
 }
