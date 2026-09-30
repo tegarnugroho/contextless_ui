@@ -202,5 +202,45 @@ void main() {
       final result = await asyncHandle.result<String>();
       expect(result, 'bottomsheet_result');
     });
+
+    testWidgets(
+        'should render bottom sheet with ListTile without ink splash or surface errors',
+        (WidgetTester tester) async {
+      final navigatorKey = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(MaterialApp(
+        navigatorKey: navigatorKey,
+        theme: ThemeData(
+          listTileTheme: const ListTileThemeData(
+            tileColor: Colors.grey,
+          ),
+        ),
+        home: const Scaffold(body: Center(child: Text('Home'))),
+      ));
+
+      ContextlessBottomSheets.init(navigatorKey: navigatorKey);
+      await tester.pump();
+
+      final handle = ContextlessBottomSheets.show(
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('Option 1'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Option 1'), findsOneWidget);
+
+      await tester.tap(find.text('Option 1'));
+      await tester.pumpAndSettle();
+
+      await ContextlessBottomSheets.close(handle);
+      await tester.pumpAndSettle();
+      expect(find.text('Option 1'), findsNothing);
+    });
   });
 }

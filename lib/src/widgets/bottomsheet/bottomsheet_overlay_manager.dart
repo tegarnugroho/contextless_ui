@@ -43,6 +43,7 @@ class BottomSheetOverlayManager extends BaseOverlayManager<BottomSheetHandle> {
     // Extract options
     final isDismissible = options?['isDismissible'] as bool? ?? true;
     final backgroundColor = options?['backgroundColor'] as Color?;
+    final elevation = options?['elevation'] as double?;
     final shape = options?['shape'] as ShapeBorder?;
     final constraints = options?['constraints'] as BoxConstraints?;
     final transitionsBuilder =
@@ -58,23 +59,31 @@ class BottomSheetOverlayManager extends BaseOverlayManager<BottomSheetHandle> {
     // Create overlay entry
     final overlayEntry = OverlayEntry(
       builder: (context) {
+        final theme = Theme.of(context);
+        final bottomSheetTheme = theme.bottomSheetTheme;
+        final effectiveColor = backgroundColor ??
+            bottomSheetTheme.backgroundColor ??
+            theme.colorScheme.surface;
+        final effectiveShape = shape ??
+            bottomSheetTheme.shape ??
+            const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            );
+        final effectiveElevation =
+            elevation ?? bottomSheetTheme.elevation ?? 1.0;
+
         return _BottomSheetWrapper(
           animation: animationController,
           isDismissible: isDismissible,
           onDismiss: () => close(handle),
           transitionsBuilder: transitionsBuilder,
           child: Material(
-            type: MaterialType.transparency,
+            color: effectiveColor,
+            elevation: effectiveElevation,
+            shape: effectiveShape,
+            clipBehavior: Clip.antiAlias,
             child: Container(
               constraints: constraints,
-              decoration: BoxDecoration(
-                color: backgroundColor ??
-                    Theme.of(context).bottomSheetTheme.backgroundColor ??
-                    Colors.white,
-                borderRadius: shape is RoundedRectangleBorder
-                    ? (shape).borderRadius
-                    : null,
-              ),
               child: content,
             ),
           ),
@@ -100,7 +109,7 @@ class BottomSheetOverlayManager extends BaseOverlayManager<BottomSheetHandle> {
 
   @override
   Future<bool> close(BottomSheetHandle handle) async {
-    final entry = _activeBottomSheets[handle.id];
+    final entry = _activeBottomSheets.remove(handle.id);
     if (entry == null) return false;
 
     try {
@@ -108,13 +117,12 @@ class BottomSheetOverlayManager extends BaseOverlayManager<BottomSheetHandle> {
       await entry.animationController.reverse();
 
       // Remove from overlay
-      entry.overlayEntry.remove();
+      if (entry.overlayEntry.mounted) {
+        entry.overlayEntry.remove();
+      }
 
       // Dispose animation controller
       entry.animationController.dispose();
-
-      // Remove from tracking
-      _activeBottomSheets.remove(handle.id);
 
       // Complete handle if async
       handle.complete();
@@ -123,9 +131,10 @@ class BottomSheetOverlayManager extends BaseOverlayManager<BottomSheetHandle> {
     } catch (e) {
       // Clean up even if animation fails
       try {
-        entry.overlayEntry.remove();
+        if (entry.overlayEntry.mounted) {
+          entry.overlayEntry.remove();
+        }
         entry.animationController.dispose();
-        _activeBottomSheets.remove(handle.id);
         handle.completeError(e);
       } catch (_) {}
       return false;
@@ -187,13 +196,15 @@ class BottomSheetOverlayManager extends BaseOverlayManager<BottomSheetHandle> {
   /// Closes all bottom sheets and disposes resources.
   void dispose() {
     final entries = _activeBottomSheets.values.toList();
+    _activeBottomSheets.clear();
     for (final entry in entries) {
       try {
-        entry.overlayEntry.remove();
+        if (entry.overlayEntry.mounted) {
+          entry.overlayEntry.remove();
+        }
         entry.animationController.dispose();
       } catch (_) {}
     }
-    _activeBottomSheets.clear();
   }
 }
 
