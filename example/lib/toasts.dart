@@ -10,15 +10,31 @@ List<DialogDemo> get toastDemos => [
         description: 'Basic toast notification',
         icon: Icons.message_outlined,
         color: const Color(0xFF6B7280),
-        onTap: () => ContextlessUi.showToast(const Text('Hello World!')),
+        onTap: () => ContextlessUi.showToast(
+          const Text(
+            'Hello World!',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+          ),
+          decoration: const ToastDecoration(
+            backgroundColor: Color(0xFF1E293B),
+          ),
+        ),
       ),
       DialogDemo(
         title: 'Success Toast',
         description: 'Success notification toast',
         icon: Icons.check_circle_outline,
         color: const Color(0xFF16A34A),
-        onTap: () =>
-            ContextlessUi.showToast(const Text('Task completed successfully!')),
+        onTap: () => ContextlessUi.showToast(
+          const Text(
+            'Task completed successfully!',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+          ),
+          iconLeft: const Icon(Icons.check_circle, color: Colors.white, size: 20),
+          decoration: const ToastDecoration(
+            backgroundColor: Color(0xFF16A34A),
+          ),
+        ),
       ),
       DialogDemo(
         title: 'Custom Toast',

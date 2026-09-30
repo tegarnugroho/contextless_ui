@@ -41,10 +41,13 @@ void _showProcessingDialog() {
 
 void _showSuccessMessage(String message) {
   ContextlessUi.showSnackbar(
-    Text(message, style: const TextStyle(color: Colors.white)),
-    iconLeft: const Icon(Icons.check_circle),
+    Text(
+      message,
+      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+    ),
+    iconLeft: const Icon(Icons.check_circle, color: Colors.white),
     decoration: const SnackbarDecoration(
-      backgroundColor: Colors.green,
+      backgroundColor: Color(0xFF16A34A),
     ),
   );
 }
@@ -113,30 +116,35 @@ class ProcessingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 28),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.primary,
+              color: cs.primary,
             ),
             const SizedBox(height: 24),
             Text(
               'Processing your request',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: cs.onSurface,
+              ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
               'Please wait a moment...',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: cs.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),

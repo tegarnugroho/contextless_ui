@@ -310,11 +310,16 @@ class ContextlessToasts {
     Widget content, {
     ToastDecoration? decoration,
   }) {
+    final bgColor = decoration?.backgroundColor ?? Colors.black87;
+    final isDark =
+        ThemeData.estimateBrightnessForColor(bgColor) == Brightness.dark;
+    final defaultContentColor = isDark ? Colors.white : Colors.black87;
+
     return Container(
       padding: decoration?.padding ??
-          const EdgeInsetsGeometry.symmetric(horizontal: 24, vertical: 12),
+          const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       decoration: BoxDecoration(
-        color: decoration?.backgroundColor ?? Colors.black87,
+        color: bgColor,
         borderRadius: decoration?.borderRadius ?? BorderRadius.circular(8),
         boxShadow: decoration?.elevation != null
             ? [
@@ -326,7 +331,17 @@ class ContextlessToasts {
               ]
             : null,
       ),
-      child: content,
+      child: DefaultTextStyle(
+        style: TextStyle(
+          color: defaultContentColor,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+        child: IconTheme(
+          data: IconThemeData(color: defaultContentColor, size: 20),
+          child: content,
+        ),
+      ),
     );
   }
 }

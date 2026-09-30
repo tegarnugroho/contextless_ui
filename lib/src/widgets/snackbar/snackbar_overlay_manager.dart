@@ -82,34 +82,56 @@ class SnackbarOverlayManager extends BaseOverlayManager<SnackbarHandle> {
           dismissDirection: dismissDirection,
           onDismiss: () => close(handle, animate: false),
           transitionsBuilder: transitionsBuilder,
-          child: Material(
-            elevation: elevation ?? 4.0,
-            color: backgroundColor ??
-                Theme.of(context).snackBarTheme.backgroundColor ??
-                Colors.white,
-            shape: shape ??
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-            child: Container(
-              padding: padding ?? const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Expanded(child: content),
-                  if (action != null) ...[
-                    const SizedBox(width: 8),
-                    action,
-                  ],
-                  if (showCloseIcon) ...[
-                    const SizedBox(width: 8),
-                    IconButton(
-                      icon: Icon(Icons.close, color: closeIconColor),
-                      onPressed: () => close(handle),
-                      iconSize: 18,
+          child: Builder(
+            builder: (context) {
+              final theme = Theme.of(context);
+              final snackBarTheme = theme.snackBarTheme;
+              final effectiveBgColor = backgroundColor ??
+                  snackBarTheme.backgroundColor ??
+                  theme.colorScheme.inverseSurface;
+              final isDark =
+                  ThemeData.estimateBrightnessForColor(effectiveBgColor) ==
+                      Brightness.dark;
+              final defaultTextColor = isDark ? Colors.white : Colors.black87;
+              final contentTextStyle = snackBarTheme.contentTextStyle ??
+                  TextStyle(color: defaultTextColor, fontSize: 14);
+              final contentColor = contentTextStyle.color ?? defaultTextColor;
+
+              return Material(
+                elevation: elevation ?? 4.0,
+                color: effectiveBgColor,
+                shape: shape ??
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0)),
+                child: DefaultTextStyle(
+                  style: contentTextStyle,
+                  child: IconTheme(
+                    data: IconThemeData(color: contentColor),
+                    child: Container(
+                      padding: padding ?? const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          Expanded(child: content),
+                          if (action != null) ...[
+                            const SizedBox(width: 8),
+                            action,
+                          ],
+                          if (showCloseIcon) ...[
+                            const SizedBox(width: 8),
+                            IconButton(
+                              icon: Icon(Icons.close,
+                                  color: closeIconColor ?? contentColor),
+                              onPressed: () => close(handle),
+                              iconSize: 18,
+                            ),
+                          ],
+                        ],
+                      ),
                     ),
-                  ],
-                ],
-              ),
-            ),
+                  ),
+                ),
+              );
+            },
           ),
         );
       },
