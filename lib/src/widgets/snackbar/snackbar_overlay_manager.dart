@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../core/base/base_components.dart';
 import 'snackbar_handle.dart';
@@ -10,6 +11,7 @@ class _SnackbarEntry {
   final String? tag;
   final AnimationController animationController;
   final SnackBarBehavior behavior;
+  Timer? timer;
 
   _SnackbarEntry({
     required this.overlayEntry,
@@ -71,12 +73,14 @@ class SnackbarOverlayManager extends BaseOverlayManager<SnackbarHandle> {
     final overlayEntry = OverlayEntry(
       builder: (context) {
         return _SnackbarWrapper(
+          key: ValueKey('snackbar_wrapper_${handle.id}'),
+          dismissibleKey: ValueKey('snackbar_dismissible_${handle.id}'),
           animation: animationController,
           behavior: behavior,
           margin: margin,
           width: width,
           dismissDirection: dismissDirection,
-          onDismiss: () => close(handle),
+          onDismiss: () => close(handle, animate: false),
           transitionsBuilder: transitionsBuilder,
           child: Material(
             elevation: elevation ?? 4.0,
@@ -112,13 +116,14 @@ class SnackbarOverlayManager extends BaseOverlayManager<SnackbarHandle> {
     );
 
     // Store entry
-    _activeSnackbars[handle.id] = _SnackbarEntry(
+    final entry = _SnackbarEntry(
       overlayEntry: overlayEntry,
       handle: handle,
       animationController: animationController,
       behavior: behavior,
       tag: tag,
     );
+    _activeSnackbars[handle.id] = entry;
 
     // Show snackbar
     overlay!.insert(overlayEntry);
@@ -126,29 +131,32 @@ class SnackbarOverlayManager extends BaseOverlayManager<SnackbarHandle> {
 
     // Auto-dismiss after duration
     if (duration != Duration.zero) {
-      Future.delayed(duration).then((_) => close(handle));
+      entry.timer = Timer(duration, () => close(handle));
     }
 
     return handle;
   }
 
   @override
-  Future<bool> close(SnackbarHandle handle) async {
-    final entry = _activeSnackbars[handle.id];
+  Future<bool> close(SnackbarHandle handle, {bool animate = true}) async {
+    final entry = _activeSnackbars.remove(handle.id);
     if (entry == null) return false;
 
+    entry.timer?.cancel();
+
     try {
-      // Animate out
-      await entry.animationController.reverse();
+      if (animate) {
+        // Animate out
+        await entry.animationController.reverse();
+      }
 
       // Remove from overlay
-      entry.overlayEntry.remove();
+      if (entry.overlayEntry.mounted) {
+        entry.overlayEntry.remove();
+      }
 
       // Dispose animation controller
       entry.animationController.dispose();
-
-      // Remove from tracking
-      _activeSnackbars.remove(handle.id);
 
       // Complete handle if async
       handle.complete();
@@ -157,9 +165,10 @@ class SnackbarOverlayManager extends BaseOverlayManager<SnackbarHandle> {
     } catch (e) {
       // Clean up even if animation fails
       try {
-        entry.overlayEntry.remove();
+        if (entry.overlayEntry.mounted) {
+          entry.overlayEntry.remove();
+        }
         entry.animationController.dispose();
-        _activeSnackbars.remove(handle.id);
         handle.completeError(e);
       } catch (_) {}
       return false;
@@ -221,18 +230,22 @@ class SnackbarOverlayManager extends BaseOverlayManager<SnackbarHandle> {
   /// Closes all snackbars and disposes resources.
   void dispose() {
     final entries = _activeSnackbars.values.toList();
+    _activeSnackbars.clear();
     for (final entry in entries) {
+      entry.timer?.cancel();
       try {
-        entry.overlayEntry.remove();
+        if (entry.overlayEntry.mounted) {
+          entry.overlayEntry.remove();
+        }
         entry.animationController.dispose();
       } catch (_) {}
     }
-    _activeSnackbars.clear();
   }
 }
 
 /// Wrapper widget for snackbar with positioning and animations.
-class _SnackbarWrapper extends StatelessWidget {
+class _SnackbarWrapper extends StatefulWidget {
+  final Key dismissibleKey;
   final Animation<double> animation;
   final SnackBarBehavior behavior;
   final EdgeInsetsGeometry? margin;
@@ -243,6 +256,8 @@ class _SnackbarWrapper extends StatelessWidget {
   final RouteTransitionsBuilder? transitionsBuilder;
 
   const _SnackbarWrapper({
+    super.key,
+    required this.dismissibleKey,
     required this.animation,
     required this.behavior,
     required this.onDismiss,
@@ -254,34 +269,50 @@ class _SnackbarWrapper extends StatelessWidget {
   });
 
   @override
+  State<_SnackbarWrapper> createState() => _SnackbarWrapperState();
+}
+
+class _SnackbarWrapperState extends State<_SnackbarWrapper> {
+  bool _isDismissed = false;
+
+  @override
   Widget build(BuildContext context) {
+    if (_isDismissed) {
+      return const SizedBox.shrink();
+    }
+
     Widget snackbar = Container(
-      width: width,
-      margin: margin ??
-          (behavior == SnackBarBehavior.floating
+      width: widget.width,
+      margin: widget.margin ??
+          (widget.behavior == SnackBarBehavior.floating
               ? const EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 10.0)
               : EdgeInsets.zero),
-      child: child,
+      child: widget.child,
     );
 
     snackbar = SnackbarTransitions.buildTransition(
       context: context,
-      animation: animation,
+      animation: widget.animation,
       child: snackbar,
-      transitionsBuilder: transitionsBuilder,
+      transitionsBuilder: widget.transitionsBuilder,
     );
 
-    if (dismissDirection != DismissDirection.none) {
+    if (widget.dismissDirection != DismissDirection.none) {
       snackbar = Dismissible(
-        key: ValueKey('snackbar'),
-        direction: dismissDirection,
-        onDismissed: (_) => onDismiss(),
+        key: widget.dismissibleKey,
+        direction: widget.dismissDirection,
+        onDismissed: (_) {
+          setState(() {
+            _isDismissed = true;
+          });
+          widget.onDismiss();
+        },
         child: snackbar,
       );
     }
 
     return Align(
-      alignment: behavior == SnackBarBehavior.floating
+      alignment: widget.behavior == SnackBarBehavior.floating
           ? Alignment.bottomCenter
           : Alignment.bottomCenter,
       child: snackbar,

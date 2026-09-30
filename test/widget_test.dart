@@ -108,6 +108,32 @@ void main() {
       expect(result, 'test_result');
     });
 
+    testWidgets('should dismiss snackbar on swipe without assertion error',
+        (WidgetTester tester) async {
+      final navigatorKey = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(MaterialApp(
+        navigatorKey: navigatorKey,
+        home: const Scaffold(body: Center(child: Text('Home'))),
+      ));
+
+      ContextlessSnackbars.init(navigatorKey: navigatorKey);
+      await tester.pump();
+
+      ContextlessSnackbars.show(
+        const Text('Dismiss me'),
+        duration: const Duration(seconds: 10),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Dismiss me'), findsOneWidget);
+
+      // Drag down to dismiss
+      await tester.drag(find.text('Dismiss me'), const Offset(0, 300));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Dismiss me'), findsNothing);
+    });
+
     testWidgets('should show and hide dialog with content verification',
         (WidgetTester tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
